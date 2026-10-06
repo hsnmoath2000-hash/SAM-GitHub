@@ -1,0 +1,8 @@
+<?php
+declare(strict_types=1);
+if(basename((string)($_SERVER['SCRIPT_FILENAME']??''))===basename(__FILE__)){http_response_code(404);exit;}
+if(!in_array($action,['get_wallet_sale_quote','sell_voucher_from_wallet','credit_agent_wallet','get_wallet_distribution_sales','get_pos_retail_book','pay_pos_customer_refund'],true))return;
+$read=str_starts_with($action,'get_');if(($_SERVER['REQUEST_METHOD']??'')!==($read?'GET':'POST'))jsonResponse(['success'=>false,'error'=>'METHOD_NOT_ALLOWED'],405);if(!$read&&($_SERVER['HTTP_X_SAM_REQUEST']??'')!=='XMLHttpRequest')jsonResponse(['success'=>false,'error'=>'CSRF_GUARD_FAILED'],403);
+require_once __DIR__.'/includes/WalletCommerceService.php';$service=new WalletCommerceService(getDB(),legacyAuthorizationContext());
+try{if($read)jsonResponse(match($action){'get_wallet_sale_quote'=>$service->quote($_GET),'get_wallet_distribution_sales'=>$service->records($_GET,false),'get_pos_retail_book'=>$service->records($_GET,true)});$raw=file_get_contents('php://input');if(strlen($raw)>16384)throw new InvalidArgumentException('REQUEST_TOO_LARGE');$data=json_decode($raw,true,16,JSON_THROW_ON_ERROR);if(!is_array($data)||array_is_list($data))throw new InvalidArgumentException('INVALID_JSON');jsonResponse(match($action){'sell_voucher_from_wallet'=>$service->sell($data),'credit_agent_wallet'=>$service->fund($data),'pay_pos_customer_refund'=>$service->payCustomerRefund($data['sale_id']??0,$data)});}
+catch(DomainException $e){jsonResponse(['success'=>false,'error'=>$e->getMessage()],str_starts_with($e->getMessage(),'FORBIDDEN')?403:409);}catch(InvalidArgumentException|JsonException $e){jsonResponse(['success'=>false,'error'=>$e->getMessage()],422);}

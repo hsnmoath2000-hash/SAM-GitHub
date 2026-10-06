@@ -1,0 +1,31 @@
+[Unit]
+Description=SAM WhatsApp Microservice (Baileys WebSocket Edition)
+Documentation=https://github.com/WhiskeySockets/Baileys
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/mikrotik-usermanager/services/whatsapp
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=15s
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sam-whatsapp
+
+Environment=NODE_ENV=production
+Environment=PORT=3388
+Environment=SAM_WHATSAPP_AUTH_PATH=/var/lib/mikrotik-usermanager/whatsapp/baileys_auth
+Environment=SAM_CHATBOT_URL=http://127.0.0.1:8099/api.php?action=handle_chatbot_message
+Environment=LOG_LEVEL=warn
+
+LimitNOFILE=65535
+LimitNPROC=4096
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

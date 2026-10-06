@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة المشتركين للخدمة الذاتية | استعلام رصيد الكرت</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0288d1;
+            --primary-dark: #01579b;
+            --success: #2e7d32;
+            --danger: #c62828;
+            --warning: #f57c00;
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-main: #263238;
+            --text-muted: #607d8b;
+            --border: #cfd8dc;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .portal-card {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 480px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .portal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .portal-header h1 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+        .portal-header p { font-size: 13px; opacity: 0.9; }
+
+        .portal-body { padding: 25px 20px; }
+
+        .search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.15); }
+
+        .btn-query {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0 22px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-query:hover { background: var(--primary-dark); }
+
+        .result-container { display: none; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .status-badge.active { background: #e8f5e9; color: var(--success); }
+        .status-badge.expired { background: #ffebee; color: var(--danger); }
+
+        .kpi-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .kpi-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .kpi-box .val { font-size: 18px; font-weight: 800; color: var(--primary-dark); margin-bottom: 4px; }
+        .kpi-box .lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+        .progress-bar-container {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 8px 0 16px 0;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .info-list {
+            background: #fdfdfd;
+            border: 1px solid #edf2f7;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .info-item:last-child { border-bottom: none; }
+        .info-item span:first-child { color: var(--text-muted); }
+        .info-item span:last-child { font-weight: 700; }
+
+        .portal-footer {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+
+        .spinner {
+            display: none;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(2, 136, 209, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="portal-card">
+        <div class="portal-header">
+            <h1>🌐 بوابة خدمة المشتركين الذاتية</h1>
+            <p>استعلم عن رصيدك المتبقي والوقت والصلاحية لحظياً</p>
+        </div>
+
+        <div class="portal-body">
+            <div class="search-box">
+                <input type="text" id="cardCode" class="search-input" placeholder="أدخل رقم الكرت هنا..." autocomplete="off" autofocus>
+                <button class="btn-query" onclick="queryCard()">استعلام</button>
+            </div>
+
+            <div id="loader" class="spinner"></div>
+            <div id="errorAlert" style="display:none; background:#ffebee; color:#c62828; padding:12px; border-radius:8px; font-size:13px; text-align:center; margin-bottom:15px; font-weight:700;"></div>
+
+            <div id="resultBox" class="result-container">
+                <div style="text-align:center;">
+                    <div id="statusBadge" class="status-badge active">🟢 الكرت نشط وصالح</div>
+                </div>
+
+                <div class="kpi-row">
+                    <div class="kpi-box">
+                        <div class="val" id="remBytes">--</div>
+                        <div class="lbl">الرصيد المتبقي (Data Left)</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="val" id="remTime">--</div>
+                        <div class="lbl">الوقت المتبقي (Time Left)</div>
+                    </div>
+                </div>
+
+                <div style="font-size:12px; color:var(--text-muted); display:flex; justify-content:space-between;">
+                    <span>نسبة استهلاك الرصيد:</span>
+                    <b id="quotaPct">0%</b>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar-fill"></div>
+                </div>
+
+                <div class="info-list">
+                    <div class="info-item">
+                        <span>اسم الباقة:</span>
+                        <span id="profName">--</span>
+                    </div>
+                    <div class="info-item">
+                        <span>تاريخ الانتهاء:</span>
+                        <span id="expDate" style="color:var(--primary-dark);">--</span>
+                    </div>
+                    <div class="info-item">
+                        <span>سرعة الاشتراك:</span>
+                        <span id="rateLimit">--</span>
+                    </div>
+                    <div class="info-item">
+                        <span>أول تسجيل دخول:</span>
+                        <span id="firstLogin">--</span>
+                    </div>
+                    <div class="info-item">
+                        <span>حالة الاتصال بالراوتر:</span>
+                        <span id="onlineStatus">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portal-footer">
+                نظام إدارة الشبكات والمشتركين الذكي &copy; 2026
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('cardCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') queryCard();
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeParam = urlParams.get('code') || urlParams.get('user') || urlParams.get('username');
+        if (codeParam) {
+            document.getElementById('cardCode').value = codeParam;
+            queryCard();
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes || bytes <= 0) return '0 MB';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        async function queryCard() {
+            const code = document.getElementById('cardCode').value.trim();
+            const err = document.getElementById('errorAlert');
+            const resBox = document.getElementById('resultBox');
+            const loader = document.getElementById('loader');
+
+            err.style.display = 'none';
+            resBox.style.display = 'none';
+
+            if (!code) {
+                err.innerText = 'يرجى كتابة رقم الكرت';
+                err.style.display = 'block';
+                return;
+            }
+
+            loader.style.display = 'block';
+
+            try {
+                const response = await fetch('../api.php?action=subscriber_card_query&code=' + encodeURIComponent(code));
+                const data = await response.json();
+                loader.style.display = 'none';
+
+                if (!data || !data.success) {
+                    err.innerText = data.error || 'عذراً، لم يتم العثور على الكرت';
+                    err.style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('profName').innerText = data.profile_name;
+                document.getElementById('expDate').innerText = data.expires_at;
+                document.getElementById('rateLimit').innerText = data.rate_limit;
+                document.getElementById('firstLogin').innerText = data.first_login;
+                document.getElementById('onlineStatus').innerHTML = data.is_online ? '<span style="color:#2e7d32;">🟢 متصل حالياً بالإنترنت</span>' : '⚪ غير متصل';
+
+                if (data.remaining_bytes !== null) {
+                    document.getElementById('remBytes').innerText = formatBytes(data.remaining_bytes);
+                    document.getElementById('quotaPct').innerText = data.quota_percent + '% مستهلك';
+                    document.getElementById('progressBar').style.width = data.quota_percent + '%';
+                } else {
+                    document.getElementById('remBytes').innerText = 'رصيد مفتوح';
+                    document.getElementById('quotaPct').innerText = 'غير محدود';
+                    document.getElementById('progressBar').style.width = '0%';
+                }
+
+                document.getElementById('remTime').innerText = data.rem_time_str;
+
+                const badge = document.getElementById('statusBadge');
+                if (data.is_expired) {
+                    badge.className = 'status-badge expired';
+                    badge.innerText = '🔴 الكرت منتهي الصلاحية';
+                } else if (data.is_depleted) {
+                    badge.className = 'status-badge expired';
+                    badge.innerText = '🔴 انتهى رصيد البيانات بالكامل';
+                } else {
+                    badge.className = 'status-badge active';
+                    badge.innerText = '🟢 الكرت نشط وصالح للاستخدام';
+                }
+
+                resBox.style.display = 'block';
+
+            } catch (e) {
+                loader.style.display = 'none';
+                err.innerText = 'تعذر الاتصال بالسيرفر، يرجى المحاولة لاحقاً';
+                err.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

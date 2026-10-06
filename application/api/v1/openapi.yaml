@@ -1,0 +1,355 @@
+openapi: 3.1.0
+info:
+  title: MikroTik User Manager API
+  version: 1.0.0
+  description: Versioned API for system accounts, exports, uploads, jobs, and notifications.
+servers:
+  - url: /api/v1
+tags:
+  - name: Auth
+  - name: Users
+  - name: Notifications
+  - name: Jobs
+  - name: Exports
+  - name: Uploads
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+  /auth/login:
+    post:
+      tags: [Auth]
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+        '401': { $ref: '#/components/responses/Error' }
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token: { type: string }
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+        '401': { $ref: '#/components/responses/Error' }
+  /auth/logout:
+    post:
+      tags: [Auth]
+      operationId: logout
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+  /me:
+    get:
+      tags: [Auth]
+      operationId: getCurrentUser
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+  /users:
+    get:
+      tags: [Users]
+      operationId: listUsers
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { $ref: '#/components/parameters/Page' }
+        - { $ref: '#/components/parameters/PerPage' }
+        - { name: search, in: query, schema: { type: string } }
+        - { name: role, in: query, schema: { type: string } }
+        - { name: active, in: query, schema: { type: boolean } }
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+        '403': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Users]
+      operationId: createUser
+      description: Creates the account through the existing business service. A WhatsApp confirmation is attempted after successful creation.
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UserWrite' }
+      responses:
+        '201': { $ref: '#/components/responses/Success' }
+        '422': { $ref: '#/components/responses/Error' }
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [Users]
+      operationId: getUser
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+        '404': { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Users]
+      operationId: updateUser
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UserWrite' }
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+  /users/{id}/tokens/revoke:
+    post:
+      tags: [Users, Auth]
+      operationId: revokeUserTokens
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+  /notifications:
+    get:
+      tags: [Notifications]
+      operationId: listNotifications
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { $ref: '#/components/parameters/Page' }
+        - { $ref: '#/components/parameters/PerPage' }
+        - name: after_id
+          in: query
+          schema: { type: integer, minimum: 0 }
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+  /notifications/{id}/read:
+    post:
+      tags: [Notifications]
+      operationId: markNotificationRead
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+  /events:
+    get:
+      tags: [Notifications]
+      operationId: pollEvents
+      description: Long polling endpoint. Timeout is capped at 20 seconds.
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: after_id
+          in: query
+          schema: { type: integer, minimum: 0 }
+        - name: timeout
+          in: query
+          schema: { type: integer, minimum: 0, maximum: 20 }
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+  /exports:
+    post:
+      tags: [Exports, Jobs]
+      operationId: createExport
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [resource, format]
+              properties:
+                resource: { type: string, enum: [users] }
+                format: { type: string, enum: [csv, pdf] }
+                filters: { type: object, additionalProperties: true }
+      responses:
+        '202': { $ref: '#/components/responses/Success' }
+  /exports/{id}/download:
+    get:
+      tags: [Exports]
+      operationId: downloadExport
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Generated CSV or PDF file
+          content:
+            text/csv: { schema: { type: string, format: binary } }
+            application/pdf: { schema: { type: string, format: binary } }
+        '409': { $ref: '#/components/responses/Error' }
+  /jobs:
+    get:
+      tags: [Jobs]
+      operationId: listJobs
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { $ref: '#/components/parameters/Page' }
+        - { $ref: '#/components/parameters/PerPage' }
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+  /jobs/{id}:
+    get:
+      tags: [Jobs]
+      operationId: getJob
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { $ref: '#/components/responses/Success' }
+  /jobs/backup:
+    post:
+      tags: [Jobs]
+      operationId: createDatabaseBackupJob
+      security: [{ bearerAuth: [] }]
+      responses:
+        '202': { $ref: '#/components/responses/Success' }
+  /jobs/router-backup:
+    post:
+      tags: [Jobs]
+      operationId: createRouterBackupJob
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nas_id]
+              properties:
+                nas_id: { type: integer, minimum: 1 }
+                backup_name: { type: string }
+      responses:
+        '202': { $ref: '#/components/responses/Success' }
+  /uploads/images:
+    post:
+      tags: [Uploads]
+      operationId: uploadImage
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: { type: string, format: binary }
+                category: { type: string }
+      responses:
+        '201': { $ref: '#/components/responses/Success' }
+  /uploads/{id}:
+    get:
+      tags: [Uploads]
+      operationId: getUploadedImage
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[a-f0-9]{32}$' }
+      responses:
+        '200':
+          description: Re-encoded image
+          content:
+            image/jpeg: { schema: { type: string, format: binary } }
+            image/png: { schema: { type: string, format: binary } }
+            image/webp: { schema: { type: string, format: binary } }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema: { type: integer, minimum: 1, default: 1 }
+    PerPage:
+      name: per_page
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 100, default: 25 }
+  schemas:
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username: { type: string }
+        password: { type: string, format: password }
+        device_name: { type: string, maxLength: 100 }
+    UserWrite:
+      type: object
+      properties:
+        username: { type: string }
+        password: { type: string, format: password }
+        fullname: { type: string }
+        phone: { type: string }
+        email: { type: string, format: email }
+        role: { type: string }
+        parent_id: { type: [integer, 'null'] }
+        credit_limit: { type: number }
+        discount_rate: { type: number }
+        max_cards_quota: { type: integer }
+        free_profile: { type: [string, 'null'] }
+        free_cards_quota: { type: integer }
+        data_scope: { type: string, enum: [all, own, assigned] }
+        delegated_admin_ids: { type: array, items: { type: integer } }
+        allowed_networks: { type: array, items: { type: integer } }
+        permissions: { type: array, items: { type: string } }
+        is_active: { type: boolean }
+        notes: { type: string }
+  responses:
+    Success:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [data, meta, error]
+            properties:
+              data: {}
+              meta:
+                type: object
+                properties:
+                  request_id: { type: string }
+              error: { type: 'null' }
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [data, meta, error]
+            properties:
+              data: { type: 'null' }
+              meta: { type: object }
+              error:
+                type: object
+                required: [code, message, details]
+                properties:
+                  code: { type: string }
+                  message: { type: string }
+                  details: { type: object }

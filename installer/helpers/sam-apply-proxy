@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+SOURCE=/var/lib/mikrotik-usermanager/proxy/proxy-block.new
+DESTINATION=/etc/freeradius/3.0/proxy.conf
+DEFAULT_SITE=/etc/freeradius/3.0/sites-available/default
+
+if [[ ! -f "$SOURCE" || -L "$SOURCE" ]]; then
+    echo "Staged proxy configuration is missing or unsafe." >&2
+    exit 2
+fi
+
+owner_uid="$(stat -c '%u' "$SOURCE")"
+www_uid="$(id -u www-data)"
+if [[ "$owner_uid" != "$www_uid" ]]; then
+    echo "Staged proxy configuration has an unexpected owner." >&2
+    exit 3
+fi
+
+if [[ "$(stat -c '%s' "$SOURCE")" -gt 262144 ]]; then
+    echo "Staged proxy configuration has an invalid size." >&2
+    exit 4
+fi
+
+backup="$(mktemp /etc/freeradius/3.0/.proxy.conf.sam.XXXXXX)"
+candidate="$(mktemp /etc/freeradius/3.0/.proxy.conf.candidate.XXXXXX)"
+site_backup="$(mktemp /etc/freeradius/3.0/sites-available/.default.sam.XXXXXX)"
+site_candidate="$(mktemp /etc/freeradius/3.0/sites-available/.default.candidate.XXXXXX)"
+check_log="$(mktemp /tmp/sam-freeradius-check.XXXXXX)"
+cleanup() { rm -f "$backup" "$candidate" "$site_backup" "$site_candidate" "$check_log"; }
+trap cleanup EXIT
+
+cp --preserve=mode,ownership,timestamps "$DESTINATION" "$backup"
+cp --preserve=mode,ownership,timestamps "$DEFAULT_SITE" "$site_backup"
+python3 - "$DESTINATION" "$SOURCE" "$candidate" "$DEFAULT_SITE" "$site_candidate" <<'PY'
+import pathlib
+import re
+import sys
+
+destination, staged, candidate, default_site, site_candidate = map(pathlib.Path, sys.argv[1:])
+content = destination.read_text(encoding='utf-8')
+content = re.sub(
+    r'# BEGIN SAM USERMANAGER PROXY.*?# END SAM USERMANAGER PROXY\s*',
+    '',
+    content,
+    flags=re.S,
+)
+content = re.sub(
+    r'home_server\s+sam_um_auth\s*\{[^}]*\}\s*'
+    r'home_server_pool\s+sam_um_auth_pool\s*\{[^}]*\}\s*'
+    r'home_server\s+sam_um_acct\s*\{[^}]*\}\s*'
+    r'home_server_pool\s+sam_um_acct_pool\s*\{[^}]*\}\s*'
+    r'realm\s+sam_usermanager\s*\{[^}]*\}\s*',
+    '',
+    content,
+    flags=re.S,
+)
+content = re.sub(r'home_server\s+router_\d+_um_[^\s]+\s*\{[^}]*\}\s*', '', content, flags=re.S)
+content = re.sub(r'home_server_pool\s+router_\d+_um_[^\s]+\s*\{[^}]*\}\s*', '', content, flags=re.S)
+content = re.sub(r'realm\s+router_realm_\d+\s*\{[^}]*\}\s*', '', content, flags=re.S)
+
+block = staged.read_text(encoding='utf-8').strip()
+if block:
+    content = content.rstrip() + '\n\n' + block + '\n'
+candidate.write_text(content, encoding='utf-8')
+
+site = default_site.read_text(encoding='utf-8')
+site = re.sub(
+    r'[ \t]*# BEGIN SAM USERMANAGER FALLBACK.*?# END SAM USERMANAGER FALLBACK\s*',
+    '',
+    site,
+    flags=re.S,
+)
+if block:
+    fallback = '''
+\t# BEGIN SAM USERMANAGER FALLBACK
+\tif (notfound) {
+\t\tupdate control {
+\t\t\tProxy-To-Realm := "%{sql:SELECT CONCAT('router_realm_', id) FROM nas WHERE (nasname = '%{Packet-Src-IP-Address}' OR nasname = '%{NAS-IP-Address}') AND um_proxy_enabled = 1 LIMIT 1}"
+\t\t}
+\t\tif (!control:Proxy-To-Realm && "%{sql:SELECT setting_value FROM um_settings WHERE setting_key = 'um_proxy_enabled'}" == "1") {
+\t\t\tupdate control {
+\t\t\t\tProxy-To-Realm := "sam_usermanager"
+\t\t\t}
+\t\t}
+\t}
+\t# END SAM USERMANAGER FALLBACK
+'''
+    site, count = re.subn(
+        r'(^[ \t]*-?sql[ \t]*$)',
+        lambda match: match.group(1) + fallback,
+        site,
+        count=1,
+        flags=re.M,
+    )
+    if count != 1:
+        raise SystemExit('Could not locate SQL authorization in the FreeRADIUS default site.')
+site_candidate.write_text(site, encoding='utf-8')
+PY
+install -o root -g freerad -m 0640 "$candidate" "$DESTINATION"
+install -o root -g freerad -m 0640 "$site_candidate" "$DEFAULT_SITE"
+
+if ! freeradius -XC >"$check_log" 2>&1; then
+    cp --preserve=mode,ownership,timestamps "$backup" "$DESTINATION"
+    cp --preserve=mode,ownership,timestamps "$site_backup" "$DEFAULT_SITE"
+    echo "FreeRADIUS rejected the staged proxy configuration." >&2
+    tail -n 20 "$check_log" >&2 || true
+    exit 5
+fi
+
+rm -f "$SOURCE"
+systemctl reload freeradius || systemctl restart freeradius
+echo "Proxy configuration applied."

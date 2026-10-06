@@ -1,0 +1,22 @@
+/* Shared accessibility defaults for public subscriber pages. */
+:root { color-scheme: light dark; }
+
+:focus-visible {
+  outline: 3px solid #fbbf24 !important;
+  outline-offset: 3px;
+}
+
+[role="status"], [role="alert"], [aria-live] { min-height: 1.2em; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) { background-color: #0b1220; color: #f8fafc; }
+}

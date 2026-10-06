@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-05",
+  "test_host": "192.168.91.97",
+  "os": "Ubuntu 24.04 x86_64",
+  "complete_core_install": true,
+  "owner_login": true,
+  "network_api": true,
+  "profiles_api": true,
+  "owner_diagnostics_api": true,
+  "radius_udp_response": "Access-Reject for nonexistent test voucher",
+  "node_services_restart_count_after_final_install": 0,
+  "existing_install_refused": true,
+  "production_services_modified": false,
+  "not_tested": [
+    "Real MikroTik tunnel and voucher login",
+    "WhatsApp pairing and message delivery",
+    "SMS provider",
+    "Full business workflow acceptance"
+  ],
+  "bootstrap_port_fix": "Setup listens only on 8443; core enables 80/443 during service activation"
+}

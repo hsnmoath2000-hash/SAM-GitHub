@@ -1,0 +1,33 @@
+Port 2221
+AddressFamily any
+ListenAddress 0.0.0.0
+ListenAddress ::
+HostKey /etc/ssh/ssh_host_ed25519_key
+HostKey /etc/ssh/ssh_host_rsa_key
+PidFile /run/sshd-sam-um-import/sshd.pid
+UsePAM yes
+PasswordAuthentication yes
+PermitEmptyPasswords no
+PubkeyAuthentication no
+KbdInteractiveAuthentication no
+ChallengeResponseAuthentication no
+PermitRootLogin no
+AllowGroups sam_um_importers
+AllowAgentForwarding no
+AllowTcpForwarding no
+X11Forwarding no
+PermitTunnel no
+PermitTTY no
+PrintMotd no
+PrintLastLog no
+Subsystem sftp internal-sftp
+LogLevel VERBOSE
+
+Match Group sam_um_importers
+    ChrootDirectory %h
+    ForceCommand internal-sftp -d /incoming -u 0007
+    AllowTcpForwarding no
+    X11Forwarding no
+    PermitTTY no
+    PasswordAuthentication yes
+    PubkeyAuthentication no

@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+set -euo pipefail
+BASE=/srv/samnet-usermanager-sftp/tickets
+ACTION=""; TOKEN=""; PASSWORD=""
+read -r ACTION TOKEN PASSWORD || true
+
+valid_token() { [[ "${1:-}" =~ ^[a-f0-9]{32}$ ]]; }
+username_for() { printf 'u%s' "${1:0:20}"; }
+
+remove_ticket() {
+    local token="$1" username target owner attempt
+    valid_token "$token" || return 2
+    username="$(username_for "$token")"
+    target="$BASE/$token"
+    if [[ -e "$target" || -L "$target" ]]; then
+        [[ -d "$target" && ! -L "$target" ]] || return 3
+        owner="$(stat -c '%U' -- "$target")"
+        [[ "$owner" == root ]] || return 4
+    fi
+    if getent passwd "$username" >/dev/null; then
+        # RouterOS may close the SFTP channel a moment after the upload finishes.
+        # Never kill that process; retry userdel briefly, then leave the ticket
+        # intact for the next cleanup pass if the account is still in use.
+        for attempt in {1..8}; do
+            if userdel "$username" 2>/dev/null; then break; fi
+            if ! getent passwd "$username" >/dev/null; then break; fi
+            if ! pgrep -u "$username" >/dev/null 2>&1; then
+                echo 'Unable to remove temporary SFTP user' >&2
+                return 6
+            fi
+            sleep 1
+        done
+        if getent passwd "$username" >/dev/null; then
+            echo 'Temporary SFTP user is still active; cleanup deferred' >&2
+            return 6
+        fi
+    fi
+    if [[ -d "$target" && ! -L "$target" ]]; then rm -rf --one-file-system -- "$target"; fi
+}
+
+cleanup_expired() {
+    local token
+    [[ -d "$BASE" ]] || return 0
+    while IFS= read -r token; do
+        valid_token "$token" || continue
+        remove_ticket "$token" || true
+    done < <(find "$BASE" -mindepth 1 -maxdepth 1 -type d -mmin +30 -printf '%f\n')
+}
+
+case "$ACTION" in
+    create)
+        valid_token "$TOKEN" || exit 2
+        [[ "$PASSWORD" =~ ^[a-f0-9]{64}$ ]] || exit 2
+        cleanup_expired
+        USERNAME="$(username_for "$TOKEN")"
+        TARGET="$BASE/$TOKEN"
+        [[ ! -e "$TARGET" && ! -L "$TARGET" ]] || exit 3
+        if getent passwd "$USERNAME" >/dev/null; then exit 4; fi
+        install -d -o root -g root -m 0755 "$TARGET"
+        install -d -o www-data -g www-data -m 2730 "$TARGET/incoming"
+        useradd --system --no-create-home --home-dir "$TARGET" --shell /bin/sh --gid sam_um_importers --groups www-data --comment 'Temporary SAM User Manager SFTP import' "$USERNAME"
+        printf '%s:%s\n' "$USERNAME" "$PASSWORD" | chpasswd
+        printf 'OK:%s\n' "$USERNAME"
+        ;;
+    remove)
+        valid_token "$TOKEN" || exit 2
+        remove_ticket "$TOKEN"
+        printf 'OK:removed\n'
+        ;;
+    publish)
+        valid_token "$TOKEN" || exit 2
+        USERNAME="$(username_for "$TOKEN")"
+        TARGET="$BASE/$TOKEN"
+        FILE="$TARGET/incoming/$TOKEN.sqldb"
+        [[ -d "$TARGET" && ! -L "$TARGET" && -f "$FILE" && ! -L "$FILE" ]] || exit 5
+        [[ "$(stat -c '%U' -- "$TARGET")" == root ]] || exit 5
+        [[ "$(stat -c '%U' -- "$FILE")" == "$USERNAME" && "$(stat -c '%G' -- "$FILE")" == www-data ]] || exit 5
+        SIZE="$(stat -c '%s' -- "$FILE")"
+        [[ "$SIZE" =~ ^[0-9]+$ && "$SIZE" -ge 100 && "$SIZE" -le 67108864 ]] || exit 5
+        chmod 0640 -- "$FILE"
+        printf 'OK:published\n'
+        ;;
+    cleanup)
+        cleanup_expired
+        printf 'OK:cleanup\n'
+        ;;
+    *) exit 2 ;;
+esac

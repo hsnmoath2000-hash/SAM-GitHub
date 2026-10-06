@@ -1,0 +1,292 @@
+[
+  {
+    "role_key": "superadmin",
+    "permission_key": "distributors.manage.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "superadmin",
+    "permission_key": "distributors.view.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "superadmin",
+    "permission_key": "instant_balance.topup.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "superadmin",
+    "permission_key": "sales_reports.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "customers.manage.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "customers.view.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "distributors.manage.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "distributors.view.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "instant_balance.topup.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "inventory.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "pos.cards.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "pos.dashboard.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "pos.statement.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "sales_reports.view.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "sales.create.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "sales.refund.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "sales.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "statement.view.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "statement.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "wallet.transfer.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "distributor",
+    "permission_key": "wallet.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "customers.manage.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "customers.view.children",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "instant_balance.topup.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "inventory.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "pos.cards.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "pos.dashboard.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "pos.statement.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "sales_reports.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "sales.create.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "sales.refund.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "sales.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "statement.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "pos_agent",
+    "permission_key": "wallet.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "finance",
+    "permission_key": "finance.accounts.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "finance",
+    "permission_key": "finance.cashboxes.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "finance",
+    "permission_key": "finance.exchange_rates.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "finance",
+    "permission_key": "finance.journal.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "finance",
+    "permission_key": "finance.reports.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "finance",
+    "permission_key": "finance.vouchers.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "maintenance",
+    "permission_key": "maintenance.logs.view.assigned",
+    "effect": "grant"
+  },
+  {
+    "role_key": "maintenance",
+    "permission_key": "maintenance.view.assigned",
+    "effect": "grant"
+  },
+  {
+    "role_key": "maintenance",
+    "permission_key": "network.assets.view.assigned",
+    "effect": "grant"
+  },
+  {
+    "role_key": "maintenance",
+    "permission_key": "network.nodes.view.assigned",
+    "effect": "grant"
+  },
+  {
+    "role_key": "maintenance",
+    "permission_key": "network.routers.view.assigned",
+    "effect": "grant"
+  },
+  {
+    "role_key": "maintenance",
+    "permission_key": "network.status.view.assigned",
+    "effect": "grant"
+  },
+  {
+    "role_key": "accountant",
+    "permission_key": "finance.accounts.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "accountant",
+    "permission_key": "finance.cashboxes.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "accountant",
+    "permission_key": "finance.exchange_rates.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "accountant",
+    "permission_key": "finance.journal.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "accountant",
+    "permission_key": "finance.reports.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "accountant",
+    "permission_key": "finance.vouchers.view.all",
+    "effect": "grant"
+  },
+  {
+    "role_key": "agent",
+    "permission_key": "subscriber.cards.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "agent",
+    "permission_key": "subscriber.invoices.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "agent",
+    "permission_key": "subscriber.network.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "agent",
+    "permission_key": "subscriber.packages.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "agent",
+    "permission_key": "subscriber.sessions.view.own",
+    "effect": "grant"
+  },
+  {
+    "role_key": "agent",
+    "permission_key": "subscriber.usage.view.own",
+    "effect": "grant"
+  }
+]

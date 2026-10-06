@@ -1,0 +1,27 @@
+/* Mobile compatibility bridge for the legacy sales/POS renderer. */
+@media (max-width:650px){
+  html,body{max-width:100%;overflow-x:hidden}
+  #main-view.sam-page-shell{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}
+  #main-view.sam-page-shell>.sam-ui-page{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}
+  #main-view.sam-page-shell .view-scroll-content{width:100%!important;min-width:0!important;max-width:100%!important;overflow-x:hidden!important;padding:8px 0 calc(80px + env(safe-area-inset-bottom,0px)) 0!important}
+  #main-view.sam-page-shell .mt-toolbar{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;width:100%!important;max-width:100%!important;margin:8px 0!important;padding:8px!important}
+  #main-view.sam-page-shell .mt-toolbar-left,#main-view.sam-page-shell .mt-toolbar-right{display:flex!important;flex-wrap:wrap!important;align-items:stretch!important;gap:6px!important;width:100%!important;max-width:100%!important;margin:0!important}
+  #main-view.sam-page-shell .mt-toolbar-left>*,#main-view.sam-page-shell .mt-toolbar-right>*{flex:1 1 145px;min-width:0!important;max-width:100%!important;margin:0!important}
+  #main-view.sam-page-shell .mt-toolbar input.mt-input,#main-view.sam-page-shell .mt-toolbar select.mt-select{width:100%!important;min-width:0!important;max-width:100%!important}
+  #main-view.sam-page-shell .mt-toolbar-left>div[style*="inline-flex"],#main-view.sam-page-shell .mt-toolbar-right>div[style*="inline-flex"]{display:flex!important;flex-wrap:wrap!important;width:100%!important;max-width:100%!important;margin:0!important}
+  #main-view.sam-page-shell .mt-toolbar-left>div[style*="inline-flex"] .mt-btn,#main-view.sam-page-shell .mt-toolbar-right>div[style*="inline-flex"] .mt-btn{flex:1 1 135px;white-space:normal!important;height:auto!important;min-height:34px}
+  #main-view.sam-page-shell .sam-page-hero{width:100%!important;max-width:100%!important;overflow:hidden}
+  #main-view.sam-page-shell .mt-table-container,#main-view.sam-page-shell .mt-table-wrap{width:100%!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+  #main-view.sam-page-shell .kpi-grid{grid-template-columns:1fr 1fr!important;width:100%!important;max-width:100%!important}
+}
+/* Structural mobile fix: avoid nested flex/100%-height clipping from the legacy shell. */
+#main-view.sam-page-shell{box-sizing:border-box;display:block!important;height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important}
+#main-view.sam-page-shell>.sam-ui-page{box-sizing:border-box;display:flex;flex-direction:column;min-height:100%;height:auto!important;overflow:visible!important}
+#main-view.sam-page-shell>.sam-ui-page>.view-scroll-content{box-sizing:border-box;flex:0 0 auto!important;height:auto!important;min-height:0!important;overflow:visible!important}
+#main-view.sam-page-shell>.sam-ui-page .mt-table-container{max-width:100%;box-sizing:border-box}
+@media(max-width:650px){
+  #main-view.sam-page-shell{padding:0!important}
+  #main-view.sam-page-shell>.sam-ui-page{padding:8px 8px calc(84px + env(safe-area-inset-bottom,0px))!important}
+  #main-view.sam-page-shell>.sam-ui-page>.view-scroll-content{padding:8px 0 0!important}
+  #main-view.sam-page-shell .mt-table-container{overflow-x:auto!important;overflow-y:visible!important}
+}

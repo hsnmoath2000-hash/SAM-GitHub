@@ -1,0 +1,29 @@
+/* Channel settings UI: clear status, credentials and actions without changing business logic. */
+.channel-settings-shell { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-bottom:16px; }
+.channel-settings-card { position:relative; overflow:hidden; border:1px solid #d9e3ea; border-radius:16px; background:#fff; box-shadow:0 8px 24px rgba(30,55,72,.07); }
+.channel-settings-card::before { content:""; display:block; height:4px; background:linear-gradient(90deg,#0f9d8a,#55c7b7); }
+.channel-settings-card.tg-card::before { background:linear-gradient(90deg,#1687c8,#61b9e8); }
+.channel-settings-card .channel-card-inner { padding:18px; }
+.channel-settings-card .channel-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+.channel-settings-card .channel-title h3 { margin:0; color:#17324a; font-size:15px; font-weight:800; }
+.channel-settings-card .channel-title p { margin:4px 0 0; color:#6b7d8b; font-size:11px; }
+.channel-status-summary { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border:1px solid #e3ebef; border-radius:10px; background:#f7fafb; margin-bottom:14px; font-size:12px; }
+.channel-status-summary .status-label { color:#607482; }
+.channel-status-summary .status-value { font-weight:800; color:#087b6c; }
+.channel-settings-card.tg-card .channel-status-summary .status-value { color:#1675aa; }
+.channel-credential-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.channel-credential-grid .form-group { margin:0 !important; }
+.channel-credential-grid label { display:block; margin-bottom:5px; color:#49616e; font-size:11px; font-weight:800; }
+.channel-credential-grid input { min-height:40px; border:1px solid #cbd9df; border-radius:9px; background:#fff; padding:8px 10px; font-size:12px; }
+.channel-credential-grid input:focus { border-color:#0f9d8a; outline:3px solid rgba(15,157,138,.12); }
+.channel-settings-card.tg-card .channel-credential-grid input:focus { border-color:#1687c8; outline-color:rgba(22,135,200,.12); }
+.channel-action-row { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid #edf2f4; }
+.channel-action-row .channel-action-note { margin-inline-end:auto; color:#78909c; font-size:10.5px; }
+.channel-action-row button { min-height:36px; border-radius:8px; font-weight:800; }
+.channel-test-result { display:none; margin-top:10px; padding:9px 11px; border-radius:9px; font-size:11px; line-height:1.5; }
+.channel-test-result.visible { display:block; }
+.channel-test-result.ok { color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; }
+.channel-test-result.fail { color:#991b1b; background:#fef2f2; border:1px solid #fecaca; }
+#wa-qr-container { border-color:#b9e8df !important; background:#f4fbf9 !important; }
+@media (max-width:760px) { .channel-settings-shell { grid-template-columns:1fr; gap:12px; } .channel-settings-card .channel-card-inner { padding:14px; } }
+@media (max-width:480px) { .channel-credential-grid { grid-template-columns:1fr; } .channel-action-row { align-items:stretch; flex-direction:column; } .channel-action-row .channel-action-note { margin:0; } .channel-action-row button { width:100%; } }

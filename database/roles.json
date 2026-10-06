@@ -1,0 +1,259 @@
+[
+  {
+    "role_key": "superadmin",
+    "role_name_ar": "المدير العام",
+    "description": "كامل الصلاحيات دون قيود",
+    "permissions": [
+      "*"
+    ],
+    "is_system": 1,
+    "default_data_scope": "all"
+  },
+  {
+    "role_key": "partner",
+    "role_name_ar": "شريك الشبكة",
+    "description": "صلاحيات التقارير المالية ومبيعات المنافذ والراوترات ونسبة الأرباح",
+    "permissions": [
+      "dashboard",
+      "financial_reports",
+      "port_analytics",
+      "routers",
+      "logs"
+    ],
+    "is_system": 1,
+    "default_data_scope": "all"
+  },
+  {
+    "role_key": "main_node_owner",
+    "role_name_ar": "نقطة أساسية",
+    "description": "إدارة ومتابعة الأصول والمعدات في النقطة وتقارير الاستهلاك والكروت المجانية",
+    "permissions": [
+      "free_vouchers"
+    ],
+    "is_system": 1,
+    "default_data_scope": "own"
+  },
+  {
+    "role_key": "sub_node_owner",
+    "role_name_ar": "نقطة فرعية",
+    "description": "متابعة استهلاك الجلسات في النقطة والكروت المجانية الممنوحة",
+    "permissions": [
+      "free_vouchers"
+    ],
+    "is_system": 1,
+    "default_data_scope": "own"
+  },
+  {
+    "role_key": "distributor",
+    "role_name_ar": "موزع كروت",
+    "description": "إدارة كروته ومخزونه ورصيده ومبيعاته ونقاط البيع والعملاء التابعين له فقط",
+    "permissions": [
+      "sales",
+      "sales_create_invoice",
+      "sales_invoice_pay",
+      "card_warehouses",
+      "free_vouchers",
+      "free_vouchers_grant",
+      "cashbox_accounts",
+      "vouchers_fin",
+      "vouchers_receipt_create",
+      "admins_agents",
+      "ui_customizer",
+      "sales_sell_paper_cards",
+      "instant_balance_sell",
+      "instant_balance_issue_voucher",
+      "instant_balance_transfer",
+      "admins_view",
+      "admins_add",
+      "admins_edit",
+      "admins_statement"
+    ],
+    "is_system": 1,
+    "default_data_scope": "children"
+  },
+  {
+    "role_key": "pos_agent",
+    "role_name_ar": "نقطة بيع",
+    "description": "إدارة كروته ومخزونه ورصيده ومبيعاته وعملائه وطلبات شحنه فقط",
+    "permissions": [
+      "sales",
+      "sales_create_invoice",
+      "card_warehouses",
+      "vouchers_fin",
+      "sales_sell_paper_cards",
+      "instant_balance_sell",
+      "instant_balance_issue_voucher",
+      "admins_view",
+      "admins_add",
+      "admins_statement",
+      "subscriber_portal"
+    ],
+    "is_system": 1,
+    "default_data_scope": "children"
+  },
+  {
+    "role_key": "finance",
+    "role_name_ar": "إدارة ومالية",
+    "description": "الحسابات والسندات والصناديق والقيود والتقارير المالية دون إعدادات الشبكة أو مخزون الكروت",
+    "permissions": [
+      "dashboard",
+      "cashbox_accounts",
+      "vouchers_fin",
+      "financial_reports",
+      "sales",
+      "exchange_rates",
+      "finance_settings"
+    ],
+    "is_system": 1,
+    "default_data_scope": "own"
+  },
+  {
+    "role_key": "maintenance",
+    "role_name_ar": "مهندس صيانة",
+    "description": "الأصول والأعطال والراوترات والعقد وحالة الشبكة وسجل الصيانة ضمن النطاق المسند فقط",
+    "permissions": [
+      "routers",
+      "network_nodes",
+      "noc",
+      "assets"
+    ],
+    "is_system": 1,
+    "default_data_scope": "assigned"
+  },
+  {
+    "role_key": "vip",
+    "role_name_ar": "شخصية مهمة (VIP)",
+    "description": "عرض رصيد واستهلاك الكروت المجانية المخصصة",
+    "permissions": [
+      "free_vouchers"
+    ],
+    "is_system": 1,
+    "default_data_scope": "own"
+  },
+  {
+    "role_key": "accountant",
+    "role_name_ar": "محاسب",
+    "description": "الحسابات والسندات والصناديق والقيود والتقارير المالية دون إعدادات الشبكة أو مخزون الكروت",
+    "permissions": [
+      "dashboard",
+      "cashbox_accounts",
+      "vouchers_fin",
+      "financial_reports",
+      "sales",
+      "exchange_rates"
+    ],
+    "is_system": 1,
+    "default_data_scope": "own"
+  },
+  {
+    "role_key": "supervisor",
+    "role_name_ar": "مشرف",
+    "description": "دور محافظ؛ تُضاف الصلاحيات المطلوبة من شاشة الأدوار",
+    "permissions": [
+      "dashboard"
+    ],
+    "is_system": 1,
+    "default_data_scope": "own"
+  },
+  {
+    "role_key": "admin2",
+    "role_name_ar": "مدير الشبكات",
+    "description": "",
+    "permissions": [
+      "users",
+      "users_add",
+      "users_batch_gen",
+      "users_print",
+      "users_import",
+      "users_export",
+      "users_disable",
+      "profiles",
+      "templates",
+      "sales",
+      "sales_create_invoice",
+      "sales_transfer_sheets",
+      "sales_invoice_pay",
+      "sales_invoice_return",
+      "card_warehouses",
+      "warehouse_stock_transfer",
+      "warehouse_stock_return",
+      "free_vouchers",
+      "free_vouchers_grant",
+      "free_vouchers_schedule_add",
+      "free_vouchers_schedule_run",
+      "free_vouchers_schedule_delete",
+      "cashbox_accounts",
+      "exchange_rates",
+      "vouchers_fin",
+      "vouchers_receipt_create",
+      "vouchers_payment_create",
+      "expenses_disburse_any_account",
+      "chart_of_accounts",
+      "journal_entries",
+      "trial_balance",
+      "financial_reports",
+      "partners_equity",
+      "salaries_payroll",
+      "sales_sell_paper_cards",
+      "instant_balance_sell",
+      "instant_balance_issue_voucher",
+      "instant_balance_transfer",
+      "instant_balance_initial_grant",
+      "routers",
+      "routers_reboot",
+      "sstp_vpn",
+      "network_nodes",
+      "port_analytics",
+      "noc",
+      "active_sessions",
+      "sessions_disconnect",
+      "assets",
+      "assets_delete",
+      "assets_price_edit",
+      "admins_agents",
+      "admins_view",
+      "admins_add",
+      "admins_edit",
+      "admins_statement",
+      "admins_permissions_edit",
+      "admins_hierarchy_edit",
+      "admins_financial_limits_edit",
+      "notifications",
+      "whatsapp_manager",
+      "chatbot_manage",
+      "chatbot_rules_edit",
+      "message_queue_dispatch",
+      "notifications_logs_view",
+      "notifications_send",
+      "notifications_resend",
+      "notifications_settings",
+      "admins_agents",
+      "ui_customizer",
+      "subscriber_portal",
+      "backups",
+      "logs"
+    ],
+    "is_system": 1,
+    "default_data_scope": "all"
+  },
+  {
+    "role_key": "agent",
+    "role_name_ar": "عميل",
+    "description": "تفاصيل كروته وشبكته وباقاته ورصيده واستهلاكه وجلساته وفواتيره فقط",
+    "permissions": [
+      "subscriber_portal"
+    ],
+    "is_system": 1,
+    "default_data_scope": "own"
+  },
+  {
+    "role_key": "system_owner",
+    "role_name_ar": "مالك النظام",
+    "description": "المالك الفريد للنظام وصاحب أعلى سلطة إدارية وتقنية",
+    "permissions": [
+      "*"
+    ],
+    "is_system": 1,
+    "default_data_scope": "all"
+  }
+]

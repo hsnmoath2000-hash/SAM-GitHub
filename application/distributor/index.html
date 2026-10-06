@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الموزعين والوكلاء | MikroTik Reseller Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1565c0;
+            --primary-dark: #0d47a1;
+            --secondary: #00838f;
+            --success: #2e7d32;
+            --danger: #c62828;
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #1a202c;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+        /* Login Screen */
+        .login-wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-box {
+            background: #fff;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .login-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .login-header h2 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+        .login-body { padding: 30px 25px; }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.15); }
+
+        .btn-login {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-login:hover { background: var(--primary-dark); }
+
+        /* Portal Main View */
+        .portal-main { display: none; }
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .topbar-title { font-weight: 800; font-size: 18px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+
+        .content { max-width: 1200px; margin: 25px auto; padding: 0 20px; }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+        .kpi-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        .kpi-val { font-size: 22px; font-weight: 800; }
+        .kpi-lbl { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+
+        .panel {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .panel-title { font-weight: 700; font-size: 16px; }
+
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table th, .data-table td { padding: 10px 14px; text-align: right; border-bottom: 1px solid var(--border); }
+        .data-table th { background: #f8fafc; font-weight: 700; color: var(--text-muted); }
+
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .badge-success { background: #e8f5e9; color: var(--success); }
+        .badge-danger { background: #ffebee; color: var(--danger); }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="loginView" class="login-wrap">
+        <div class="login-box">
+            <div class="login-header">
+                <h2>📱 بوابة الموزعين والوكلاء</h2>
+                <p>سجل دخولك لمتابعة حسابك ومخزون الكروت الخاص بك</p>
+            </div>
+            <div class="login-body">
+                <div id="loginError" style="display:none; background:#ffebee; color:#c62828; padding:10px; border-radius:8px; font-size:12px; margin-bottom:15px; text-align:center; font-weight:700;"></div>
+                <div class="form-group">
+                    <label>اسم المستخدم أو رقم الهاتف:</label>
+                    <input type="text" id="distUser" class="form-control" placeholder="اسم المستخدم أو الهاتف" autofocus>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور:</label>
+                    <input type="password" id="distPass" class="form-control" placeholder="••••••••">
+                </div>
+                <button class="btn-login" onclick="doDistributorLogin()">تسجيل الدخول</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MAIN DISTRIBUTOR DASHBOARD -->
+    <div id="mainView" class="portal-main">
+        <div class="topbar">
+            <div class="topbar-title">
+                <span>📱 بوابة الموزع: </span>
+                <span id="distributorName" style="color:var(--text-main);">--</span>
+            </div>
+            <div>
+                <button onclick="logoutDistributor()" style="background:#fff; border:1px solid var(--border); padding:6px 14px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:700; color:var(--danger);">تسجيل الخروج 🚪</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- KPI CARDS -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background:#e8f5e9; color:var(--success);">💰</div>
+                    <div>
+                        <div class="kpi-val" id="kpiBalance">0.00</div>
+                        <div class="kpi-lbl">الرصيد المالي للحساب (ريال)</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background:#e3f2fd; color:var(--primary);">📦</div>
+                    <div>
+                        <div class="kpi-val" id="kpiTotal">0</div>
+                        <div class="kpi-lbl">إجمالي الكروت المستلمة</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background:#fff3e0; color:var(--secondary);">🏷️</div>
+                    <div>
+                        <div class="kpi-val" id="kpiSold">0</div>
+                        <div class="kpi-lbl">الكروت المباعة / المفعلة</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background:#f3e5f5; color:#7b1fa2;">📑</div>
+                    <div>
+                        <div class="kpi-val" id="kpiUnsold">0</div>
+                        <div class="kpi-lbl">الكروت المتبقية في العهدة</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATEMENT PANEL -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">📜 كشف الحساب المالي (Statement of Account)</div>
+                    <button onclick="loadDashboard()" style="background:#f0f4f8; border:1px solid var(--border); padding:4px 10px; border-radius:6px; font-size:12px; cursor:pointer;">⟳ تحديث</button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>رقم المرجع / الفاتورة</th>
+                                <th>البيان / الحركة</th>
+                                <th>مدين (عليك)</th>
+                                <th>دائن (لك)</th>
+                                <th>التاريخ والوقت</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statementTbody">
+                            <tr><td colspan="6" style="text-align:center; color:var(--text-muted);">جاري تحميل كشف الحساب...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('distPass').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') doDistributorLogin();
+        });
+
+        async function doDistributorLogin() {
+            const u = document.getElementById('distUser').value.trim();
+            const p = document.getElementById('distPass').value.trim();
+            const err = document.getElementById('loginError');
+
+            if (!u || !p) {
+                err.innerText = 'يرجى إدخال اسم المستخدم وكلمة المرور';
+                err.style.display = 'block';
+                return;
+            }
+
+            try {
+                const res = await fetch('../api.php?action=distributor_login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    sessionStorage.setItem('dist_user', JSON.stringify(data.distributor));
+                    showMainView(data.distributor);
+                } else {
+                    err.innerText = data.error || 'فشل تسجيل الدخول';
+                    err.style.display = 'block';
+                }
+            } catch (e) {
+                err.innerText = 'خطأ في الاتصال بالسيرفر';
+                err.style.display = 'block';
+            }
+        }
+
+        function showMainView(dist) {
+            document.getElementById('loginView').style.display = 'none';
+            document.getElementById('mainView').style.display = 'block';
+            document.getElementById('distributorName').innerText = dist.name;
+            loadDashboard();
+        }
+
+        async function loadDashboard() {
+            try {
+                const [dashRes, stmtRes] = await Promise.all([
+                    fetch('../api.php?action=distributor_get_dashboard').then(r => r.json()),
+                    fetch('../api.php?action=distributor_get_statement').then(r => r.json())
+                ]);
+
+                if (dashRes.success) {
+                    document.getElementById('kpiBalance').innerText = parseFloat(dashRes.balance).toLocaleString('en-US', { minimumFractionDigits: 2 });
+                    document.getElementById('kpiTotal').innerText = dashRes.total_cards.toLocaleString();
+                    document.getElementById('kpiSold').innerText = dashRes.sold_cards.toLocaleString();
+                    document.getElementById('kpiUnsold').innerText = dashRes.unsold_cards.toLocaleString();
+                }
+
+                if (stmtRes.success) {
+                    const tbody = document.getElementById('statementTbody');
+                    const items = stmtRes.statement || [];
+                    if (items.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">لا توجد حركات مالية مسجلة بعد</td></tr>';
+                    } else {
+                        tbody.innerHTML = items.map((st, i) => `
+                            <tr>
+                                <td>${i + 1}</td>
+                                <td><b>${st.ref_no || '-'}</b></td>
+                                <td>${st.type}</td>
+                                <td style="color:var(--danger); font-weight:700;">${st.debit > 0 ? parseFloat(st.debit).toLocaleString() : '-'}</td>
+                                <td style="color:var(--success); font-weight:700;">${st.credit > 0 ? parseFloat(st.credit).toLocaleString() : '-'}</td>
+                                <td><small class="text-muted">${st.created_at}</small></td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function logoutDistributor() {
+            sessionStorage.removeItem('dist_user');
+            window.location.reload();
+        }
+
+        // Auto check session
+        const savedDist = sessionStorage.getItem('dist_user');
+        if (savedDist) {
+            showMainView(JSON.parse(savedDist));
+        }
+    </script>
+</body>
+</html>

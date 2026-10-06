@@ -1,0 +1,4 @@
+.quick-table-export-actions { display:inline-flex; align-items:center; gap:5px; flex:0 0 auto; }
+.quick-table-export-btn { min-height:30px; padding:5px 8px; border:1px solid #b8e6dc; border-radius:7px; background:#e5f6f2; color:#087b6c; font-size:11px; font-weight:900; cursor:pointer; }
+.quick-table-export-btn:hover { background:#0f9d8a; color:#fff; }
+@media (max-width:640px) { .quick-table-export-actions { gap:4px; } .quick-table-export-btn { min-height:36px; padding-inline:8px; } }

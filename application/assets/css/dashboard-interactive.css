@@ -1,0 +1,13 @@
+.md-insight-panel { margin:0 18px 18px; padding:18px 20px; background:#fff; border:1px solid #e3eaf2; border-radius:14px; box-shadow:0 4px 14px rgba(38,50,56,.08); }
+.md-insight-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:18px; }
+.md-insight-head h3 { margin:0; color:#263238; font-size:16px; font-weight:900; }
+.md-insight-head p { margin:4px 0 0; color:#78909c; font-size:12px; }
+.md-insight-time { color:#90a4ae; font-size:11px; font-weight:800; }
+.md-insight-bars { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+.md-insight-row { min-width:0; }
+.md-insight-label { display:flex; justify-content:space-between; gap:8px; color:#607d8b; font-size:12px; font-weight:800; margin-bottom:9px; }
+.md-insight-label b { color:#263238; white-space:nowrap; }
+.md-insight-track { height:9px; overflow:hidden; border-radius:999px; background:#edf2f7; }
+.md-insight-track span { display:block; height:100%; border-radius:999px; background:var(--bar-color); transition:width .8s cubic-bezier(.2,.7,.2,1); }
+@media (max-width:900px) { .md-insight-bars { grid-template-columns:repeat(2,minmax(0,1fr)); } .md-insight-panel { margin-inline:12px; } }
+@media (max-width:560px) { .md-insight-panel { margin-inline:12px; padding:14px; } .md-insight-bars { grid-template-columns:1fr; gap:13px; } }

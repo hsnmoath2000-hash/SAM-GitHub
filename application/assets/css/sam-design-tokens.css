@@ -1,0 +1,151 @@
+/**
+ * SAM Network Manager - Unified Design Tokens
+ * ==============================================================================
+ * Central source of truth for colors, typography, spacing, elevations, and radii.
+ * Fully compatible with legacy Winbox themes and modern SamUI modules.
+ * ==============================================================================
+ */
+
+:root {
+  /* --- Brand & Primary Colors --- */
+  --sam-primary: #0f766e;
+  --sam-primary-hover: #115e59;
+  --sam-primary-active: #134e4a;
+  --sam-primary-light: #f0fdfa;
+  --sam-primary-subtle: #ccfbf1;
+  --sam-primary-border: #99f6e4;
+  --sam-primary-ring: rgba(15, 118, 110, 0.18);
+
+  /* --- Secondary & Accents --- */
+  --sam-secondary: #0284c7;
+  --sam-secondary-hover: #0369a1;
+  --sam-secondary-light: #f0f9ff;
+  --sam-secondary-subtle: #e0f2fe;
+
+  /* --- Semantic Feedback Colors --- */
+  --sam-success: #16a34a;
+  --sam-success-hover: #15803d;
+  --sam-success-light: #f0fdf4;
+  --sam-success-subtle: #dcfce7;
+  --sam-success-border: #bbf7d0;
+
+  --sam-warning: #f59e0b;
+  --sam-warning-hover: #d97706;
+  --sam-warning-light: #fffbeb;
+  --sam-warning-subtle: #fef3c7;
+  --sam-warning-border: #fde68a;
+
+  --sam-danger: #dc2626;
+  --sam-danger-hover: #b91c1c;
+  --sam-danger-light: #fef2f2;
+  --sam-danger-subtle: #fee2e2;
+  --sam-danger-border: #fecaca;
+
+  --sam-info: #0284c7;
+  --sam-info-hover: #0369a1;
+  --sam-info-light: #f0f9ff;
+  --sam-info-subtle: #e0f2fe;
+
+  /* --- Surface & Neutral Palette --- */
+  --sam-bg-body: #f8fafc;
+  --sam-bg-surface: #ffffff;
+  --sam-bg-surface-alt: #f1f5f9;
+  --sam-bg-surface-muted: #e2e8f0;
+  --sam-bg-sidebar: #0f172a;
+  --sam-bg-sidebar-hover: #1e293b;
+  --sam-bg-header: #102e45;
+
+  /* --- Borders --- */
+  --sam-border: #e2e8f0;
+  --sam-border-strong: #cbd5e1;
+  --sam-border-light: #f1f5f9;
+
+  /* --- Text Colors --- */
+  --sam-text: #0f172a;
+  --sam-text-secondary: #334155;
+  --sam-text-muted: #64748b;
+  --sam-text-subtle: #94a3b8;
+  --sam-text-inverse: #ffffff;
+
+  /* --- Typography --- */
+  --sam-font-sans: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --sam-font-mono: 'Roboto Mono', 'SFMono-Regular', Consolas, monospace;
+
+  --sam-text-xs: 11px;
+  --sam-text-sm: 12.5px;
+  --sam-text-base: 14px;
+  --sam-text-md: 15px;
+  --sam-text-lg: 18px;
+  --sam-text-xl: 22px;
+  --sam-text-2xl: 26px;
+
+  /* --- Spacing Scale --- */
+  --sam-space-1: 4px;
+  --sam-space-2: 8px;
+  --sam-space-3: 12px;
+  --sam-space-4: 16px;
+  --sam-space-5: 20px;
+  --sam-space-6: 24px;
+  --sam-space-8: 32px;
+  --sam-space-10: 40px;
+
+  /* --- Radii --- */
+  --sam-radius-xs: 3px;
+  --sam-radius-sm: 6px;
+  --sam-radius-md: 8px;
+  --sam-radius-lg: 12px;
+  --sam-radius-xl: 16px;
+  --sam-radius-pill: 9999px;
+
+  /* --- Shadows --- */
+  --sam-shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --sam-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.07), 0 1px 2px rgba(15, 23, 42, 0.03);
+  --sam-shadow-md: 0 4px 8px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+  --sam-shadow-lg: 0 10px 20px -3px rgba(15, 23, 42, 0.09), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+  --sam-shadow-modal: 0 20px 45px -10px rgba(15, 23, 42, 0.25), 0 10px 20px -8px rgba(15, 23, 42, 0.15);
+
+  /* --- Heights & Touch Targets --- */
+  --sam-btn-h: 38px;
+  --sam-btn-sm-h: 30px;
+  --sam-btn-lg-h: 44px;
+  --sam-input-h: 40px;
+  --sam-topbar-h: 56px;
+
+  /* --- Transitions --- */
+  --sam-transition-fast: 0.12s ease;
+  --sam-transition-base: 0.2s ease;
+  --sam-transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ==========================================================================
+     BACKWARDS COMPATIBILITY LAYER FOR LEGACY WINBOX & SAM STYLES
+     ========================================================================== */
+  --primary-color: var(--sam-primary);
+  --primary-hover: var(--sam-primary-hover);
+  --accent-blue: var(--sam-secondary);
+  --accent-green: var(--sam-success);
+  --accent-red: var(--sam-danger);
+  --accent-orange: var(--sam-warning);
+  --bg-window: var(--sam-bg-surface);
+  --bg-body: var(--sam-bg-body);
+  --bg-card: var(--sam-bg-surface);
+  --border-color: var(--sam-border);
+  --text-primary: var(--sam-text);
+  --text-secondary: var(--sam-text-secondary);
+  --text-muted: var(--sam-text-muted);
+  --radius-sm: var(--sam-radius-sm);
+  --radius-md: var(--sam-radius-md);
+  --radius-lg: var(--sam-radius-lg);
+  --shadow-card: var(--sam-shadow-sm);
+}
+
+/* Dark Mode Tokens (Ready for toggling if needed) */
+[data-theme="dark"] {
+  --sam-bg-body: #0b1120;
+  --sam-bg-surface: #1e293b;
+  --sam-bg-surface-alt: #334155;
+  --sam-border: #334155;
+  --sam-border-strong: #475569;
+  --sam-text: #f8fafc;
+  --sam-text-secondary: #cbd5e1;
+  --sam-text-muted: #94a3b8;
+}

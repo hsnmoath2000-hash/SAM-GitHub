@@ -1,0 +1,250 @@
+{
+  "menus": [
+    {
+      "id": "dashboard",
+      "label": "الرئيسية والمؤشرات",
+      "icon": "📊",
+      "permission": "dashboard"
+    },
+    {
+      "id": "subscriber_portal",
+      "label": "بوابة المشتركين والكرت",
+      "icon": "📱",
+      "permission": "subscriber_portal"
+    },
+    {
+      "id": "sales",
+      "label": "فواتير المبيعات ونقاط البيع (POS)",
+      "icon": "🛒",
+      "permission": "sales"
+    },
+    {
+      "id": "purchase_invoices",
+      "label": "المشتريات وفواتير الموردين",
+      "icon": "🧾",
+      "permission": "purchase_invoices"
+    },
+    {
+      "id": "instant_balance",
+      "label": "الرصيد الفوري والمبيعات الرقمية",
+      "icon": "💳",
+      "permission": "instant_balance"
+    },
+    {
+      "id": "card_warehouses",
+      "label": "مخازن الكروت والعهد",
+      "icon": "🏢",
+      "permission": "card_warehouses"
+    },
+    {
+      "id": "users",
+      "label": "كروت الانترنت والمشتركون",
+      "icon": "🎫",
+      "permission": "users"
+    },
+    {
+      "id": "batch_gen",
+      "label": "توليد الكروت بالدفعات",
+      "icon": "⚡",
+      "permission": "batch_gen"
+    },
+    {
+      "id": "profiles",
+      "label": "باقات وسرعات الخدمة",
+      "icon": "📦",
+      "permission": "profiles"
+    },
+    {
+      "id": "free_vouchers",
+      "label": "🎁 الكروت المجانية و VIP",
+      "icon": "🎁",
+      "permission": "free_vouchers"
+    },
+    {
+      "id": "templates",
+      "label": "تصاميم وقوالب الطباعة",
+      "icon": "🎨",
+      "permission": "templates"
+    },
+    {
+      "id": "exchange_rates",
+      "label": "أسعار الصرف وتعدد العملات",
+      "icon": "💱",
+      "permission": "exchange_rates"
+    },
+    {
+      "id": "vouchers_fin",
+      "label": "سندات القبض والصرف",
+      "icon": "🧾",
+      "permission": "vouchers_fin"
+    },
+    {
+      "id": "cashbox_accounts",
+      "label": "الصناديق والخزائن والحسابات",
+      "icon": "💰",
+      "permission": "cashbox_accounts"
+    },
+    {
+      "id": "chart_of_accounts",
+      "label": "دليل وشجرة الحسابات",
+      "icon": "🏢",
+      "permission": "chart_of_accounts"
+    },
+    {
+      "id": "journal_entries",
+      "label": "قيود اليومية العامة",
+      "icon": "📑",
+      "permission": "journal_entries"
+    },
+    {
+      "id": "trial_balance",
+      "label": "ميزان المراجعة والأستاذ",
+      "icon": "⚖️",
+      "permission": "trial_balance"
+    },
+    {
+      "id": "cost_centers",
+      "label": "مراكز التكلفة والراوترات",
+      "icon": "🎯",
+      "permission": "cost_centers"
+    },
+    {
+      "id": "partners_equity",
+      "label": "الشركاء وتوزيع الأرباح",
+      "icon": "👥",
+      "permission": "partners_equity"
+    },
+    {
+      "id": "salaries_payroll",
+      "label": "مسيرات ورواتب الموظفين",
+      "icon": "💵",
+      "permission": "salaries_payroll"
+    },
+    {
+      "id": "operating_expenses",
+      "label": "المصروفات التشغيلية والدورية",
+      "icon": "🧾",
+      "permission": "operating_expenses"
+    },
+    {
+      "id": "sales_channel_reports",
+      "label": "مبيعات القنوات ونقاط البيع",
+      "icon": "🏪",
+      "permission": "sales_channel_reports"
+    },
+    {
+      "id": "financial_reports",
+      "label": "التقارير المالية وقوائم الأرباح (P&L)",
+      "icon": "📊",
+      "permission": "financial_reports"
+    },
+    {
+      "id": "port_analytics",
+      "label": "مبيعات واستهلاك المنافذ",
+      "icon": "🌐",
+      "permission": "port_analytics"
+    },
+    {
+      "id": "reports_center",
+      "label": "مركز التقارير والطباعة",
+      "icon": "🖨️",
+      "permission": "reports_center"
+    },
+    {
+      "id": "logs",
+      "label": "سجلات العمليات والتدقيق",
+      "icon": "📜",
+      "permission": "logs"
+    },
+    {
+      "id": "routers",
+      "label": "أجهزة الراوتر (NAS)",
+      "icon": "🌐",
+      "permission": "routers"
+    },
+    {
+      "id": "hotspot_designer",
+      "label": "🎨 إعداد وتخصيص صفحة الهوتسبوت",
+      "icon": "🎨",
+      "permission": "hotspot_designer"
+    },
+    {
+      "id": "assets",
+      "label": "إدارة الأصول ومعدات الشبكة",
+      "icon": "📡",
+      "permission": "assets"
+    },
+    {
+      "id": "network_nodes",
+      "label": "هيكلية ونقاط الشبكة",
+      "icon": "🌳",
+      "permission": "network_nodes"
+    },
+    {
+      "id": "sstp_vpn",
+      "label": "خادم نفق SSTP VPN",
+      "icon": "🔒",
+      "permission": "sstp_vpn"
+    },
+    {
+      "id": "noc",
+      "label": "مراقبة الشبكة (NOC)",
+      "icon": "📊",
+      "permission": "noc"
+    },
+    {
+      "id": "active_sessions",
+      "label": "الجلسات المباشرة المتصلة",
+      "icon": "🔴",
+      "permission": "active_sessions"
+    },
+    {
+      "id": "admins_agents",
+      "label": "المستخدمون والوكلاء والموزعون",
+      "icon": "👔",
+      "permission": "admins_agents"
+    },
+    {
+      "id": "roles_permissions",
+      "label": "مصفوفة الرتب والصلاحيات (RBAC)",
+      "icon": "🛡️",
+      "permission": "roles_permissions"
+    },
+    {
+      "id": "notifications",
+      "label": "إدارة الرسائل والتنبيهات (واتساب)",
+      "icon": "💬",
+      "permission": "notifications"
+    },
+    {
+      "id": "whatsapp_manager",
+      "label": "إدارة واعتماد قوالب الواتساب",
+      "icon": "📱",
+      "permission": "whatsapp_manager"
+    },
+    {
+      "id": "networks_partnerships",
+      "label": "الشبكات والشراكات المتعددة",
+      "icon": "🌐",
+      "permission": "networks_partnerships"
+    },
+    {
+      "id": "backups",
+      "label": "النسخ الاحتياطي وتليجرام",
+      "icon": "💾",
+      "permission": "backups"
+    },
+    {
+      "id": "ui_customizer",
+      "label": "تخصيص الواجهة واللوحة",
+      "icon": "🎨",
+      "permission": "ui_customizer"
+    },
+    {
+      "id": "network_setup",
+      "label": "مركز إعداد الشبكة",
+      "icon": "⚙️",
+      "permission": "network_setup"
+    }
+  ]
+}

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز تحميل تطبيقات المنظومة | SAM Network Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1322;
+            --bg-card: #151f32;
+            --bg-card-hover: #1a273f;
+            --border: #23334d;
+            --primary: #0284c7;
+            --primary-glow: rgba(2, 132, 199, 0.35);
+            --accent: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.3);
+            --purple: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --radius: 16px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(180deg, #0b1120 0%, #0f172a 50%, #070c18 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px 16px 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 860px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 10px 0 10px;
+        }
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            background: rgba(2, 132, 199, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            font-size: 34px;
+            margin-bottom: 12px;
+            box-shadow: 0 10px 30px var(--primary-glow);
+        }
+        .title {
+            font-size: 26px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 16px;
+        }
+        
+        .app-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+        }
+        .app-card:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+        }
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+        .app-card.card-pos::before {
+            background: linear-gradient(90deg, #0284c7, #38bdf8);
+        }
+        .app-card.card-hotspot::before {
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+        .app-card.card-pwa::before {
+            background: linear-gradient(90deg, #8b5cf6, #c084fc);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .app-icon-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+        }
+        .app-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.3;
+        }
+        .app-role {
+            font-size: 11.5px;
+            color: #38bdf8;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+        .app-desc {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .features-list {
+            list-style: none;
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .features-list li {
+            font-size: 12px;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .features-list li::before {
+            content: '✓';
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        .btn-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.3);
+            transition: all 0.2s ease;
+        }
+        .btn-download:hover {
+            background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(2, 132, 199, 0.4);
+        }
+        .btn-download.btn-green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: rgba(52, 211, 153, 0.4);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+        .btn-download.btn-green:hover {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+        .btn-download.btn-purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            border-color: rgba(192, 132, 252, 0.4);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .quick-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            color: #fff;
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .server-pkg-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/arabic-fonts-local.css">
+    <link rel="stylesheet" href="assets/css/subscriber-accessibility.css">
+</head>
+<body>
+<div class="container">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-badge">📲</div>
+        <h1 class="title">مركز تحميل وتثبيت التطبيقات</h1>
+        <p class="subtitle">
+            حمل تطبيقات منظومة SAM الأصلية مباشرة على هاتفك أو ثبّت النظام كتطبيق ويب فوري لسرعة وكفاءة مطلقة.
+        </p>
+    </header>
+
+    <!-- Navigation Shortcuts -->
+    <div class="quick-nav">
+        <a href="index.php" class="nav-btn">🏢 لوحة التحكم الرئيسية</a>
+        <a href="hotspot-portal.php" class="nav-btn">📶 صفحة الهوتسبوت</a>
+        <a href="services.html" class="nav-btn">🌟 دليل خدمات النظام</a>
+    </div>
+
+    <!-- Apps Grid -->
+    <div class="grid">
+
+        <!-- App 1: Admin & POS App -->
+        <div class="app-card card-pos">
+            <div>
+                <div class="card-top">
+                    <div class="app-icon-wrap" style="color:#38bdf8; background:rgba(2,132,199,0.15); border-color:rgba(56,189,248,0.3);">🖨️</div>
+                    <div>
+                        <h2 class="app-name">تطبيق الإدارة ونقاط البيع</h2>
+                        <div class="app-role">للإدارة والموزعين والكاشير</div>
+                    </div>
+                </div>
+                <p class="app-desc">
+                    تطبيق أصلي للأندرويد مجهز بطباعة الفواتير والكروت عبر البلوتوث مع أيقونة سريعة لتغيير وضبط السيرفر.
+                </p>
+                <ul class="features-list">
+                    <li>طباعة فورية عبر طابعات البلوتوث (58mm / 80mm).</li>
+                    <li>مسح باركود و QR الكروت والفواتير بالكاميرا.</li>
+                    <li>أيقونة عائمة ⚙️ للتبديل بين السيرفر المحلي والسحابي.</li>
+                    <li>حماية العمليات وتنبيهات انقطاع الاتصال.</li>
+                </ul>
+            </div>
+            <div>
+                <a href="downloads/sam-pos-admin.apk" class="btn-download" download>
+                    <span>📥</span>
+                    <span>تحميل تطبيق الإدارة (APK)</span>
+                </a>
+                <div class="meta-info">
+                    <span>الإصدار: v1.0.0 (Release)</span>
+                    <span>الحجم: 5.3 MB</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- App 2: Hotspot Client App -->
+        <div class="app-card card-hotspot">
+            <div>
+                <div class="card-top">
+                    <div class="app-icon-wrap" style="color:#34d399; background:rgba(16,185,129,0.15); border-color:rgba(52,211,153,0.3);">📶</div>
+                    <div>
+                        <h2 class="app-name">تطبيق المشتركين للهوتسبوت</h2>
+                        <div class="app-role">لزبائن ومستخدمي الواي فاي</div>
+                    </div>
+                </div>
+                <p class="app-desc">
+                    تطبيق المشتركين المخصص للاتصال التلقائي بالواي فاي، ومتابعة الرصيد المتبقي وتشغيل البث المباشر.
+                </p>
+                <ul class="features-list">
+                    <li>تسجيل الدخول التلقائي وحفظ الجلسة.</li>
+                    <li>عرض الرصيد والوقت المتبقي بدقة لحظية.</li>
+                    <li>مسح كروت QR بكاميرا الهاتف وتعبئتها آلياً.</li>
+                    <li>مشغل فيديو مدمج (ExoPlayer) لقنوات البث والأفلام.</li>
+                    <li>إشعارات تنبيه عند قرب انتهاء الباقة.</li>
+                </ul>
+            </div>
+            <div>
+                <a href="downloads/sam-hotspot-client.apk" class="btn-download btn-green" download>
+                    <span>📥</span>
+                    <span>تحميل تطبيق المشتركين (APK)</span>
+                </a>
+                <div class="meta-info">
+                    <span>الإصدار: v1.2.6 (Fast Client)</span>
+                    <span>الحجم: 155 KB</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- App 3: PWA Instant Install (Web App) -->
+        <div class="app-card card-pwa">
+            <div>
+                <div class="card-top">
+                    <div class="app-icon-wrap" style="color:#c084fc; background:rgba(139,92,246,0.15); border-color:rgba(192,132,252,0.3);">⚡</div>
+                    <div>
+                        <h2 class="app-name">تطبيق الويب الفوري (PWA)</h2>
+                        <div class="app-role">للآيفون والأندرويد والكمبيوتر</div>
+                    </div>
+                </div>
+                <p class="app-desc">
+                    ثبّت المنظومة كتطبيق أصلي خفيف وفائق السرعة على شاشة هاتفك الرئيسية بنقرة واحدة من المتصفح مباشرة.
+                </p>
+                <ul class="features-list">
+                    <li>أعلى سرعة استجابة (60fps) بدون أي بطء.</li>
+                    <li>يعمل على هواتف iPhone (iOS) وأندرويد وأجهزة الكمبيوتر.</li>
+                    <li>تحديثات فورية من السيرفر بدون تحميل APK جديد.</li>
+                    <li>واجهة كاملة الشاشة مع حفظ الجلسة.</li>
+                </ul>
+            </div>
+            <div>
+                <button class="btn-download btn-purple" id="btnInstallPwa" onclick="installPWA()">
+                    <span>📲</span>
+                    <span>تثبيت على الشاشة الرئيسية</span>
+                </button>
+                <div class="meta-info">
+                    <span>متوافق: Safari / Chrome / Edge</span>
+                    <span>الحجم: 0 MB (فوري)</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Server Package Banner -->
+    <div class="server-pkg-card">
+        <div>
+            <div style="font-size:14px; font-weight:800; color:#fff; display:flex; align-items:center; gap:6px;">
+                <span>📦</span>
+                <span>حزمة التثبيت النظيفة لسيرفر جديد (Turnkey Enterprise Clean Installer)</span>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+                حزمة متكاملة جاهزة بدون أي بيانات تجريبية (جداول وفري راديوس 3 مع كاشير ومحاسبة) لتثبيت المنظومة بأمر واحد.
+            </div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <a href="downloads/sam-turnkey-enterprise-clean.tar.gz" class="nav-btn" style="border-color:#38bdf8; color:#38bdf8;" download>
+                <span>🐧</span>
+                <span>تحميل TAR.GZ (2.75 MB)</span>
+            </a>
+            <a href="downloads/sam-turnkey-enterprise-clean.zip" class="nav-btn" style="border-color:#10b981; color:#10b981;" download>
+                <span>🗜️</span>
+                <span>تحميل ZIP (2.87 MB)</span>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>منظومة SAM لإدارة شبكات المايكروتك وبطاقات الهوتسبوت | جميع الحقوق محفوظة</p>
+    </footer>
+
+</div>
+
+<script>
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const btn = document.getElementById('btnInstallPwa');
+    if (btn) btn.style.display = 'flex';
+});
+
+function installPWA() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted PWA install');
+            }
+            deferredPrompt = null;
+        });
+    } else {
+        alert('لتثبيت التطبيق على هاتفك:\n- على أندرويد (Chrome): اضغط على القائمة (⋮) ثم "الإضافة إلى الشاشة الرئيسية".\n- على آيفون (Safari): اضغط على زر المشاركة (⎙) ثم "إضافة إلى الصفحة الرئيسية (Add to Home Screen)".');
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+[Unit]
+Description=SAM Live Telemetry & Real-Time WebSocket Microservice
+Documentation=https://github.com/hsnmoath/mikrotik-usermanager
+After=network.target network-online.target mariadb.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/mikrotik-usermanager/services/telemetry
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sam-telemetry
+
+Environment=NODE_ENV=production
+Environment=TELEMETRY_PORT=8088
+Environment=BROADCAST_INTERVAL_MS=3000
+
+LimitNOFILE=65535
+LimitNPROC=4096
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

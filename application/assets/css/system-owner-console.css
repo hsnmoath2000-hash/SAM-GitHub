@@ -1,0 +1,687 @@
+/* ==========================================================================
+   SAM System Owner Console & UI Governance Studio Stylesheet
+   ========================================================================== */
+
+/* 1. Server Resources & Maintenance Console */
+.owner-console { display:grid; gap:16px; max-width:1500px; margin:0 auto; padding:0 2px 24px; }
+.owner-console-head { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px 20px; border-radius:12px; background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color:#fff; box-shadow:0 4px 14px rgba(15,23,42,0.12); }
+.owner-console-head h2 { margin:0; font-size:20px; font-weight:800; display:flex; align-items:center; gap:10px; }
+.owner-console .kpi-grid { margin:0; grid-template-columns:repeat(4, minmax(0, 1fr)); }
+.owner-console .kpi-card { min-height:105px; display:flex; flex-direction:column; justify-content:center; gap:6px; }
+.owner-console .kpi-card small { overflow:hidden; text-overflow:ellipsis; }
+.owner-sections { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:16px; align-items:start; }
+.owner-section { background:var(--bg-window, #fff); border:1px solid var(--border-color, #cbd5e1); border-radius:12px; padding:18px; box-shadow:0 2px 8px rgba(15,23,42,0.05); min-width:0; }
+.owner-section h3 { margin:0 0 14px; padding-bottom:10px; border-bottom:1px solid var(--border-color, #e2e8f0); font-size:16px; font-weight:700; color:var(--text-main, #0f172a); }
+.owner-section-danger { grid-column:1/-1; border-color:#fecaca; background:linear-gradient(180deg, #fff 0%, #fff7f7 100%); }
+.owner-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.owner-console .form-row { align-items:end; gap:12px; }
+.owner-console .form-group { min-width:210px; flex:1; }
+.owner-console input[type=color] { width:100%; height:42px; border:1px solid var(--border-color); border-radius:7px; background:var(--bg-window); cursor:pointer; }
+.owner-service-actions { display:flex; gap:5px; flex-wrap:wrap; }
+.owner-port-list { line-height:2; word-break:break-word; }
+.owner-help { font-size:12px; color:var(--text-muted); margin:5px 0 12px; }
+.owner-section-services, .owner-section-ports { grid-column:1/-1; }
+
+/* 2. System UI Governance Studio & Full Template Switcher */
+.gov-studio { display:flex; flex-direction:column; gap:18px; max-width:1500px; margin:0 auto; padding:0 2px 32px; }
+.gov-hero-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; padding:18px 22px; border-radius:14px; background:linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0369a1 100%); color:#fff; box-shadow:0 6px 20px rgba(2,132,199,0.18); }
+.gov-hero-title { display:flex; align-items:center; gap:12px; }
+.gov-hero-title h2 { margin:0; font-size:22px; font-weight:800; letter-spacing:-0.3px; }
+.gov-hero-desc { font-size:12.5px; opacity:0.9; margin-top:4px; max-width:700px; line-height:1.5; }
+.gov-hero-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+
+.gov-card { background:var(--bg-window, #fff); border:1px solid var(--border-color, #cbd5e1); border-radius:12px; padding:20px; box-shadow:0 3px 12px rgba(15,23,42,0.06); }
+.gov-card-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border-color, #e2e8f0); }
+.gov-card-title { display:flex; align-items:center; gap:10px; }
+.gov-card-title h3 { margin:0; font-size:17px; font-weight:800; color:var(--text-main, #0f172a); }
+.gov-card-title small { display:block; font-size:12px; color:var(--text-muted, #64748b); font-weight:normal; margin-top:2px; }
+
+/* Template Presets Grid */
+.gov-template-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:16px; }
+.gov-template-card { background:#f8fafc; border:2px solid #e2e8f0; border-radius:12px; padding:16px; cursor:pointer; transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1); display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden; }
+.gov-template-card:hover { border-color:#94a3b8; transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,0.08); background:#fff; }
+.gov-template-card.active { border-color:#0284c7; background:#eff6ff; box-shadow:0 0 0 3px rgba(2,132,199,0.2), 0 8px 20px rgba(2,132,199,0.12); }
+.gov-template-top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:10px; }
+.gov-template-icon-wrap { font-size:28px; line-height:1; }
+.gov-template-badge { font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:12px; text-transform:uppercase; letter-spacing:0.3px; }
+.badge-recommended { background:#dcfce7; color:#15803d; border:1px solid #86efac; }
+.badge-winbox { background:#dbeafe; color:#1e40af; border:1px solid #93c5fd; }
+.badge-pos { background:#ccfbf1; color:#0f766e; border:1px solid #5eead4; }
+.badge-enterprise { background:#e0e7ff; color:#4338ca; border:1px solid #a5b4fc; }
+.badge-gold { background:#fef3c7; color:#b45309; border:1px solid #fde68a; }
+.gov-template-info h4 { margin:0 0 3px; font-size:15px; font-weight:800; color:#0f172a; }
+.gov-template-sub { font-size:11.5px; color:#64748b; font-family:monospace; margin-bottom:8px; }
+.gov-template-desc { font-size:12px; color:#475569; line-height:1.45; margin-bottom:14px; min-height:36px; }
+.gov-template-swatches { display:flex; align-items:center; gap:8px; margin-bottom:14px; background:#fff; padding:6px 10px; border-radius:8px; border:1px solid #e2e8f0; width:fit-content; }
+.gov-swatch-dot { width:20px; height:20px; border-radius:50%; border:1.5px solid rgba(0,0,0,0.15); box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+.gov-template-btn { width:100%; padding:8px 12px; border-radius:8px; font-size:12.5px; font-weight:700; border:none; cursor:pointer; display:flex; justify-content:center; align-items:center; gap:6px; transition:all 0.2s; }
+.gov-template-card.active .gov-template-btn { background:#0284c7; color:#fff; }
+.gov-template-card:not(.active) .gov-template-btn { background:#e2e8f0; color:#334155; }
+.gov-template-card:not(.active) .gov-template-btn:hover { background:#cbd5e1; color:#0f172a; }
+
+/* Branding & Logo Layout */
+.gov-branding-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; }
+.gov-logo-box { display:grid; grid-template-columns:110px minmax(0, 1fr); gap:18px; align-items:center; background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:14px; }
+.gov-logo-preview { width:100px; height:100px; padding:8px; object-fit:contain; border:2px dashed #94a3b8; border-radius:10px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.05); }
+.gov-logo-controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.gov-logo-controls input[type=file] { max-width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; font-size:12px; }
+
+/* Palette Grid */
+.gov-palette-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:14px; }
+.gov-palette-item { display:flex; flex-direction:column; gap:6px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; }
+.gov-palette-item label { font-size:12px; font-weight:700; color:#334155; display:flex; justify-content:space-between; align-items:center; }
+.gov-palette-item input[type=color] { width:100%; height:38px; border:1px solid #cbd5e1; border-radius:6px; background:#fff; cursor:pointer; padding:2px; }
+
+/* Mobile Bottom Nav Grid */
+.gov-mobilenav-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; }
+.gov-mobilenav-slot { background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; display:flex; flex-direction:column; gap:6px; }
+.gov-mobilenav-slot label { font-size:12px; font-weight:700; color:#1e293b; }
+
+/* Table Defaults Grid */
+.gov-table-defaults-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px; }
+
+/* Sticky Save & Broadcast Bar */
+.gov-save-bar { position:sticky; bottom:16px; z-index:100; background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border:1px solid #334155; border-radius:12px; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; box-shadow:0 8px 24px rgba(15,23,42,0.25); color:#fff; }
+.gov-save-info { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:600; }
+.gov-save-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .owner-console .kpi-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .owner-sections { grid-template-columns:1fr; }
+  .owner-section, .owner-section-danger, .owner-section-services, .owner-section-ports { grid-column:1; }
+  .gov-template-grid { grid-template-columns:1fr; }
+  .gov-hero-header { flex-direction:column; align-items:stretch; }
+  .gov-save-bar { flex-direction:column; align-items:stretch; bottom:68px; }
+}
+
+@media (max-width: 520px) {
+  .owner-console { gap:11px; }
+  .owner-console-head { padding:13px; }
+  .owner-console-head h2 { font-size:17px; }
+  .owner-console .kpi-grid { grid-template-columns:1fr; }
+  .owner-section { padding:12px; }
+  .gov-studio { gap:12px; }
+  .gov-hero-header { padding:14px; }
+  .gov-hero-title h2 { font-size:18px; }
+  .gov-card { padding:14px; }
+  .gov-logo-box { grid-template-columns:1fr; text-align:center; }
+  .gov-logo-preview { margin:0 auto; }
+  .gov-logo-controls { flex-direction:column; align-items:stretch; }
+  .gov-logo-controls .mt-btn { width:100%; }
+  .gov-save-actions .mt-btn { width:100%; }
+}
+
+/* ==========================================================================
+   Owner Console Enhanced Diagnostics, Background Jobs & Security Styles
+   ========================================================================== */
+.owner-subtabs {
+    display: flex;
+    gap: 8px;
+    background: var(--bg-window, #fff);
+    padding: 6px;
+    border: 1px solid var(--border-color, #cbd5e1);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    overflow-x: auto;
+    flex-wrap: nowrap;
+}
+.owner-subtab-btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted, #64748b);
+    font-weight: 700;
+    font-size: 13.5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.owner-subtab-btn:hover {
+    background: #f1f5f9;
+    color: var(--text-main, #0f172a);
+}
+.owner-subtab-btn.active {
+    background: #0284c7;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+}
+
+/* Background Jobs Queue Styles */
+.job-progress-container {
+    width: 100%;
+    min-width: 110px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 14px;
+    position: relative;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+.job-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+.job-progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.status-queued { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+.status-running { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; animation: pulseGlow 1.8s infinite; }
+.status-completed { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.status-failed { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Terminal & Log Viewer Styles */
+.owner-terminal-window {
+    background: #090d16;
+    border-radius: 12px;
+    border: 1px solid #1e293b;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.owner-terminal-header {
+    background: #111827;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #1f2937;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.owner-terminal-dots {
+    display: flex;
+    gap: 6px;
+}
+.terminal-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+}
+.dot-red { background: #ef4444; }
+.dot-yellow { background: #f59e0b; }
+.dot-green { background: #10b981; }
+.owner-terminal-body {
+    background: #040711;
+    color: #38bdf8;
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    padding: 16px;
+    margin: 0;
+    max-height: 480px;
+    min-height: 250px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    direction: ltr;
+    text-align: left;
+}
+
+/* Firewall Grid & Chips */
+.firewall-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.firewall-banner.active {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    color: #ecfdf5;
+    border: 1px solid #10b981;
+}
+.firewall-banner.inactive {
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+    color: #fef2f2;
+    border: 1px solid #ef4444;
+}
+.ports-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+}
+.port-chip {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+.port-chip:hover {
+    border-color: #0284c7;
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+.port-chip code {
+    font-weight: 800;
+    color: #0284c7;
+    font-size: 13px;
+}
+
+/* Dynamic Firewall Rules & Controls */
+.firewall-grid-actions {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+@media (max-width: 900px) {
+    .firewall-grid-actions { grid-template-columns: 1fr; }
+}
+.firewall-sub-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+.firewall-sub-card h4 {
+    margin: 0 0 12px;
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.quick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+.quick-chip-btn {
+    background: #e2e8f0;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+.quick-chip-btn:hover {
+    background: #0284c7;
+    color: #fff;
+    border-color: #0284c7;
+}
+.badge-allow {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #86efac;
+    font-weight: 800;
+}
+.badge-deny {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+    font-weight: 800;
+}
+.badge-v6 {
+    background: #f3e8ff;
+    color: #7e22ce;
+    border: 1px solid #d8b4fe;
+    font-size: 10px;
+    font-weight: 700;
+}
+.badge-v4 {
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* Cleanup Stats Banner */
+.cleanup-banner {
+    background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Port Forwarding & NAT UI */
+.port-forward-section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.port-forward-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.port-forward-flow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    direction: ltr;
+    font-family: monospace;
+    font-size: 13px;
+    font-weight: 700;
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+.port-forward-flow .pf-listen { color: #0284c7; }
+.port-forward-flow .pf-arrow { color: #64748b; font-weight: 900; }
+.port-forward-flow .pf-target { color: #059669; }
+
+/* GeoIP Threat & Lookup UI */
+.geoip-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+.geoip-search-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+.geoip-result-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+}
+@media (max-width: 768px) {
+    .geoip-result-card { grid-template-columns: 1fr; }
+}
+.geoip-flag-icon {
+    font-size: 38px;
+    line-height: 1;
+    text-align: center;
+}
+.geoip-details h4 {
+    margin: 0 0 4px;
+    font-size: 15.5px;
+    color: #0f172a;
+}
+.geoip-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+.geoip-tag {
+    font-size: 11.5px;
+    font-weight: 700;
+    background: #e2e8f0;
+    color: #334155;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+.geoip-tag.asn {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+/* Geo Rules Section & Styles */
+.geo-rules-section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.geo-rules-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Priority & Version Badges */
+.badge-priority-high {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+    font-size: 11px;
+    font-weight: 800;
+}
+.badge-priority-norm {
+    background: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
+    font-size: 11px;
+    font-weight: 700;
+}
+.badge-both {
+    background: #e0e7ff;
+    color: #4338ca;
+    border: 1px solid #c7d2fe;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* Firewall IPv4 / IPv6 Filter Tabs */
+.fw-filter-tabs {
+    display: inline-flex;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 3px;
+    gap: 4px;
+}
+.fw-filter-tab {
+    background: transparent;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+.fw-filter-tab:hover {
+    color: #0f172a;
+    background: rgba(255,255,255,0.6);
+}
+.fw-filter-tab.active {
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Sensitive Ports Armor & Security HUD */
+.armor-hud-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+.armor-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+}
+.armor-card:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.07);
+    border-color: #cbd5e1;
+}
+.armor-card.highlight {
+    border: 1.5px solid #0284c7;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+}
+.armor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.armor-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+}
+.armor-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+.armor-badge.secured {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+.armor-badge.warning {
+    background: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+.armor-desc {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+.armor-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.priority-tag-high {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.priority-tag-norm {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+
+
+
+
+/* ==========================================================================
+   Mobile & Smartphone Responsive Enhancements for Sovereign Firewall
+   ========================================================================== */
+@media (max-width: 768px) {
+    .owner-console-head {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 14px 16px !important;
+        gap: 10px !important;
+    }
+    .owner-console-head h2 {
+        font-size: 16px !important;
+    }
+    .owner-console .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+    .owner-sections {
+        grid-template-columns: 1fr !important;
+    }
+    .geoip-search-row {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+    .geoip-search-row input {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .geoip-search-row button {
+        width: 100% !important;
+    }
+    .port-forward-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+    .port-forward-header button {
+        width: 100% !important;
+    }
+    #pf-form-card .form-group {
+        min-width: 100% !important;
+    }
+    .mt-modal {
+        width: 95vw !important;
+        max-width: 95vw !important;
+        margin: 10px auto !important;
+        padding: 14px !important;
+    }
+    .owner-subtab-btn {
+        padding: 8px 12px !important;
+        font-size: 12px !important;
+    }
+    .quick-chips {
+        flex-wrap: wrap !important;
+    }
+    .quick-chip-btn {
+        font-size: 11px !important;
+        padding: 4px 8px !important;
+    }
+}

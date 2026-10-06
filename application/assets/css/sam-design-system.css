@@ -1,0 +1,1305 @@
+/**
+ * SAM Network Manager - Unified Component Design System
+ * ==============================================================================
+ * Central, standardized component styles for Buttons, Inputs, Tables, Modals,
+ * Cards, Badges, and Toolbars across the entire system.
+ * ==============================================================================
+ */
+
+/* ==========================================================================
+   1. BUTTONS (.sam-btn & .mt-btn Harmonization)
+   ========================================================================== */
+.sam-btn,
+.mt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sam-space-2, 8px);
+  min-height: var(--sam-btn-h, 38px);
+  padding: 6px 16px;
+  border-radius: var(--sam-radius-md, 8px);
+  font-family: var(--sam-font-sans);
+  font-weight: 700;
+  font-size: var(--sam-text-sm, 12.5px);
+  line-height: 1.4;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: background-color var(--sam-transition-fast), border-color var(--sam-transition-fast), box-shadow var(--sam-transition-fast), transform var(--sam-transition-fast);
+  border: 1px solid transparent;
+  box-shadow: var(--sam-shadow-xs);
+  box-sizing: border-box;
+}
+
+.sam-btn:hover,
+.mt-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--sam-shadow-sm);
+}
+
+.sam-btn:active,
+.mt-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.sam-btn:disabled,
+.mt-btn:disabled,
+.sam-btn.disabled,
+.mt-btn.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Button Variants */
+.sam-btn--primary,
+.mt-btn-primary,
+.sam-ui-btn.primary {
+  background-color: var(--sam-primary, #0f766e);
+  border-color: var(--sam-primary, #0f766e);
+  color: #ffffff;
+}
+.sam-btn--primary:hover,
+.mt-btn-primary:hover,
+.sam-ui-btn.primary:hover {
+  background-color: var(--sam-primary-hover, #115e59);
+  border-color: var(--sam-primary-hover, #115e59);
+  color: #ffffff;
+}
+
+.sam-btn--success,
+.mt-btn-success,
+.sam-ui-btn.success {
+  background-color: var(--sam-success, #16a34a);
+  border-color: var(--sam-success, #16a34a);
+  color: #ffffff;
+}
+.sam-btn--success:hover,
+.mt-btn-success:hover,
+.sam-ui-btn.success:hover {
+  background-color: var(--sam-success-hover, #15803d);
+  border-color: var(--sam-success-hover, #15803d);
+  color: #ffffff;
+}
+
+.sam-btn--danger,
+.mt-btn-danger,
+.sam-ui-btn.danger {
+  background-color: var(--sam-danger, #dc2626);
+  border-color: var(--sam-danger, #dc2626);
+  color: #ffffff;
+}
+.sam-btn--danger:hover,
+.mt-btn-danger:hover,
+.sam-ui-btn.danger:hover {
+  background-color: var(--sam-danger-hover, #b91c1c);
+  border-color: var(--sam-danger-hover, #b91c1c);
+  color: #ffffff;
+}
+
+.sam-btn--warning,
+.mt-btn-warning {
+  background-color: var(--sam-warning, #f59e0b);
+  border-color: var(--sam-warning, #f59e0b);
+  color: #ffffff;
+}
+.sam-btn--warning:hover,
+.mt-btn-warning:hover {
+  background-color: var(--sam-warning-hover, #d97706);
+  border-color: var(--sam-warning-hover, #d97706);
+  color: #ffffff;
+}
+
+.sam-btn--secondary,
+.mt-btn-secondary,
+.sam-btn--ghost,
+.sam-ui-btn.ghost {
+  background-color: var(--sam-bg-surface-alt, #f1f5f9);
+  border-color: var(--sam-border-strong, #cbd5e1);
+  color: var(--sam-text-secondary, #334155);
+}
+.sam-btn--secondary:hover,
+.mt-btn-secondary:hover,
+.sam-btn--ghost:hover,
+.sam-ui-btn.ghost:hover {
+  background-color: #e2e8f0;
+  border-color: #94a3b8;
+  color: var(--sam-text, #0f172a);
+}
+
+.sam-btn--outline {
+  background-color: transparent;
+  border-color: var(--sam-border-strong, #cbd5e1);
+  color: var(--sam-text-secondary, #334155);
+}
+.sam-btn--outline:hover {
+  background-color: var(--sam-bg-surface-alt, #f1f5f9);
+  border-color: var(--sam-primary, #0f766e);
+  color: var(--sam-primary, #0f766e);
+}
+
+/* Button Sizes */
+.sam-btn--sm,
+.mt-btn-sm {
+  min-height: var(--sam-btn-sm-h, 30px);
+  padding: 3px 10px;
+  font-size: var(--sam-text-xs, 11px);
+  border-radius: var(--sam-radius-sm, 6px);
+}
+
+.sam-btn--lg,
+.mt-btn-lg {
+  min-height: var(--sam-btn-lg-h, 44px);
+  padding: 8px 22px;
+  font-size: var(--sam-text-base, 14px);
+  border-radius: var(--sam-radius-md, 8px);
+}
+
+.sam-btn--block {
+  width: 100%;
+  display: flex;
+}
+
+/* Loading State */
+.sam-btn--loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+.sam-btn--loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin: -8px 0 0 -8px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: sam-spin 0.6s linear infinite;
+}
+@keyframes sam-spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ==========================================================================
+   2. FORM CONTROLS (.sam-input & .mt-input Harmonization)
+   ========================================================================== */
+.sam-input,
+.mt-input,
+.mt-form-control,
+.sam-select,
+.mt-select,
+select.mt-input {
+  display: block;
+  width: 100%;
+  min-height: var(--sam-input-h, 40px);
+  padding: 8px 12px;
+  font-family: var(--sam-font-sans);
+  font-size: var(--sam-text-sm, 12.5px);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--sam-text, #0f172a);
+  background-color: var(--sam-bg-surface, #ffffff);
+  border: 1px solid var(--sam-border-strong, #cbd5e1);
+  border-radius: var(--sam-radius-md, 8px);
+  box-shadow: var(--sam-shadow-xs);
+  transition: border-color var(--sam-transition-fast), box-shadow var(--sam-transition-fast), background-color var(--sam-transition-fast);
+  box-sizing: border-box;
+}
+
+.sam-input:hover,
+.mt-input:hover,
+.mt-form-control:hover,
+.sam-select:hover,
+.mt-select:hover {
+  border-color: #94a3b8;
+}
+
+.sam-input:focus,
+.mt-input:focus,
+.mt-form-control:focus,
+.sam-select:focus,
+.mt-select:focus {
+  outline: 0;
+  border-color: var(--sam-primary, #0f766e);
+  box-shadow: 0 0 0 3px var(--sam-primary-ring, rgba(15, 118, 110, 0.18));
+  background-color: #ffffff;
+}
+
+.sam-input::placeholder,
+.mt-input::placeholder,
+.mt-form-control::placeholder {
+  color: var(--sam-text-subtle, #94a3b8);
+  font-weight: 400;
+}
+
+.sam-input:disabled,
+.mt-input:disabled,
+.mt-form-control:disabled {
+  background-color: var(--sam-bg-surface-alt, #f1f5f9);
+  color: var(--sam-text-muted, #64748b);
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+/* RTL Select Custom Arrow */
+.sam-select,
+.mt-select,
+select.mt-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  background-size: 16px;
+  padding-left: 36px;
+}
+
+/* Form Groups & Labels */
+.sam-form-group,
+.form-group {
+  margin-bottom: var(--sam-space-3, 12px);
+  text-align: right;
+}
+
+.sam-label,
+.sam-form-group label,
+.form-group label {
+  display: block;
+  margin-bottom: var(--sam-space-1, 4px);
+  font-family: var(--sam-font-sans);
+  font-size: var(--sam-text-xs, 11px);
+  font-weight: 700;
+  color: var(--sam-text-secondary, #334155);
+}
+
+.sam-label--required::after {
+  content: " *";
+  color: var(--sam-danger, #dc2626);
+}
+
+/* Modern Switches & Toggles */
+.sam-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sam-space-2, 8px);
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--sam-text-sm, 12.5px);
+  font-weight: 600;
+  color: var(--sam-text-secondary, #334155);
+}
+
+.sam-switch input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 40px;
+  height: 22px;
+  border-radius: 9999px;
+  background-color: #cbd5e1;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: background-color var(--sam-transition-fast);
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.sam-switch input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform var(--sam-transition-fast);
+}
+
+.sam-switch input[type="checkbox"]:checked {
+  background-color: var(--sam-success, #16a34a);
+}
+
+.sam-switch input[type="checkbox"]:checked::after {
+  transform: translateX(-18px);
+}
+
+
+/* ==========================================================================
+   3. BADGES & STATUS PILLS (.sam-badge & .status-pill Harmonization)
+   ========================================================================== */
+.sam-badge,
+.badge,
+.status-pill,
+.pos-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 22px;
+  padding: 2px 8px;
+  border-radius: var(--sam-radius-pill, 9999px);
+  font-family: var(--sam-font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.sam-badge--success,
+.badge-success,
+.status-pill.active,
+.status-pill.online,
+.pos-badge.paid {
+  background-color: var(--sam-success-light, #f0fdf4);
+  color: var(--sam-success, #16a34a);
+  border: 1px solid var(--sam-success-border, #bbf7d0);
+}
+
+.sam-badge--warning,
+.badge-warning,
+.status-pill.pending,
+.pos-badge.due {
+  background-color: var(--sam-warning-light, #fffbeb);
+  color: var(--sam-warning, #d97706);
+  border: 1px solid var(--sam-warning-border, #fde68a);
+}
+
+.sam-badge--danger,
+.badge-danger,
+.status-pill.offline,
+.status-pill.blocked,
+.status-pill.expired {
+  background-color: var(--sam-danger-light, #fef2f2);
+  color: var(--sam-danger, #dc2626);
+  border: 1px solid var(--sam-danger-border, #fecaca);
+}
+
+.sam-badge--info,
+.sam-badge--primary,
+.badge-info,
+.badge-primary {
+  background-color: var(--sam-primary-light, #f0fdfa);
+  color: var(--sam-primary, #0f766e);
+  border: 1px solid var(--sam-primary-border, #99f6e4);
+}
+
+.sam-badge--neutral,
+.badge-secondary {
+  background-color: var(--sam-bg-surface-alt, #f1f5f9);
+  color: var(--sam-text-muted, #64748b);
+  border: 1px solid var(--sam-border, #e2e8f0);
+}
+
+
+/* ==========================================================================
+   4. CARDS & PANELS (.sam-card & .mt-card Harmonization)
+   ========================================================================== */
+.sam-card,
+.mt-card,
+.sam-ui-panel,
+.pos-card {
+  background-color: var(--sam-bg-surface, #ffffff);
+  border: 1px solid var(--sam-border, #e2e8f0);
+  border-radius: var(--sam-radius-lg, 12px);
+  box-shadow: var(--sam-shadow-sm);
+  padding: var(--sam-space-4, 16px);
+  margin-bottom: var(--sam-space-4, 16px);
+  box-sizing: border-box;
+}
+
+.sam-card-header,
+.pos-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sam-space-3, 12px);
+  padding-bottom: var(--sam-space-3, 12px);
+  margin-bottom: var(--sam-space-3, 12px);
+  border-bottom: 1px solid var(--sam-border-light, #f1f5f9);
+}
+
+.sam-card-header h3,
+.pos-card-head h3 {
+  margin: 0;
+  font-size: var(--sam-text-md, 15px);
+  font-weight: 700;
+  color: var(--sam-text, #0f172a);
+}
+
+
+/* ==========================================================================
+   5. DATA TABLES (.sam-table & .mt-table Harmonization)
+   ========================================================================== */
+.sam-table-wrapper,
+.mt-table-container,
+.mt-table-wrap,
+.pos-table-wrap,
+.sam-ui-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--sam-bg-surface, #ffffff);
+  border: 1px solid var(--sam-border, #e2e8f0);
+  border-radius: var(--sam-radius-lg, 12px);
+  box-shadow: var(--sam-shadow-xs);
+  margin-bottom: var(--sam-space-4, 16px);
+  box-sizing: border-box;
+}
+
+.sam-table,
+.mt-table,
+.pos-table-wrap table,
+.sam-ui-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+  font-family: var(--sam-font-sans);
+  font-size: var(--sam-text-sm, 12px);
+  direction: rtl;
+}
+
+.sam-table th,
+.mt-table th,
+.pos-table-wrap th,
+.sam-ui-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--sam-bg-surface-alt, #f8fafc);
+  color: var(--sam-text-secondary, #475569);
+  font-weight: 700;
+  font-size: var(--sam-text-xs, 11px);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--sam-border-strong, #cbd5e1);
+  white-space: nowrap;
+}
+
+.sam-table td,
+.mt-table td,
+.pos-table-wrap td,
+.sam-ui-table td {
+  padding: 10px 14px;
+  color: var(--sam-text, #0f172a);
+  border-bottom: 1px solid var(--sam-border-light, #f1f5f9);
+  vertical-align: middle;
+}
+
+.sam-table tbody tr:hover,
+.mt-table tbody tr:hover,
+.pos-table-wrap table tbody tr:hover,
+.sam-ui-table tbody tr:hover {
+  background-color: rgba(15, 118, 110, 0.03);
+}
+
+.sam-table tbody tr:last-child td,
+.mt-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+
+/* ==========================================================================
+   6. MODALS (.sam-modal & .mt-modal Harmonization)
+   ========================================================================== */
+.sam-modal-backdrop,
+.mt-modal-backdrop,
+.mt-modal-overlay,
+.modal-overlay,
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sam-space-4, 16px);
+  animation: sam-fade-in 0.2s ease forwards;
+  box-sizing: border-box;
+}
+
+@keyframes sam-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sam-modal-dialog,
+.mt-modal-dialog,
+.mt-modal {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  max-height: min(85vh, calc(100vh - 40px));
+  background-color: var(--sam-bg-surface, #ffffff);
+  border: 1px solid var(--sam-border, #e2e8f0);
+  border-radius: var(--sam-radius-xl, 16px);
+  box-shadow: var(--sam-shadow-modal);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  direction: rtl;
+  text-align: right;
+  animation: sam-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  box-sizing: border-box;
+}
+
+@keyframes sam-slide-up {
+  from { transform: translateY(16px) scale(0.98); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.sam-modal-dialog--sm, .mt-modal-sm { max-width: 460px; }
+.sam-modal-dialog--lg, .mt-modal-lg { max-width: 840px; }
+.sam-modal-dialog--xl, .mt-modal-xl { max-width: 1100px; }
+
+.sam-modal-header,
+.mt-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: var(--sam-bg-surface, #ffffff);
+  border-bottom: 1px solid var(--sam-border, #e2e8f0);
+  flex-shrink: 0;
+}
+
+.sam-modal-header h3,
+.mt-modal-header h3 {
+  margin: 0;
+  font-size: var(--sam-text-md, 15px);
+  font-weight: 700;
+  color: var(--sam-text, #0f172a);
+}
+
+.sam-modal-body,
+.mt-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1 1 auto;
+}
+
+.sam-modal-footer,
+.mt-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sam-space-3, 12px);
+  padding: 14px 20px;
+  background-color: var(--sam-bg-surface-alt, #f8fafc);
+  border-top: 1px solid var(--sam-border, #e2e8f0);
+  flex-shrink: 0;
+}
+
+
+/* ==========================================================================
+   7. TOOLBARS & QUICK SEARCH (.sam-toolbar & .quick-table-search)
+   ========================================================================== */
+.sam-toolbar,
+.mt-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  background: var(--sam-bg-surface, #ffffff);
+  border: 1px solid var(--sam-border, #e2e8f0);
+  border-radius: var(--sam-radius-lg, 10px);
+  margin-bottom: 14px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  box-sizing: border-box;
+}
+
+.sam-toolbar-group,
+.mt-toolbar-left,
+.mt-toolbar-right {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  flex: 0 1 auto;
+}
+
+.sam-toolbar select,
+.sam-toolbar .sam-select,
+.mt-toolbar select,
+.mt-toolbar .sam-select,
+.mt-toolbar .mt-select,
+.sam-toolbar-group select,
+.sam-toolbar-group .sam-select,
+.sam-toolbar-group .mt-select {
+  display: inline-flex !important;
+  width: auto !important;
+  min-width: 110px;
+  max-width: 190px;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 4px 28px 4px 10px !important;
+  font-size: 12px !important;
+  font-weight: 600;
+  border-radius: 8px !important;
+  border: 1px solid var(--sam-border-strong, #cbd5e1);
+  background-color: var(--sam-bg-surface, #ffffff);
+  background-position: left 8px center !important;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.sam-toolbar .quick-table-search,
+.mt-toolbar .quick-table-search,
+.sam-toolbar-group .quick-table-search {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px;
+  margin: 0 !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 2px 10px !important;
+  border: 1px solid var(--sam-border-strong, #cbd5e1);
+  border-radius: 8px !important;
+  background-color: var(--sam-bg-surface, #ffffff);
+  box-sizing: border-box;
+}
+
+.quick-table-search-icon {
+  color: var(--sam-primary, #0f766e);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.quick-table-search-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 28px !important;
+  height: 28px !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  color: var(--sam-text, #0f172a);
+  font-family: var(--sam-font-sans);
+  font-size: var(--sam-text-sm, 12px);
+}
+
+.quick-table-search-clear {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 6px;
+  background: #e2e8f0;
+  color: var(--sam-text-muted, #64748b);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Action Menus */
+.sam-action-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.sam-action-menu__items {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 4px);
+  z-index: 99999 !important;
+  min-width: 165px;
+  padding: 6px;
+  background: #ffffff;
+  border: 1px solid var(--sam-border, #e2e8f0);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  box-sizing: border-box;
+}
+
+.sam-action-menu__items[hidden],
+[hidden] {
+  display: none !important;
+}
+
+/* KPI Cards Responsive Balanced Grid */
+.kpi-grid,
+.sam-ui-kpis {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin-bottom: 14px !important;
+  box-sizing: border-box;
+}
+
+.kpi-card,
+.sam-ui-kpi {
+  min-height: 64px !important;
+  padding: 10px 14px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  border: 1px solid var(--sam-border, #e2e8f0) !important;
+  background: var(--sam-bg-surface, #ffffff) !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.kpi-card:hover,
+.sam-ui-kpi:hover {
+  transform: translateY(-1px);
+  border-color: var(--sam-primary, #0f766e) !important;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.06) !important;
+}
+
+.sam-kpi-card--active {
+  border-color: var(--sam-primary, #0f766e) !important;
+  background: var(--sam-primary-light, #f0fdfa) !important;
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.2) !important;
+}
+
+
+/* ==========================================================================
+   8. MOBILE RESPONSIVE ENHANCEMENTS (< 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .sam-modal-backdrop,
+  .mt-modal-backdrop,
+  .mt-modal-overlay,
+  .modal-overlay,
+  .modal-backdrop {
+    padding: 8px;
+    align-items: flex-end;
+  }
+
+  .sam-modal-dialog,
+  .mt-modal-dialog,
+  .mt-modal {
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .sam-toolbar,
+  .mt-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sam-toolbar-group,
+  .mt-toolbar-left,
+  .mt-toolbar-right {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .sam-toolbar-group > *,
+  .mt-toolbar-left > *,
+  .mt-toolbar-right > * {
+    flex: 1 1 auto;
+  }
+}
+
+/* ==========================================================================
+   9. QUICK TABLE EXPORT ACTIONS
+   ========================================================================== */
+.quick-table-export-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sam-space-1, 4px);
+  flex: 0 0 auto;
+}
+
+.quick-table-export-btn {
+  min-height: var(--sam-btn-sm-h, 30px);
+  padding: 4px 10px;
+  border: 1px solid var(--sam-primary-border, #99f6e4);
+  border-radius: var(--sam-radius-sm, 6px);
+  background-color: var(--sam-primary-light, #f0fdfa);
+  color: var(--sam-primary, #0f766e);
+  font-family: var(--sam-font-sans);
+  font-size: var(--sam-text-xs, 11px);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--sam-transition-fast);
+}
+
+.quick-table-export-btn:hover {
+  background-color: var(--sam-primary, #0f766e);
+  color: #ffffff;
+  border-color: var(--sam-primary, #0f766e);
+}
+
+@media (max-width: 640px) {
+  .quick-table-export-actions {
+    gap: 4px;
+  }
+  .quick-table-export-btn {
+    min-height: 36px;
+    padding-inline: 8px;
+  }
+}
+
+/* ==========================================================================
+   10. COMPACT TOOLBAR CONTROLS & OVERFLOW MENUS
+   ========================================================================== */
+body.sam-compact-controls {
+  --sam-header-height: 64px;
+}
+
+body.sam-compact-controls .mt-header {
+  min-height: 64px !important;
+  padding: 10px 18px !important;
+}
+
+body.sam-compact-controls .mt-brand {
+  gap: 8px;
+  font-size: 14px;
+}
+
+body.sam-compact-controls .mt-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+body.sam-compact-controls .mt-header-right .mt-btn {
+  min-height: 32px !important;
+  padding: 5px 9px !important;
+  font-size: 12px !important;
+}
+
+body.sam-compact-controls .sam-toolbar-menu-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+body.sam-compact-controls .sam-toolbar-more {
+  min-width: 92px;
+  background: var(--sam-bg-surface-alt, #f8fafc) !important;
+  color: var(--sam-text-secondary, #334155) !important;
+  border-color: var(--sam-border-strong, #cbd5e1) !important;
+}
+
+body.sam-compact-controls .sam-toolbar-more:hover {
+  background: var(--sam-primary-light, #f0fdfa) !important;
+  color: var(--sam-primary, #0f766e) !important;
+}
+
+body.sam-compact-controls .sam-toolbar-menu {
+  position: absolute;
+  top: calc(var(--sam-header-height, 64px) + 7px);
+  right: 0;
+  z-index: 5000;
+  display: none;
+  min-width: 190px;
+  padding: 6px;
+  background: var(--sam-bg-surface, #ffffff);
+  border: 1px solid var(--sam-border, #e2e8f0);
+  border-radius: var(--sam-radius-md, 8px);
+  box-shadow: var(--sam-shadow-lg);
+}
+
+body.sam-compact-controls .sam-toolbar-menu.open {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+body.sam-compact-controls .sam-toolbar-menu .sam-menu-action {
+  width: 100%;
+  min-height: 38px;
+  justify-content: flex-start;
+  text-align: right;
+  background: var(--sam-bg-surface, #ffffff) !important;
+  color: var(--sam-text-secondary, #334155) !important;
+  border: 0 !important;
+  border-radius: var(--sam-radius-sm, 6px);
+}
+
+body.sam-compact-controls .sam-toolbar-menu .sam-menu-action:hover {
+  background: var(--sam-primary-light, #f0fdfa) !important;
+  color: var(--sam-primary, #0f766e) !important;
+}
+
+body.sam-compact-controls .mt-toolbar-right > button:nth-child(n+2) {
+  min-width: 82px;
+}
+
+@media (max-width: 640px) {
+  body.sam-compact-controls .mt-header {
+    min-height: 48px !important;
+    height: 48px !important;
+    padding: 0 8px !important;
+    flex-wrap: nowrap !important;
+    overflow: hidden !important;
+  }
+  body.sam-compact-controls .mt-brand {
+    font-size: 13px;
+    gap: 4px;
+    min-width: 0;
+  }
+  body.sam-compact-controls .brand-title-full {
+    display: none !important;
+  }
+  body.sam-compact-controls .brand-title-short {
+    display: inline !important;
+  }
+  body.sam-compact-controls .mt-header-right {
+    gap: 4px;
+    flex-wrap: nowrap !important;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+  body.sam-compact-controls .mt-header-right .btn-label,
+  body.sam-compact-controls .mt-header-right .user-greeting {
+    display: none !important;
+  }
+  body.sam-compact-controls .mt-header-right .mt-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 4px 6px !important;
+    font-size: 13px !important;
+  }
+  body.sam-compact-controls #sam-header-net-switcher,
+  body.sam-compact-controls .sam-header-net-switcher {
+    display: inline-flex !important;
+    align-items: center !important;
+    max-width: 130px !important;
+    padding: 2px 5px !important;
+    font-size: 11px !important;
+    flex-shrink: 1 !important;
+    min-width: 0 !important;
+  }
+  body.sam-compact-controls #sam-header-net-switcher .net-switcher-btn-modal,
+  body.sam-compact-controls .sam-header-net-switcher .net-switcher-btn-modal,
+  body.sam-compact-controls .sam-net-switcher-btn {
+    display: none !important;
+  }
+  body.sam-compact-controls #sam-active-network,
+  body.sam-compact-controls .sam-active-network-select {
+    max-width: 80px !important;
+    font-size: 11px !important;
+    padding: 1px 2px !important;
+  }
+  body.sam-compact-controls .sam-toolbar-menu {
+    position: fixed;
+    top: calc(var(--sam-header-height, 64px) + 6px);
+    right: 10px;
+    left: 10px;
+    min-width: 0;
+  }
+  body.sam-compact-controls .mt-toolbar-right {
+    grid-template-columns: 1fr auto !important;
+  }
+  body.sam-compact-controls .mt-toolbar-right > .sam-toolbar-menu-wrap {
+    grid-column: auto;
+  }
+  body.sam-compact-controls .sam-toolbar-more {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  body.sam-compact-controls .mt-header {
+    padding: 0 5px !important;
+  }
+  body.sam-compact-controls .mt-brand .badge {
+    display: none !important;
+  }
+  body.sam-compact-controls #sam-header-net-switcher,
+  body.sam-compact-controls .sam-header-net-switcher {
+    max-width: 105px !important;
+    padding: 1px 4px !important;
+  }
+  body.sam-compact-controls #sam-active-network,
+  body.sam-compact-controls .sam-active-network-select {
+    max-width: 62px !important;
+    font-size: 10px !important;
+  }
+  body.sam-compact-controls .mt-header-right {
+    gap: 3px !important;
+  }
+  body.sam-compact-controls .mt-header-right .mt-btn {
+    min-width: 28px !important;
+    height: 30px !important;
+    padding: 3px 5px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* ==========================================================================
+   11. MENU TOGGLE & MOBILE NAVIGATION CONTROLS
+   ========================================================================== */
+body.sam-material-theme .mt-mobile-toggle {
+  display: none !important;
+  align-items: center;
+  justify-content: center;
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px;
+  background: var(--sam-primary, #0f766e) !important;
+  border: 1px solid var(--sam-primary-hover, #115e59) !important;
+  color: #ffffff !important;
+  border-radius: var(--sam-radius-md, 8px) !important;
+  font-size: 19px !important;
+  line-height: 1;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative;
+  z-index: 10;
+}
+
+body.sam-material-theme .mt-mobile-toggle:hover,
+body.sam-material-theme .mt-mobile-toggle:active {
+  background: var(--sam-primary-hover, #115e59) !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 768px) {
+  body.sam-material-theme .mt-mobile-toggle {
+    display: inline-flex !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body.sam-material-theme .mt-mobile-toggle {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px;
+    font-size: 21px !important;
+  }
+}
+
+body.sam-material-theme .mt-header-back-btn {
+  display: none !important;
+}
+
+/* ==========================================================================
+   12. SALES & POS MOBILE LAYOUT BRIDGE
+   ========================================================================== */
+#main-view.sam-page-shell {
+  box-sizing: border-box;
+  display: block !important;
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+#main-view.sam-page-shell > .sam-ui-page {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+#main-view.sam-page-shell > .sam-ui-page > .view-scroll-content {
+  box-sizing: border-box;
+  flex: 0 0 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+#main-view.sam-page-shell > .sam-ui-page .mt-table-container {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 650px) {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  #main-view.sam-page-shell {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+  }
+  #main-view.sam-page-shell > .sam-ui-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 8px 8px calc(84px + env(safe-area-inset-bottom, 0px)) !important;
+    overflow-x: hidden !important;
+  }
+  #main-view.sam-page-shell .view-scroll-content {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 8px 0 0 !important;
+    overflow-x: hidden !important;
+  }
+  #main-view.sam-page-shell .mt-toolbar {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 8px 0 !important;
+    padding: 8px !important;
+  }
+  #main-view.sam-page-shell .mt-toolbar-left,
+  #main-view.sam-page-shell .mt-toolbar-right {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: stretch !important;
+    gap: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  #main-view.sam-page-shell .mt-toolbar-left > *,
+  #main-view.sam-page-shell .mt-toolbar-right > * {
+    flex: 1 1 145px;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  #main-view.sam-page-shell .mt-toolbar input.mt-input,
+  #main-view.sam-page-shell .mt-toolbar select.mt-select {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #main-view.sam-page-shell .mt-toolbar-left > div[style*="inline-flex"],
+  #main-view.sam-page-shell .mt-toolbar-right > div[style*="inline-flex"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  #main-view.sam-page-shell .mt-toolbar-left > div[style*="inline-flex"] .mt-btn,
+  #main-view.sam-page-shell .mt-toolbar-right > div[style*="inline-flex"] .mt-btn {
+    flex: 1 1 135px;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 34px;
+  }
+  #main-view.sam-page-shell .sam-page-hero {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden;
+  }
+  #main-view.sam-page-shell .mt-table-container,
+  #main-view.sam-page-shell .mt-table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  #main-view.sam-page-shell .kpi-grid {
+    grid-template-columns: 1fr 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ==========================================================================
+   UNIVERSAL SAM PHONE INPUT COMPONENT & RESPONSIVENESS
+   ========================================================================== */
+.sam-phone-wrap,
+.phone-input-group {
+  display: flex !important;
+  align-items: center !important;
+  direction: ltr !important;
+  gap: 6px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.sam-phone-wrap select,
+.phone-input-group select {
+  flex: 0 0 105px !important;
+  width: 105px !important;
+  min-width: 95px !important;
+  max-width: 110px !important;
+  padding: 8px 4px !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  height: 40px !important;
+  box-sizing: border-box !important;
+}
+
+.sam-phone-wrap span,
+.phone-input-group span {
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 10px !important;
+  font-weight: 800 !important;
+  font-size: 12.5px !important;
+  font-family: monospace, sans-serif !important;
+  background: #e0f2fe !important;
+  color: #0369a1 !important;
+  border-radius: 6px 0 0 6px !important;
+  border: 1px solid #bae6fd !important;
+  user-select: none !important;
+  height: 40px !important;
+  box-sizing: border-box !important;
+}
+
+.sam-phone-wrap input,
+.phone-input-group input {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  direction: ltr !important;
+  text-align: left !important;
+  font-family: monospace, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  padding: 8px 10px !important;
+  height: 40px !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 640px) {
+  .sam-phone-wrap select,
+  .phone-input-group select {
+    flex: 0 0 95px !important;
+    width: 95px !important;
+    min-width: 85px !important;
+    max-width: 100px !important;
+    font-size: 11.5px !important;
+    padding: 6px 2px !important;
+  }
+  .sam-phone-wrap input,
+  .phone-input-group input {
+    font-size: 13.5px !important;
+  }
+}
+
+

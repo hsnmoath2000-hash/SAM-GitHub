@@ -1,0 +1,20 @@
+[Unit]
+Description=MikroTik User Manager API v1 background worker
+After=network.target mariadb.service apache2.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/mikrotik-usermanager
+ExecStart=/usr/bin/php /var/www/mikrotik-usermanager/api/v1/worker.php --daemon
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/mikrotik-usermanager /var/lib/php/sessions /var/backups/mikrotik-usermanager
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+/uploads/*
+!/uploads/.gitkeep
+/.env
+/.my.cnf
+/*.sql
+/*.sql.gz
+/*.log
+/*.bak
+/*.backup
+/downloads/
+/.idea/
+/.vscode/
+

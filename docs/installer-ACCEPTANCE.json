@@ -1,0 +1,7 @@
+{
+  "release": "v3",
+  "date": "2026-10-06",
+  "full_fresh_install_tested": false,
+  "application_acceptance_host": "192.168.91.97",
+  "scope": "Application changes validated separately; v2 full-core acceptance is a reference only"
+}

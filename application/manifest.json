@@ -1,0 +1,54 @@
+{
+  "id": "./",
+  "name": "SAM — إدارة الشبكات",
+  "short_name": "SAM",
+  "description": "إدارة الشبكة والكروت والمبيعات من واجهة واحدة.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.php",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#eef5f8",
+  "theme_color": "#087b72",
+  "orientation": "any",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "./assets/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/img/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "مركز إعداد الشبكة",
+      "url": "./index.php#network_setup",
+      "description": "متابعة إعداد الشبكة"
+    },
+    {
+      "name": "المتصلون",
+      "url": "./index.php#active_sessions"
+    }
+  ]
+}

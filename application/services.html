@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>دليل خدمات ومميزات منظومة SAM لإدارة شبكات المايكروتك</title>
+    <meta name="description" content="كل ما يستفيد منه صاحب شبكة الإنترنت: إدارة راوترات المايكروتك، توليد وطباعة الكروت، نقاط البيع، المحاسبة والأرباح، وأتمتة الواتساب">
+    <link rel="icon" type="image/png" href="assets/img/log.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@500;700;800;900&family=Roboto+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --primary-light: #e0f2fe;
+            --accent: #10b981;
+            --accent-gold: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --bg-dark: #0b1120;
+            --bg-card: #151f32;
+            --card-border: #23334d;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --gradient-hero: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #1e293b 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', 'Tajawal', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(11, 17, 32, 0.90);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 14px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(16, 185, 129, 0.2) 100%);
+            border: 1px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .brand-text h1 {
+            font-size: 19px;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .brand-text p {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 65px 20px 45px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 15%, rgba(2, 132, 199, 0.18) 0%, transparent 65%);
+            max-width: 1060px;
+            margin: 0 auto;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 18px;
+            border-radius: 999px;
+            background: rgba(2, 132, 199, 0.12);
+            border: 1px solid rgba(2, 132, 199, 0.35);
+            color: #38bdf8;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.15);
+        }
+
+        .hero h2 {
+            font-size: clamp(28px, 5.5vw, 46px);
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.35;
+            margin-bottom: 18px;
+        }
+
+        .hero h2 span.gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(14.5px, 2.5vw, 17.5px);
+            color: var(--text-muted);
+            max-width: 820px;
+            margin: 0 auto 32px;
+            line-height: 1.75;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            max-width: 920px;
+            margin: 45px auto 0;
+        }
+
+        .stat-box {
+            background: var(--bg-card);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 18px 14px;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-4px);
+            border-color: #38bdf8;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-box .num {
+            font-size: 26px;
+            font-weight: 900;
+            color: #38bdf8;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .stat-box .lbl {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        /* Filter Controls */
+        .controls-wrap {
+            max-width: 1180px;
+            margin: 35px auto 20px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 260px;
+            max-width: 420px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 11px 40px 11px 16px;
+            color: #fff;
+            font-size: 13.5px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 16px;
+        }
+
+        .cat-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .cat-pill {
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cat-pill.active, .cat-pill:hover {
+            background: rgba(2, 132, 199, 0.15);
+            border-color: var(--primary);
+            color: #38bdf8;
+        }
+
+        /* Services Grid */
+        .services-container {
+            max-width: 1180px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 22px;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header-icon {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .icon-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+        }
+
+        .badge-cat {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+        }
+
+        .service-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .service-desc {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+
+        .feature-bullets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .feature-bullets li {
+            font-size: 13px;
+            color: #cbd5e1;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .feature-bullets li span.check {
+            color: #10b981;
+            font-weight: 900;
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* Banner Box */
+        .cta-banner {
+            max-width: 1140px;
+            margin: 0 auto 70px;
+            padding: 0 20px;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 36px 28px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box h3 {
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .cta-box p {
+            font-size: 14.5px;
+            color: #94a3b8;
+            max-width: 680px;
+            margin: 0 auto 24px;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        .footer {
+            background: #090e1a;
+            border-top: 1px solid var(--card-border);
+            padding: 35px 20px;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #38bdf8;
+        }
+
+        .footer-copy {
+            font-size: 12.5px;
+            color: #64748b;
+        }
+
+        @media (max-width: 640px) {
+            .navbar { padding: 12px 16px; }
+            .hero { padding: 45px 16px 25px; }
+            .hero-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .services-container { grid-template-columns: 1fr; gap: 16px; }
+            .controls-wrap { flex-direction: column; align-items: stretch; }
+            .search-box { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <header class="navbar">
+        <a href="index.php" class="brand-wrap">
+            <div class="brand-logo">🌐</div>
+            <div class="brand-text">
+                <h1>منظومة SAM</h1>
+                <p>إدارة شبكتك والمايكروتك والكروت والمحاسبة</p>
+            </div>
+        </a>
+        <div class="nav-actions">
+            <a href="apps.html" class="btn btn-outline" style="border-color:#38bdf8; color:#38bdf8;">📲 تحميل التطبيقات</a>
+            <a href="portal.html" class="btn btn-outline" target="_blank">📱 بوابة المشتركين</a>
+            <a href="index.php" class="btn btn-primary">🔐 تسجيل دخول الشبكة</a>
+        </div>
+    </header>
+
+    <!-- Hero Header -->
+    <section class="hero">
+        <div class="badge-pill">
+            <span>⚡</span> المنظومة الذكية الأولى لإدارة وتنمية شبكة الإنترنت الخاصة بك
+        </div>
+        <h2>كل ما تحتاجه كصاحب شبكة لإدارة وتوسيع أعمالك في <span class="gradient-text">منصة واحدة ذكية</span></h2>
+        <p>
+            تمنحك منظومة SAM السيطرة الكاملة على شبكتك: من ربط وتحكم راوترات المايكروتك، وتوليد وطباعة الكروت، وإدارة نقاط البيع والموزعين، إلى حساب الأرباح الصافية بدقة وأتمتة إرسال الفواتير ورسائل الواتساب للمشتركين 24/7.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+            <a href="index.php" class="btn btn-primary" style="padding: 12px 28px; font-size: 14.5px;">
+                🚀 تسجيل الدخول لشبكتك الآن
+            </a>
+            <a href="portal.html" class="btn btn-outline" style="padding: 12px 24px; font-size: 14.5px;" target="_blank">
+                📱 فحص وتجربة بوابة المشتركين
+            </a>
+        </div>
+
+        <div class="hero-stats">
+            <div class="stat-box">
+                <div class="num">&lt; 1 ms</div>
+                <div class="lbl">سرعة مصادقة لحظية للراوترات</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">100k+</div>
+                <div class="lbl">قدرة استيعاب وتوليد للكروت</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">WhatsApp Bot</div>
+                <div class="lbl">إرسال فواتير ودعم آلي 24/7</div>
+            </div>
+            <div class="stat-box">
+                <div class="num">100% Data Safe</div>
+                <div class="lbl">نسخ احتياطي آلي لتليجرام يومياً</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Controls & Search Filter -->
+    <div class="controls-wrap">
+        <div class="cat-pills" id="category-filters">
+            <button class="cat-pill active" onclick="filterCategory('all', this)">🌟 كافة مميزات شبكتك</button>
+            <button class="cat-pill" onclick="filterCategory('routers', this)">📡 راوترات المايكروتك والتحكم</button>
+            <button class="cat-pill" onclick="filterCategory('cards', this)">🎫 الكروت والمخازن والطباعة</button>
+            <button class="cat-pill" onclick="filterCategory('pos', this)">🏪 الموزعون ونقاط البيع (POS)</button>
+            <button class="cat-pill" onclick="filterCategory('finance', this)">💰 الحسابات والأرباح والصناديق</button>
+            <button class="cat-pill" onclick="filterCategory('messaging', this)">💬 الواتساب وخدمة المشتركين</button>
+            <button class="cat-pill" onclick="filterCategory('security', this)">🛡️ المراقبة والأمان والنسخ</button>
+        </div>
+        <div class="search-box">
+            <input type="text" id="feature-search" class="search-input" placeholder="ابحث عن أي خدمة أو ميزة تهم شبكتك..." oninput="filterSearch(this.value)" />
+            <span class="search-icon">🔍</span>
+        </div>
+    </div>
+
+    <!-- Services Cards Grid (Single Network Owner Perspective) -->
+    <main class="services-container" id="services-grid">
+
+        <!-- 1. MikroTik & RADIUS -->
+        <article class="service-card" data-cat="routers">
+            <div>
+                <div class="card-header-icon">
+                    <div class="icon-wrap" style="background: rgba(2,132,199,0.15); color: #0284c7;">📡</div>
+                    <span class="badge-cat">إدارة الراوترات</span>
+                </div>
+                <h3 class="service-title">ربط وتحكم مركزي بكافة راوترات المايكروتك</h3>
+                <p class="service-desc">
+                    اربط جميع راوترات الهوتسبوت وأبراج البث وخطوط PPPoE التابعة لشبكتك في شاشة واحدة، وتحكم بمصادقة وفصل المشتركين لحظياً بدون الحاجة إلى IP ثابت.
+                </p>
+            </div>
+            <ul class="feature-bullets">
+                <li><span class="check">✓</span> ربط مشفر عبر نفق SSTP VPN دون الحاجة لدفع تكاليف Real IP ثابت</li>
+                <li><span class="check">✓</span> طرد وفصل فوري للجلسات وتعديل السرعات لحظياً (CoA) دون ريستارت للراوتر</li>
+                <li><span class="check">✓</span> توليد سكربت ضبط المايكروتك بضغطة زر وتطبيقه في ثوانٍ</li>
+                <li><span class="check">✓</span> كشف فوري لانقطاع أي راوتر أو برج وإرسال تنبيه مباشر لك</li>
+            </ul>
+        </article>
+
+        <!-- 2. Vouchers & Cards Engine -->
+        <article class="service-card" data-cat="cards">
+            <div>
+                <div class="card-header-icon">
+                    <div class="icon-wrap" style="background: rgba(16,185,129,0.15); color: #10b981;">🎫</div>
+                    <span class="badge-cat">إنتاج وطباعة الكروت</span>
+                </div>
+                <h3 class="service-title">توليد وطباعة الكروت باحترافية وتصاميم جاهزة</h3>
+                <p class="service-desc">
+                    أنشئ آلاف الكروت لشبكتك بسرعات وسعات وأسعار مختلفة في ثوانٍ معدودة، واطبعها بتصاميم مخصصة تحمل اسم وشعار شبكتك.
+                </p>
+            </div>
+            <ul class="feature-bullets">
+                <li><span class="check">✓</span> توليد آلاف الكروت بأرقام وسيريالات مشفرة ومعقدة لمنع التخمين</li>
+                <li><span class="check">✓</span> مصمم قوالب متكامل يدعم ورق A4 والطابعات الحرارية (80mm) والمحمولة</li>
+                <li><span class="check">✓</span> دعم باقات متعددة: وقت محدد، حصص جيجابايت، سرعات خاصة، وكروت VIP</li>
+                <li><span class="check">✓</span> كروت شحن رقمية وإمكانية الشحن الفوري عبر الباركود (QR Code)</li>
+            </ul>
+        </article>
+
+        <!-- 3. POS & Agent Distribution Network -->
+        <article class="service-card" data-cat="pos">
+            <div>
+                <div class="card-header-icon">
+                    <div class="icon-wrap" style="background: rgba(139,92,246,0.15); color: #8b5cf6;">🏪</div>
+                    <span class="badge-cat">الموزعون ونقاط البيع</span>
+                </div>
+                <h3 class="service-title">إدارة الوكلاء ونقاط البيع ومخازن العهد</h3>
+                <p class="service-desc">
+                    وسّع شبكة مبيعاتك عبر إضافة البقالات والمحلات كنقاط بيع، وحدد نسبة خصم كل وكيل مع متابعة دقيقة لمخزون الكروت والمديونيات.
+                </p>
+            </div>
+            <ul class="feature-bullets">
+                <li><span class="check">✓</span> واجهة كاشير سريعة (POS) للبقالات لبيع الكروت وطباعتها أو إرسالها للعميل</li>
+                <li><span class="check">✓</span> سقوف مديونية ذكية توقف البيع تلقائياً عند تجاوز الوكيل للحد الائتماني المسموح</li>
+                <li><span class="check">✓</span> تنظيم الكروت في مخازن وعهد منفصلة لكل موزع لمنع ضياع الكروت</li>
+                <li><span class="check">✓</span> كشوفات حساب تفصيلية للموزعين توضح المسحوبات والمدفوعات والمتبقي بدقة</li>
+            </ul>
+        </article>
+
+        <!-- 4. Accounting & Net Profit -->
+        <article class="service-card" data-cat="finance">
+            <div>
+                <div class="card-header-icon">
+                    <div class="icon-wrap" style="background: rgba(245,158,11,0.15); color: #f59e0b;">💰</div>
+                    <span class="badge-cat">المالية والأرباح</span>
+                </div>
+                <h3 class="service-title">حساب الأرباح الصافية والصناديق والمصروفات</h3>
+                <p class="service-desc">
+                    نظام مالي ومحاسبي متكامل مصمم خصيصاً لأصحاب الشبكات لمعرفة الأرباح الحقيقية ومتابعة حركة السيولة والمصاريف التشغيلية.
+                </p>
+            </div>
+            <ul class="feature-bullets">
+                <li><span class="check">✓</span> تقرير الأرباح والخسائر (P&L) يوضح صافي ربح شبكتك يومياً وشهرياً</li>
+                <li><span class="check">✓</span> إدارة الصناديق النقدية، حسابات البنوك، وسندات القبض والصرف الرسمية</li>
+                <li><span class="check">✓</span> تسجيل المصاريف التشغيلية (إيجار مواقع، فواتير إنترنت، كهرباء، رواتب)</li>
+                <li><span class="check">✓</span> مصفوفة توزيع أرباح الشركاء والمستثمرين في الشبكة حسب نسب المساهمة</li>
+            </ul>
+        </article>
+
+        <!-- 5. WhatsApp & Customer Automation -->
+        <article class="service-card" data-cat="messaging">
+            <div>
+                <div class="card-header-icon">
+                    <div class="icon-wrap" style="background: rgba(34,197,94,0.15); color: #22c55e;">💬</div>
+                    <span class="badge-cat">الواتساب والرد الآلي</span>
+                </div>
+                <h3 class="service-title">أتمتة خدمة العملاء وإرسال الكروت عبر واتساب</h3>
+                <p class="service-desc">
+                    اربط رقم واتساب شبكتك بسهولة، ودع المنظومة ترسل بيانات الكروت والفواتير للمشترين وترد على استفسارات الزبائن آلياً طوال 24 ساعة.
+                </p>
+            </div>
+            <ul class="feature-bullets">
+                <li><span class="check">✓</span> إرسال فوري لبيانات الكرت أو الفاتورة إلى واتساب المشترك بمجرد الشراء</li>
+                <li><span class="check">✓</span> روبوت دردشة ذكي (Chatbot) للرد التلقائي على أسعار الباقات وأرقام الدعم</li>
+                <li><span class="check">✓</span> استعادة كلمات المرور وتأكيد الحسابات عبر كود تحقق (OTP) على الواتساب</li>
+                <li><span class="check">✓</span> ربط مباشر وسهل عبر WhatsApp Web بدون الحاجة لاشتراكات مدفوعة معقدة</li>
+            </ul>
+        </article>
+
+        <!-- 6. Subscriber Self-Service Portal -->
+        <article class="service-card" data-cat="cards">
+            <div>
+                <div class="card-header-icon">
+                    <div class="icon-wrap" style="background: rgba(6,182,212,0.15); color: #06b6d4;">📱</div>
+                    <span class="badge-cat">خدمة المشتركين</span>
+                </div>
+                <h3 class="service-title">بوابة المشتركين وصفحة الهوتسبوت الذكية</h3>
+                <p class="service-desc">
+                    امنح مشتركي شبكتك تجربة استخدام عصرية وسلسة من خلال صفحة تسجيل دخول جذابة وبوابة خدمة ذاتية تعرض الرصيد وسرعة الاتصال.
+                </p>
+            </div>
+            <ul class="feature-bullets">
+                <li><span class="check">✓</span> صفحة هوتسبوت متجاوبة مع كافة الهواتف تحمل اسم وشعار شبكتك وعروضك</li>
+                <li><span class="check">✓</span> تطبيق ويب (PWA) للمشترك لمعرفة الرصيد المتبقي، والاستهلاك، ووقت الصلاحية</li>
+                <li><span class="check">✓</span> شحن الرصيد الفوري عبر كاميرا الجوال ومسح باركود الكرت (QR Code)</li>
+                <li><span class="check">✓</span> ميزة تثبيت الجهاز (MAC Lock) لحماية كرت المشترك من السرقة أو التطفل</li>
+            </ul>
+        </article>
+
+        <!-- 7. Live NOC & Network Analytics -->
+        <article class="service-card" data-cat="security">
+            <div>
+                <div class="card-header-icon">
+                    <div class="icon-wrap" style="background: rgba(14,165,233,0.15); color: #0ea5e9;">📊</div>
+                    <span class="badge-cat">المراقبة والتحليل</span>
+                </div>
+                <h3 class="service-title">مركز عمليات الشبكة ومراقبة استهلاك البيانات</h3>
+                <p class="service-desc">
+                    تابع صحة واستقرار شبكتك لحظة بلحظة، مع رسوم بيانية لحجم حركة البيانات (Bandwidth) وإحصائيات المنافذ الأكثر مبيعاً.
+                </p>
+            </div>
+            <ul class="feature-bullets">
+                <li><span class="check">✓</span> مراقبة حية لجميع المتصلين الآن بالشبكة مع بيانات الـ IP والـ MAC وسرعة الاتصال</li>
+                <li><span class="check">✓</span> رسوم بيانية توضح حركة الرفع والتحميل وساعات الذروة في شبكتك</li>
+                <li><span class="check">✓</span> إحصائيات أكثر الباقات مبيعاً والمواقع الأكثر استهلاكاً لتوجيه التوسعة بذكاء</li>
+                <li><span class="check">✓</span> سجل تدقيق شامل للعمليات يسجل كل عملية بيع أو تعديل بالوقت واسم المستخدم</li>
+            </ul>
+        </article>
+
+        <!-- 8. Backups & Data Security -->
+        <article class="service-card" data-cat="security">
+            <div>
+                <div class="card-header-icon">
+                    <div class="icon-wrap" style="background: rgba(239,68,68,0.15); color: #ef4444;">🛡️</div>
+                    <span class="badge-cat">حماية البيانات</span>
+                </div>
+                <h3 class="service-title">النسخ الاحتياطي التلقائي إلى تليجرام والأمان العالي</h3>
+                <p class="service-desc">
+                    بيانات شبكتك وكروتك وحساباتك المالية في أمان تام، مع نظام نسخ احتياطي ذاتي يرسل نسخة يومية مشفرة إلى تليجرام الخاص بك.
+                </p>
+            </div>
+            <ul class="feature-bullets">
+                <li><span class="check">✓</span> نسخ احتياطي آلي يومي لقاعدة بيانات شبكتك بدون أي تدخل يدوي</li>
+                <li><span class="check">✓</span> إرسال ملف النسخة المشفرة مباشرة إلى حسابك في Telegram لضمان عدم ضياع أي بيان</li>
+                <li><span class="check">✓</span> صلاحيات دقيقة للموظفين والكاشير لمنع التلاعب أو إلغاء الفواتير دون إذن</li>
+                <li><span class="check">✓</span> استعادة سريعة للبيانات في دقائق في حال حدوث أي طارئ في السيرفر</li>
+            </ul>
+        </article>
+
+        <!-- 9. Roaming & Coverage Expansion -->
+        <article class="service-card" data-cat="routers">
+            <div>
+                <div class="card-header-icon">
+                    <div class="icon-wrap" style="background: rgba(168,85,247,0.15); color: #a855f7;">🌐</div>
+                    <span class="badge-cat">التجوال والشراكات</span>
+                </div>
+                <h3 class="service-title">توسيع التغطية والتجوال مع الشبكات المجاورة</h3>
+                <p class="service-desc">
+                    زد من مبيعات كروتك ونطاق تغطيتك عبر ميزة التجوال الذكي التي تتيح لكروت شبكتك العمل في أبراج الشبكات الشريكة بمقاصة مالية آلية.
+                </p>
+            </div>
+            <ul class="feature-bullets">
+                <li><span class="check">✓</span> إمكانية بيع كروتك لمشتركين يتنقلون بين منطقتك ومناطق الشبكات الشريكة</li>
+                <li><span class="check">✓</span> نظام مقاصة مالية آلي يضمن حقوق شبكتك بالريال عن كل ميجابايت مستهلك</li>
+                <li><span class="check">✓</span> عزل تام لبيانات شبكتك وحساباتك عن أي شبكة أخرى لضمان الخصوصية 100%</li>
+                <li><span class="check">✓</span> حرية تفعيل أو إيقاف التجوال بضغطة زر واحدة في أي وقت</li>
+            </ul>
+        </article>
+
+    </main>
+
+    <!-- CTA Box -->
+    <section class="cta-banner">
+        <div class="cta-box">
+            <h3>جاهز لتشغيل وتطوير شبكتك بأحدث المعايير؟</h3>
+            <p>
+                انضم الآن لمنظومة SAM وابدأ في إدارة راوتراتك، طباعة كروتك، وتنظيم مبيعات نقاط البيع والمحاسبة بأسلوب رقمي متكامل يوفر وقتك ويضاعف أرباحك.
+            </p>
+            <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+                <a href="index.php" class="btn btn-primary" style="padding: 12px 28px; font-size: 14.5px;">
+                    🚀 تسجيل الدخول لشبكتك الآن
+                </a>
+                <a href="portal.html" class="btn btn-outline" style="padding: 12px 24px; font-size: 14.5px;" target="_blank">
+                    📱 بوابة خدمة المشتركين
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.php">🔐 تسجيل الدخول للوحة تحكم الشبكة</a>
+            <a href="portal.html" target="_blank">📱 بوابة رصيد وفحص الكروت</a>
+            <a href="index.php">✨ تسجيل حساب جديد</a>
+        </div>
+        <p class="footer-copy">
+            جميع الحقوق محفوظة © منظومة SAM لإدارة شبكات المايكروتك والإنترنت 2026.
+        </p>
+    </footer>
+
+    <script>
+        function filterCategory(cat, btn) {
+            document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const cards = document.querySelectorAll('.service-card');
+            cards.forEach(card => {
+                if (cat === 'all' || card.getAttribute('data-cat') === cat) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterSearch(query) {
+            const q = query.trim().toLowerCase();
+            const cards = document.querySelectorAll('.service-card');
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(q)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

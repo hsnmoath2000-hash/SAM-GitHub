@@ -1,0 +1,74 @@
+/* Responsive UI improvements for شبكة+ / SAM
+   Added 2026-09-17. Safe, presentation-only overrides. */
+:root { --mobile-gutter: 14px; }
+*, *::before, *::after { box-sizing: border-box; }
+html { overflow-x: hidden; }
+body { max-width: 100%; overflow-x: hidden; }
+img, video, canvas, svg { max-width: 100%; height: auto; }
+button, input, select, textarea { max-width: 100%; font: inherit; }
+
+/* Prevent desktop-width panels and tables from forcing page overflow. */
+main, .main-content, .content, .page-content, .container, .app-container,
+.dashboard, .dashboard-content, .panel, .card, .section, .modal-content { min-width: 0; }
+.table-responsive, .table-wrap, .table-container, .data-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { max-width: 100%; }
+
+/* Flexible navigation and action rows. */
+.navbar, .topbar, .header, .toolbar, .page-header, .actions, .action-bar,
+.button-row, .form-actions { flex-wrap: wrap; gap: 10px; }
+.navbar > *, .topbar > *, .toolbar > *, .page-header > * { min-width: 0; }
+
+/* Cards and grid layouts collapse naturally on smaller screens. */
+.grid, .cards-grid, .stats-grid, .kpi-grid, .dashboard-grid,
+.form-grid, .filters-grid, .content-grid { min-width: 0; }
+@media (max-width: 900px) {
+  .sidebar, aside.sidebar, .app-sidebar { max-width: 86vw; }
+  .main-content, .content, .page-content, main { width: 100%; }
+  .grid, .cards-grid, .stats-grid, .dashboard-grid, .form-grid, .filters-grid,
+  .content-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .wide-panel, .full-width, .span-full { grid-column: 1 / -1; }
+  .modal, .modal-dialog { width: min(94vw, 720px); max-width: 94vw; }
+}
+
+@media (max-width: 640px) {
+  :root { --mobile-gutter: 12px; }
+  body { font-size: 14px; }
+  .container, .app-container, .main-content, .content, .page-content,
+  main { padding-left: var(--mobile-gutter) !important; padding-right: var(--mobile-gutter) !important; }
+  .grid, .cards-grid, .stats-grid, .kpi-grid, .dashboard-grid, .form-grid,
+  .filters-grid, .content-grid, .owner-sections, .gov-branding-grid,
+  .gov-palette-grid, .gov-mobilenav-grid, .gov-table-defaults-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .card, .panel, .section, .box, .widget, .gov-card { border-radius: 12px; }
+  .card, .panel, .section, .box, .widget { padding: 14px !important; }
+  .page-header, .toolbar, .action-bar, .form-actions { align-items: stretch; }
+  .page-header h1, .page-header h2, .page-header h3 { font-size: 1.15rem; line-height: 1.45; }
+  .page-header > *, .toolbar > *, .action-bar > *, .form-actions > *,
+  .button-row > * { width: 100%; }
+  button, .btn, .mt-btn, input[type="submit"], input[type="button"] { min-height: 42px; }
+  input, select, textarea { min-height: 42px; width: 100%; }
+  textarea { min-height: 96px; }
+  .table-responsive, .table-wrap, .table-container, .data-table-wrap { margin: 0 calc(var(--mobile-gutter) * -1); width: calc(100% + var(--mobile-gutter) * 2); padding: 0 var(--mobile-gutter); }
+  table { min-width: 620px; font-size: 12px; }
+  th, td { white-space: nowrap; padding: 9px 8px !important; }
+  .modal, .modal-dialog, .modal-content { width: calc(100vw - 24px); max-width: calc(100vw - 24px); margin: 12px auto; }
+  .modal-body { max-height: calc(100vh - 170px); overflow-y: auto; }
+  .gov-save-bar { position: sticky; bottom: 8px; margin-left: -2px; margin-right: -2px; padding: 12px; }
+  .gov-save-info, .gov-save-actions { width: 100%; }
+  .gov-save-actions { flex-direction: column; align-items: stretch; }
+  .gov-logo-box { grid-template-columns: 1fr !important; }
+  .gov-logo-preview { margin: auto; }
+}
+
+@media (max-width: 380px) {
+  body { font-size: 13px; }
+  .container, .app-container, .main-content, .content, .page-content,
+  main { padding-left: 9px !important; padding-right: 9px !important; }
+  .card, .panel, .section, .box, .widget { padding: 11px !important; }
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}

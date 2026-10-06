@@ -1,0 +1,452 @@
+[
+  {
+    "permission_key": "cashbox.view.own",
+    "module_key": "cashbox",
+    "action_key": "view",
+    "scope_key": "own",
+    "permission_name_ar": "عرض الصندوق",
+    "description": "عرض الصندوق المرتبط بالحساب",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "customers.manage.children",
+    "module_key": "customers",
+    "action_key": "manage",
+    "scope_key": "children",
+    "permission_name_ar": "إدارة العملاء التابعين",
+    "description": "إدارة العملاء الموجودين ضمن شجرة المستخدم فقط",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "customers.view.children",
+    "module_key": "customers",
+    "action_key": "view",
+    "scope_key": "children",
+    "permission_name_ar": "عرض العملاء التابعين",
+    "description": "عرض عملاء نقطة البيع أو الموزع ضمن شجرته فقط",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "dashboard.view.all",
+    "module_key": "dashboard",
+    "action_key": "view",
+    "scope_key": "all",
+    "permission_name_ar": "عرض لوحة النظام",
+    "description": "عرض المؤشرات الشاملة",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "dashboard.view.own",
+    "module_key": "dashboard",
+    "action_key": "view",
+    "scope_key": "own",
+    "permission_name_ar": "عرض لوحة المستخدم",
+    "description": "عرض ملخص الحساب الخاص بالمستخدم",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "distributors.manage.children",
+    "module_key": "distributors",
+    "action_key": "manage",
+    "scope_key": "children",
+    "permission_name_ar": "إدارة الموزعين والتابعين",
+    "description": "تعديل بيانات الموزعين ضمن النطاق",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "distributors.view.children",
+    "module_key": "distributors",
+    "action_key": "view",
+    "scope_key": "children",
+    "permission_name_ar": "عرض الموزعين والتابعين",
+    "description": "عرض الموزعين ونقاط البيع التابعة",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "finance.accounts.view.all",
+    "module_key": "finance",
+    "action_key": "accounts",
+    "scope_key": "all",
+    "permission_name_ar": "الحسابات المالية",
+    "description": "عرض الحسابات المالية لكل النظام",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "finance.cashboxes.view.all",
+    "module_key": "finance",
+    "action_key": "cashboxes",
+    "scope_key": "all",
+    "permission_name_ar": "الصناديق",
+    "description": "عرض الصناديق والأرصدة المالية",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "finance.exchange_rates.view.all",
+    "module_key": "finance",
+    "action_key": "exchange_rates",
+    "scope_key": "all",
+    "permission_name_ar": "أسعار الصرف",
+    "description": "عرض العملات وأسعار التحويل",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "finance.journal.view.all",
+    "module_key": "finance",
+    "action_key": "journal",
+    "scope_key": "all",
+    "permission_name_ar": "القيود المحاسبية",
+    "description": "عرض القيود اليومية والأستاذ العام",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "finance.reports.view.all",
+    "module_key": "finance",
+    "action_key": "reports",
+    "scope_key": "all",
+    "permission_name_ar": "التقارير المالية",
+    "description": "عرض التقارير المالية المجمعة",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "finance.vouchers.view.all",
+    "module_key": "finance",
+    "action_key": "vouchers",
+    "scope_key": "all",
+    "permission_name_ar": "السندات المالية",
+    "description": "عرض سندات القبض والصرف لكل النظام",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "free_vouchers.view.own",
+    "module_key": "free_vouchers",
+    "action_key": "view",
+    "scope_key": "own",
+    "permission_name_ar": "عرض الكروت المجانية",
+    "description": "عرض الحصة والاستهلاك الخاص",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "instant_balance.topup.all",
+    "module_key": "instant_balance",
+    "action_key": "topup",
+    "scope_key": "all",
+    "permission_name_ar": "شحن جميع الأرصدة",
+    "description": "اعتماد شحن الرصيد الفوري لأي موزع أو نقطة بيع",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "instant_balance.topup.children",
+    "module_key": "instant_balance",
+    "action_key": "topup",
+    "scope_key": "children",
+    "permission_name_ar": "شحن رصيد التابعين",
+    "description": "اعتماد شحن الرصيد الفوري للحسابات التابعة",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "instant_balance.topup.own",
+    "module_key": "instant_balance",
+    "action_key": "topup",
+    "scope_key": "own",
+    "permission_name_ar": "طلب شحن الرصيد الشخصي",
+    "description": "إنشاء طلب شحن للحساب الشخصي",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "inventory.transfer.children",
+    "module_key": "inventory",
+    "action_key": "transfer",
+    "scope_key": "children",
+    "permission_name_ar": "تحويل المخزون",
+    "description": "تحويل المخزون للتابعين",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "inventory.view.own",
+    "module_key": "inventory",
+    "action_key": "view",
+    "scope_key": "own",
+    "permission_name_ar": "عرض المخزون",
+    "description": "عرض المخزون الخاص",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "maintenance.logs.view.assigned",
+    "module_key": "maintenance",
+    "action_key": "logs",
+    "scope_key": "assigned",
+    "permission_name_ar": "سجل الصيانة",
+    "description": "عرض سجل أعمال الصيانة ضمن النطاق المسند",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "maintenance.view.assigned",
+    "module_key": "maintenance",
+    "action_key": "view",
+    "scope_key": "assigned",
+    "permission_name_ar": "عرض الصيانة المسندة",
+    "description": "عرض الأعطال والأصول المسندة",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "network.assets.view.assigned",
+    "module_key": "network",
+    "action_key": "assets",
+    "scope_key": "assigned",
+    "permission_name_ar": "الأصول المسندة",
+    "description": "عرض الأصول المسندة إلى فني الصيانة",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "network.nodes.view.assigned",
+    "module_key": "network",
+    "action_key": "nodes",
+    "scope_key": "assigned",
+    "permission_name_ar": "العقد المسندة",
+    "description": "عرض العقد التابعة لنطاق الصيانة",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "network.routers.view.assigned",
+    "module_key": "network",
+    "action_key": "routers",
+    "scope_key": "assigned",
+    "permission_name_ar": "الراوترات المسندة",
+    "description": "عرض الراوترات الواقعة ضمن نطاق الصيانة",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "network.status.view.assigned",
+    "module_key": "network",
+    "action_key": "status",
+    "scope_key": "assigned",
+    "permission_name_ar": "حالة الشبكة المسندة",
+    "description": "عرض حالة الشبكات المسموح بها فقط",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "notifications.manage.all",
+    "module_key": "notifications",
+    "action_key": "manage",
+    "scope_key": "all",
+    "permission_name_ar": "إدارة التنبيهات",
+    "description": "إدارة إعدادات وقنوات التنبيهات",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "pos.cards.view.own",
+    "module_key": "pos",
+    "action_key": "cards",
+    "scope_key": "own",
+    "permission_name_ar": "عرض كروت نقطة البيع",
+    "description": "عرض مخزون ومبيعات الكروت الخاصة",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "pos.dashboard.view.own",
+    "module_key": "pos",
+    "action_key": "dashboard",
+    "scope_key": "own",
+    "permission_name_ar": "عرض لوحة نقطة البيع",
+    "description": "عرض الحساب والشبكة والكروت الخاصة بنقطة البيع",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "pos.statement.view.own",
+    "module_key": "pos",
+    "action_key": "statement",
+    "scope_key": "own",
+    "permission_name_ar": "كشف حساب نقطة البيع",
+    "description": "عرض كشف الحساب الخاص بنقطة البيع",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "sales_reports.view.all",
+    "module_key": "sales_reports",
+    "action_key": "view",
+    "scope_key": "all",
+    "permission_name_ar": "تقارير جميع المبيعات",
+    "description": "عرض تقارير جميع الموزعين ونقاط البيع",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "sales_reports.view.children",
+    "module_key": "sales_reports",
+    "action_key": "view",
+    "scope_key": "children",
+    "permission_name_ar": "تقارير مبيعات التابعين",
+    "description": "عرض تقارير الموزع ونقاط البيع التابعة له",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "sales_reports.view.own",
+    "module_key": "sales_reports",
+    "action_key": "view",
+    "scope_key": "own",
+    "permission_name_ar": "تقارير المبيعات الشخصية",
+    "description": "عرض التقارير اليومية والشهرية للحساب",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "sales.create.own",
+    "module_key": "sales",
+    "action_key": "create",
+    "scope_key": "own",
+    "permission_name_ar": "إنشاء بيع",
+    "description": "إنشاء عملية بيع ضمن الحساب",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "sales.refund.own",
+    "module_key": "sales",
+    "action_key": "refund",
+    "scope_key": "own",
+    "permission_name_ar": "استرجاع بيع",
+    "description": "استرجاع عمليات المستخدم وفق الضوابط",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "sales.view.own",
+    "module_key": "sales",
+    "action_key": "view",
+    "scope_key": "own",
+    "permission_name_ar": "عرض المبيعات",
+    "description": "عرض مبيعات المستخدم",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "statement.view.children",
+    "module_key": "statement",
+    "action_key": "view",
+    "scope_key": "children",
+    "permission_name_ar": "عرض كشوف التابعين",
+    "description": "عرض كشوف الحسابات التابعة",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "statement.view.own",
+    "module_key": "statement",
+    "action_key": "view",
+    "scope_key": "own",
+    "permission_name_ar": "عرض كشف الحساب",
+    "description": "عرض كشف الحساب الشخصي",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "subscriber.cards.view.own",
+    "module_key": "subscriber",
+    "action_key": "cards",
+    "scope_key": "own",
+    "permission_name_ar": "تفاصيل كروتي",
+    "description": "عرض الكروت المملوكة للعميل الحالي فقط",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "subscriber.invoices.view.own",
+    "module_key": "subscriber",
+    "action_key": "invoices",
+    "scope_key": "own",
+    "permission_name_ar": "فواتيري",
+    "description": "عرض فواتير وكشف حساب العميل الحالي فقط",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "subscriber.network.view.own",
+    "module_key": "subscriber",
+    "action_key": "network",
+    "scope_key": "own",
+    "permission_name_ar": "معلومات شبكتي",
+    "description": "عرض معلومات الشبكة المسموح بها للعميل",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "subscriber.packages.view.own",
+    "module_key": "subscriber",
+    "action_key": "packages",
+    "scope_key": "own",
+    "permission_name_ar": "الباقات والعروض",
+    "description": "عرض الباقات والعروض المتاحة للعميل",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "subscriber.sessions.view.own",
+    "module_key": "subscriber",
+    "action_key": "sessions",
+    "scope_key": "own",
+    "permission_name_ar": "جلساتي",
+    "description": "عرض جلسات العميل الحالي فقط",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "subscriber.usage.view.own",
+    "module_key": "subscriber",
+    "action_key": "usage",
+    "scope_key": "own",
+    "permission_name_ar": "استهلاكي",
+    "description": "عرض الرصيد والصلاحية والاستهلاك الخاص بالعميل",
+    "is_sensitive": 0,
+    "is_active": 1
+  },
+  {
+    "permission_key": "wallet.transfer.children",
+    "module_key": "wallet",
+    "action_key": "transfer",
+    "scope_key": "children",
+    "permission_name_ar": "تحويل للمستخدمين التابعين",
+    "description": "تحويل رصيد للمستخدمين التابعين",
+    "is_sensitive": 1,
+    "is_active": 1
+  },
+  {
+    "permission_key": "wallet.view.own",
+    "module_key": "wallet",
+    "action_key": "view",
+    "scope_key": "own",
+    "permission_name_ar": "عرض المحفظة",
+    "description": "عرض رصيد المحفظة وحركتها",
+    "is_sensitive": 0,
+    "is_active": 1
+  }
+]

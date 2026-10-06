@@ -1,0 +1,43 @@
+# Private configuration and credentials
+.env
+.env.*
+!.env.example
+app-config.php
+app-config.local.php
+*.local.php
+.my.cnf
+*.pem
+*.key
+*.keystore
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+# Operational data; SQL schema under database/ is intentionally tracked.
+uploads/
+downloads/
+backups/
+logs/
+sessions/
+auth_info*/
+*.log
+!runtime/etc/freeradius/3.0/mods-available/detail.log
+*.sqlite
+*.sqlite3
+*.db
+*.sql.gz
+*.dump
+*.bak
+*.backup
+*.apk
+*.aab
+# Generated build products and dependencies
+/dist/
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,40 @@
+/* Shared SAM page shell tokens and responsive modes. */
+.sam-page-shell{--sam-panel-bg:#fff;--sam-border:#e2e9ec;--sam-muted:#71858f;--sam-radius:12px;box-sizing:border-box}
+.sam-page-shell *{box-sizing:border-box}
+.sam-page-shell .sam-page-panel,.sam-page-shell .dw-panel,.sam-page-shell .scr-panel{background:var(--sam-panel-bg);border:1px solid var(--sam-border);border-radius:var(--sam-radius);box-shadow:0 3px 13px rgba(25,49,64,.04)}
+.sam-page-shell .sam-page-hero,.sam-page-shell .dw-hero,.sam-page-shell .scr-hero{border-radius:16px;background:linear-gradient(135deg,var(--bg-header,#102e45),color-mix(in srgb,var(--accent-blue,#0284c7) 70%,#0d8275));}
+.sam-page-shell .sam-page-filters,.sam-page-shell .dw-filters,.sam-page-shell .scr-filters{border-color:var(--sam-border);background:var(--sam-panel-bg)}
+.sam-page-shell button.primary,.sam-page-shell .scr-filters button{background:var(--accent-blue,#0284c7);border-color:var(--accent-blue,#0284c7)}
+.sam-page-shell .dw-positive,.sam-page-shell .scr-kpi.green,.sam-page-shell td strong{--tone:var(--accent-green,#10b981)}
+.sam-page-shell .dw-due,.sam-page-shell .scr-kpi.orange{--tone:var(--accent-red,#ef4444)}
+/* Density is controlled by the global template switcher. */
+body.sam-density-compact .sam-page-shell .dw-panel,body.sam-density-compact .sam-page-shell .scr-panel{padding:10px}
+body.sam-density-compact .sam-page-shell .dw-summary article{padding:10px}
+body.sam-density-compact .sam-page-shell th,body.sam-density-compact .sam-page-shell td{padding:6px 8px;font-size:9px}
+body.sam-density-compact .sam-page-shell .scr-kpi{padding:10px}
+body.sam-density-comfortable .sam-page-shell .dw-panel,body.sam-density-comfortable .sam-page-shell .scr-panel{padding:20px}
+body.sam-density-comfortable .sam-page-shell th,body.sam-density-comfortable .sam-page-shell td{padding:12px 13px;font-size:10.5px}
+body.sam-density-comfortable .sam-page-shell .scr-kpi{padding:18px}
+/* Cards mode applies even on wide screens when selected globally. */
+body.sam-table-cards .sam-page-shell .dw-table-wrap,body.sam-table-cards .sam-page-shell .scr-table{overflow:visible;border:0}
+body.sam-table-cards .sam-page-shell .dw-table-wrap table,body.sam-table-cards .sam-page-shell .scr-table table{min-width:0}
+body.sam-table-cards .sam-page-shell .dw-table-wrap thead,body.sam-table-cards .sam-page-shell .scr-table thead{display:none}
+body.sam-table-cards .sam-page-shell .dw-table-wrap tr,body.sam-table-cards .sam-page-shell .scr-table tr{display:block;margin-bottom:8px;padding:7px;border:1px solid var(--sam-border);border-radius:9px;background:var(--sam-panel-bg)}
+body.sam-table-cards .sam-page-shell .dw-table-wrap td,body.sam-table-cards .sam-page-shell .scr-table td{display:grid;grid-template-columns:42% 58%;border:0;border-bottom:1px solid #eef2f4;padding:8px}
+body.sam-table-cards .sam-page-shell .dw-table-wrap td:before,body.sam-table-cards .sam-page-shell .scr-table td:before{content:attr(data-label);color:var(--sam-muted);font-weight:700}
+body.sam-table-cards .sam-page-shell .dw-table-wrap td:last-child,body.sam-table-cards .sam-page-shell .scr-table td:last-child{border-bottom:0}
+@media(max-width:650px){.sam-page-shell .dw-page,.sam-page-shell .scr-page{padding:11px 9px 90px}.sam-page-shell .dw-hero,.sam-page-shell .scr-hero{border-radius:12px}.sam-page-shell .dw-panel,.sam-page-shell .scr-panel{padding:11px}.sam-page-shell .dw-table-wrap,.sam-page-shell .scr-table{overflow:visible;border:0}.sam-page-shell .dw-table-wrap table,.sam-page-shell .scr-table table{min-width:0}.sam-page-shell .dw-table-wrap thead,.sam-page-shell .scr-table thead{display:none}.sam-page-shell .dw-table-wrap tr,.sam-page-shell .scr-table tr{display:block;margin-bottom:8px;padding:7px;border:1px solid var(--sam-border);border-radius:9px}.sam-page-shell .dw-table-wrap td,.sam-page-shell .scr-table td{display:grid;grid-template-columns:42% 58%;border:0;border-bottom:1px solid #eef2f4;padding:7px}.sam-page-shell .dw-table-wrap td:before,.sam-page-shell .scr-table td:before{content:attr(data-label);color:var(--sam-muted);font-weight:700}.sam-page-shell .dw-table-wrap td:last-child,.sam-page-shell .scr-table td:last-child{border-bottom:0}}
+
+/* Legacy module bridge: the main view receives sam-page-shell during every render. */
+#main-view.sam-page-shell .mt-table th,#main-view.sam-page-shell .mt-table td{transition:padding .15s ease,font-size .15s ease}
+body.sam-density-compact #main-view.sam-page-shell .mt-table th,body.sam-density-compact #main-view.sam-page-shell .mt-table td{padding:5px 7px;font-size:11px}
+body.sam-density-comfortable #main-view.sam-page-shell .mt-table th,body.sam-density-comfortable #main-view.sam-page-shell .mt-table td{padding:12px 13px;font-size:13px}
+body.sam-density-compact #main-view.sam-page-shell .mt-card,body.sam-density-compact #main-view.sam-page-shell .panel,body.sam-density-compact #main-view.sam-page-shell .card{padding:10px}
+body.sam-density-comfortable #main-view.sam-page-shell .mt-card,body.sam-density-comfortable #main-view.sam-page-shell .panel,body.sam-density-comfortable #main-view.sam-page-shell .card{padding:20px}
+body.sam-table-cards #main-view.sam-page-shell .mt-table thead{display:none}
+body.sam-table-cards #main-view.sam-page-shell .mt-table,body.sam-table-cards #main-view.sam-page-shell .mt-table tbody,body.sam-table-cards #main-view.sam-page-shell .mt-table tr,body.sam-table-cards #main-view.sam-page-shell .mt-table td{display:block;width:100%}
+body.sam-table-cards #main-view.sam-page-shell .mt-table tr{margin:0 0 9px;padding:7px;border:1px solid var(--sam-border);border-radius:9px;background:var(--sam-panel-bg,#fff)}
+body.sam-table-cards #main-view.sam-page-shell .mt-table td{display:grid;grid-template-columns:42% 58%;padding:7px;border:0;border-bottom:1px solid #eef2f4}
+body.sam-table-cards #main-view.sam-page-shell .mt-table td:before{content:attr(data-label);color:var(--sam-muted,#71858f);font-weight:700}
+body.sam-table-cards #main-view.sam-page-shell .mt-table td:last-child{border-bottom:0}
+@media(max-width:650px){#main-view.sam-page-shell{min-width:0}#main-view.sam-page-shell .mt-table-wrap,#main-view.sam-page-shell .table-responsive{overflow-x:auto}#main-view.sam-page-shell .mt-table{min-width:0}}

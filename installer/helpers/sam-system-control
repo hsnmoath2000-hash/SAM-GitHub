@@ -1,0 +1,354 @@
+#!/bin/bash
+set -euo pipefail
+case "${1:-}" in
+  service)
+    unit="${2:-}"; op="${3:-}"
+    case "$unit" in apache2|freeradius|mariadb|accel-ppp|sam-telemetry|sam-whatsapp|mikrotik-whatsapp|mikrotik-usermanager-api-worker) ;; *) exit 2;; esac
+    case "$op" in start|stop|restart) ;; *) exit 2;; esac
+    [[ "$unit:$op" != "apache2:stop" ]] || exit 3
+    /bin/systemctl "$op" "$unit"
+    ;;
+  port)
+    port="${2:-}"; [[ "$port" =~ ^[0-9]+$ ]] && ((port>=1024 && port<=65535)) || exit 2
+    [[ "$port" != 3306 && "$port" != 1812 && "$port" != 1813 && "$port" != 80 && "$port" != 443 ]] || exit 2
+    workdir="$(mktemp -d)"
+    cp /etc/apache2/conf-available/sam-port.conf "$workdir/sam-port.conf" 2>/dev/null || true
+    cp /etc/apache2/sites-available/sam.conf "$workdir/sam.conf"
+    rollback() {
+      cp "$workdir/sam-port.conf" /etc/apache2/conf-available/sam-port.conf 2>/dev/null || true
+      cp "$workdir/sam.conf" /etc/apache2/sites-available/sam.conf
+      rm -rf -- "$workdir"
+    }
+    echo "Listen $port" > /etc/apache2/conf-available/sam-port.conf
+    /usr/sbin/a2enconf sam-port >/dev/null 2>&1 || true
+    sed -E -i "s/<VirtualHost \*:(8099|[1-9][0-9]{3,4})>/<VirtualHost *:$port>/g" /etc/apache2/sites-available/sam.conf
+    sed -i '1,/<VirtualHost \*:[0-9]\+>/s/<VirtualHost \*:[0-9]\+>/<VirtualHost *:80>/' /etc/apache2/sites-available/sam.conf
+    if ! /usr/sbin/apache2ctl configtest; then rollback; exit 4; fi
+    if ! /bin/systemctl reload apache2; then rollback; /bin/systemctl reload apache2 || true; exit 5; fi
+    rm -rf -- "$workdir"
+    ;;
+  ufw)
+    op="${2:-status}"
+    case "$op" in
+      status)
+        echo "=== STATUS NUMBERED ==="
+        /usr/sbin/ufw status numbered 2>&1 || true
+        echo "=== SHOW ADDED ==="
+        /usr/sbin/ufw show added 2>&1 || true
+        ;;
+      enable)
+        if ! /usr/sbin/ufw show added 2>/dev/null | grep -qE " (22|22/tcp)"; then
+          /usr/sbin/ufw allow 22/tcp comment 'Default SSH' >/dev/null 2>&1 || true
+        fi
+        if ! /usr/sbin/ufw show added 2>/dev/null | grep -qE " (8099|8099/tcp)"; then
+          /usr/sbin/ufw allow 8099/tcp comment 'SAM Web Console' >/dev/null 2>&1 || true
+        fi
+        /usr/sbin/ufw --force enable 2>&1 || true
+        ;;
+      disable)
+        /usr/sbin/ufw disable 2>&1 || true
+        ;;
+      allow)
+        port="${3:-}"; proto="${4:-tcp}"; from_ip="${5:-any}"; comment="${6:-}"
+        [[ "$port" =~ ^[0-9]+(:[0-9]+)?$ ]] || exit 2
+        case "$proto" in tcp|udp|any) ;; *) exit 2;; esac
+        comment="${comment//[\'\"\\\`\$]/}"
+        if [[ "$from_ip" == "any" || "$from_ip" == "Anywhere" || -z "$from_ip" ]]; then
+          if [[ "$proto" == "any" ]]; then
+            /usr/sbin/ufw allow "$port" comment "$comment" 2>&1
+          else
+            /usr/sbin/ufw allow "$port/$proto" comment "$comment" 2>&1
+          fi
+        elif [[ "$from_ip" == "0.0.0.0/0" ]]; then
+          if [[ "$proto" == "any" ]]; then
+            /usr/sbin/ufw allow from 0.0.0.0/0 to any port "$port" comment "$comment" 2>&1
+          else
+            /usr/sbin/ufw allow from 0.0.0.0/0 to any port "$port" proto "$proto" comment "$comment" 2>&1
+          fi
+        elif [[ "$from_ip" == "::/0" ]]; then
+          if [[ "$proto" == "any" ]]; then
+            /usr/sbin/ufw allow from ::/0 to any port "$port" comment "$comment" 2>&1
+          else
+            /usr/sbin/ufw allow from ::/0 to any port "$port" proto "$proto" comment "$comment" 2>&1
+          fi
+        else
+          [[ "$from_ip" =~ ^[0-9a-fA-F.:/]+$ ]] || exit 2
+          if [[ "$proto" == "any" ]]; then
+            /usr/sbin/ufw allow from "$from_ip" to any port "$port" comment "$comment" 2>&1
+          else
+            /usr/sbin/ufw allow from "$from_ip" to any port "$port" proto "$proto" comment "$comment" 2>&1
+          fi
+        fi
+        ;;
+      deny-ip)
+        from_ip="${3:-}"; comment="${4:-Blocked IP}"
+        [[ "$from_ip" =~ ^[0-9a-fA-F.:/]+$ ]] || exit 2
+        comment="${comment//[\'\"\\\`\$]/}"
+        /usr/sbin/ufw insert 1 deny from "$from_ip" to any comment "$comment" 2>&1
+        ;;
+      delete-num)
+        num="${3:-}"
+        [[ "$num" =~ ^[0-9]+$ ]] || exit 2
+        /usr/sbin/ufw --force delete "$num" 2>&1
+        ;;
+      ipv6-status)
+        grep -i '^IPV6=' /etc/default/ufw 2>/dev/null || echo "IPV6=unknown"
+        ;;
+      ipv6-toggle)
+        opt="${3:-enable}"
+        if [ "$opt" = "enable" ] || [ "$opt" = "yes" ]; then
+          sed -i 's/^IPV6=.*/IPV6=yes/' /etc/default/ufw
+        else
+          sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
+        fi
+        /usr/sbin/ufw reload >/dev/null 2>&1 || true
+        echo "IPV6_CONFIGURED"
+        ;;
+      defaults)
+        /usr/sbin/ufw allow 22/tcp comment 'Default SSH' 2>&1 || true
+        /usr/sbin/ufw allow 80/tcp comment 'Web HTTP' 2>&1 || true
+        /usr/sbin/ufw allow 443/tcp comment 'Web HTTPS' 2>&1 || true
+        /usr/sbin/ufw allow 8099/tcp comment 'SAM Web Console' 2>&1 || true
+        /usr/sbin/ufw allow 4406/tcp comment 'SSTP VPN Concentrator' 2>&1 || true
+        /usr/sbin/ufw allow 1812/udp comment 'FreeRADIUS Auth' 2>&1 || true
+        /usr/sbin/ufw allow 1813/udp comment 'FreeRADIUS Acct' 2>&1 || true
+        /usr/sbin/ufw allow 3799/udp comment 'FreeRADIUS CoA' 2>&1 || true
+        /usr/sbin/ufw allow 8088/tcp comment 'Telemetry WebSocket' 2>&1 || true
+        /usr/sbin/ufw allow 3388/tcp comment 'WhatsApp Gateway' 2>&1 || true
+        echo "DEFAULT_RULES_APPLIED"
+        ;;
+      *) exit 2;;
+    esac
+    ;;
+  logs)
+    target="${2:-worker}"; lines="${3:-50}"
+    [[ "$lines" =~ ^[0-9]+$ ]] && ((lines>=5 && lines<=200)) || lines=50
+    case "$target" in
+      worker)
+        /bin/journalctl -u mikrotik-usermanager-api-worker -n "$lines" --no-pager 2>&1 || true
+        ;;
+      telemetry)
+        /bin/journalctl -u sam-telemetry -n "$lines" --no-pager 2>&1 || true
+        ;;
+      whatsapp)
+        /bin/journalctl -u sam-whatsapp -n "$lines" --no-pager 2>&1 || true
+        ;;
+      accel-ppp)
+        /bin/journalctl -u accel-ppp -n "$lines" --no-pager 2>&1 || true
+        ;;
+      freeradius)
+        /bin/journalctl -u freeradius -n "$lines" --no-pager 2>&1 || true
+        ;;
+      apache-error)
+        if [ -f /var/log/apache2/sam-http-error.log ]; then
+          /usr/bin/tail -n "$lines" /var/log/apache2/sam-http-error.log 2>&1 || true
+        else
+          /usr/bin/tail -n "$lines" /var/log/apache2/error.log 2>&1 || true
+        fi
+        ;;
+      maintenance)
+        if [ -f /var/log/sam-maintenance.log ]; then
+          /usr/bin/tail -n "$lines" /var/log/sam-maintenance.log 2>&1 || true
+        else
+          echo "No maintenance log file found."
+        fi
+        ;;
+      ssh)
+        /bin/journalctl -u ssh -n "$lines" --no-pager 2>&1 || true
+        ;;
+      *) exit 2;;
+    esac
+    ;;
+  cleanup)
+    echo "Starting safe cleanup..."
+    # 1. Clean tmp files older than 1 day
+    /usr/bin/find /tmp -maxdepth 1 -name "sam_*" -mtime +1 -delete 2>/dev/null || true
+    # 2. Clean old exports (>3 days)
+    if [ -d /var/lib/mikrotik-usermanager/exports ]; then
+      /usr/bin/find /var/lib/mikrotik-usermanager/exports -type f -mtime +3 -delete 2>/dev/null || true
+    fi
+    # 3. Rotate logs if larger than 20MB
+    for log in /var/log/sam-maintenance.log /var/log/sam-wa-reports.log /var/log/accel-ppp/accel-ppp.log; do
+      if [ -f "$log" ]; then
+        sz=$(stat -c%s "$log" 2>/dev/null || echo 0)
+        if [ "$sz" -gt 20971520 ]; then
+          tail -n 5000 "$log" > "$log.tmp" && mv "$log.tmp" "$log"
+          echo "Trimmed large log: $log"
+        fi
+      fi
+    done
+    echo "CLEANUP_SUCCESS"
+    ;;
+  port-forward)
+    op="${2:-list}"
+    case "$op" in
+      apply)
+        conf="${3:-/var/lib/mikrotik-usermanager/port-forwards.conf}"
+        /sbin/sysctl -q -w net.ipv4.ip_forward=1 || true
+        /usr/sbin/iptables -t nat -N SAM_PORT_FWD_PRE 2>/dev/null || true
+        /usr/sbin/iptables -t nat -N SAM_PORT_FWD_POST 2>/dev/null || true
+        /usr/sbin/iptables -N SAM_PORT_FWD_FILTER 2>/dev/null || true
+        /usr/sbin/iptables -t nat -C PREROUTING -j SAM_PORT_FWD_PRE 2>/dev/null || /usr/sbin/iptables -t nat -I PREROUTING 1 -j SAM_PORT_FWD_PRE
+        /usr/sbin/iptables -t nat -C POSTROUTING -j SAM_PORT_FWD_POST 2>/dev/null || /usr/sbin/iptables -t nat -I POSTROUTING 1 -j SAM_PORT_FWD_POST
+        /usr/sbin/iptables -C FORWARD -j SAM_PORT_FWD_FILTER 2>/dev/null || /usr/sbin/iptables -I FORWARD 1 -j SAM_PORT_FWD_FILTER
+
+        /usr/sbin/iptables -t nat -F SAM_PORT_FWD_PRE
+        /usr/sbin/iptables -t nat -F SAM_PORT_FWD_POST
+        /usr/sbin/iptables -F SAM_PORT_FWD_FILTER
+
+        if [ -f "$conf" ]; then
+          while IFS=' ' read -r l_port proto t_ip t_port comment || [ -n "$l_port" ]; do
+            [[ -z "$l_port" || "$l_port" =~ ^# ]] && continue
+            [[ "$l_port" =~ ^[0-9]+$ && "$t_port" =~ ^[0-9]+$ ]] || continue
+            [[ "$t_ip" =~ ^[0-9a-fA-F.:]+$ ]] || continue
+            comment="$(echo "${comment:-}" | tr -cd 'a-zA-Z0-9 _.-')"
+            
+            if [[ "$proto" == "tcp" || "$proto" == "both" ]]; then
+              /usr/sbin/iptables -t nat -A SAM_PORT_FWD_PRE -p tcp --dport "$l_port" -j DNAT --to-destination "$t_ip:$t_port"
+              /usr/sbin/iptables -t nat -A SAM_PORT_FWD_POST -p tcp -d "$t_ip" --dport "$t_port" -j MASQUERADE
+              /usr/sbin/iptables -A SAM_PORT_FWD_FILTER -p tcp -d "$t_ip" --dport "$t_port" -j ACCEPT
+              /usr/sbin/ufw allow "$l_port/tcp" comment "PF: $comment" >/dev/null 2>&1 || true
+            fi
+            if [[ "$proto" == "udp" || "$proto" == "both" ]]; then
+              /usr/sbin/iptables -t nat -A SAM_PORT_FWD_PRE -p udp --dport "$l_port" -j DNAT --to-destination "$t_ip:$t_port"
+              /usr/sbin/iptables -t nat -A SAM_PORT_FWD_POST -p udp -d "$t_ip" --dport "$t_port" -j MASQUERADE
+              /usr/sbin/iptables -A SAM_PORT_FWD_FILTER -p udp -d "$t_ip" --dport "$t_port" -j ACCEPT
+              /usr/sbin/ufw allow "$l_port/udp" comment "PF: $comment" >/dev/null 2>&1 || true
+            fi
+          done < "$conf"
+        fi
+        echo "PORT_FORWARD_APPLIED"
+        ;;
+      clear)
+        /usr/sbin/iptables -t nat -F SAM_PORT_FWD_PRE 2>/dev/null || true
+        /usr/sbin/iptables -t nat -F SAM_PORT_FWD_POST 2>/dev/null || true
+        /usr/sbin/iptables -F SAM_PORT_FWD_FILTER 2>/dev/null || true
+        echo "PORT_FORWARD_CLEARED"
+        ;;
+      list)
+        /usr/sbin/iptables -t nat -L SAM_PORT_FWD_PRE -n -v --line-numbers 2>&1 || true
+        ;;
+      *) exit 2;;
+    esac
+    ;;
+  geo-rule)
+    op="${2:-list}"
+    case "$op" in
+      apply)
+        restore_file="${3:-/var/lib/mikrotik-usermanager/geo-sets.restore}"
+        conf="${4:-/var/lib/mikrotik-usermanager/geo-rules.conf}"
+
+        # 1. Setup IPv4 chains
+        /usr/sbin/iptables -N SAM_GEO_HIGH 2>/dev/null || true
+        /usr/sbin/iptables -N SAM_GEO_NORM 2>/dev/null || true
+        /usr/sbin/iptables -C INPUT -j SAM_GEO_HIGH 2>/dev/null || /usr/sbin/iptables -I INPUT 1 -j SAM_GEO_HIGH
+        /usr/sbin/iptables -C INPUT -j SAM_GEO_NORM 2>/dev/null || /usr/sbin/iptables -A INPUT -j SAM_GEO_NORM
+        /usr/sbin/iptables -F SAM_GEO_HIGH
+        /usr/sbin/iptables -F SAM_GEO_NORM
+
+        # IPv4 Safety rules in HIGH chain
+        /usr/sbin/iptables -A SAM_GEO_HIGH -i lo -j ACCEPT
+        /usr/sbin/iptables -A SAM_GEO_HIGH -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+        /usr/sbin/iptables -A SAM_GEO_HIGH -s 192.168.3.0/24 -j ACCEPT
+
+        # 2. Setup IPv6 chains
+        /usr/sbin/ip6tables -N SAM_GEO_HIGH 2>/dev/null || true
+        /usr/sbin/ip6tables -N SAM_GEO_NORM 2>/dev/null || true
+        /usr/sbin/ip6tables -C INPUT -j SAM_GEO_HIGH 2>/dev/null || /usr/sbin/ip6tables -I INPUT 1 -j SAM_GEO_HIGH
+        /usr/sbin/ip6tables -C INPUT -j SAM_GEO_NORM 2>/dev/null || /usr/sbin/ip6tables -A INPUT -j SAM_GEO_NORM
+        /usr/sbin/ip6tables -F SAM_GEO_HIGH
+        /usr/sbin/ip6tables -F SAM_GEO_NORM
+
+        # IPv6 Safety rules in HIGH chain
+        /usr/sbin/ip6tables -A SAM_GEO_HIGH -i lo -j ACCEPT
+        /usr/sbin/ip6tables -A SAM_GEO_HIGH -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+        # 3. Destroy old sam_geo ipsets (safe now because chains are flushed)
+        for s in $(/usr/sbin/ipset list -n 2>/dev/null | grep '^sam_geo_'); do
+          /usr/sbin/ipset destroy "$s" 2>/dev/null || true
+        done
+
+        # 4. Bulk restore ipsets if restore file provided
+        if [ -f "$restore_file" ] && [ -s "$restore_file" ]; then
+          /usr/sbin/ipset restore -! < "$restore_file" 2>&1 || true
+        fi
+
+        # 5. Apply iptables & ip6tables rules from conf
+        if [ -f "$conf" ]; then
+          while IFS=' ' read -r r_id r_act r_prio r_port r_proto r_ver r_set_v4 r_set_v6 || [ -n "$r_id" ]; do
+            [[ -z "$r_id" || "$r_id" =~ ^# ]] && continue
+            chain="SAM_GEO_NORM"
+            [ "$r_prio" = "high" ] && chain="SAM_GEO_HIGH"
+            target="DROP"
+            [ "$r_act" = "allow" ] && target="ACCEPT"
+
+            # Apply IPv4 rule
+            if [[ "$r_ver" == "v4" || "$r_ver" == "both" ]] && [ "$r_set_v4" != "none" ] && [ -n "$r_set_v4" ]; then
+              if [ "$r_port" != "all" ] && [ -n "$r_port" ]; then
+                if [ "$r_proto" = "tcp" ] || [ "$r_proto" = "all" ]; then
+                  /usr/sbin/iptables -A "$chain" -m set --match-set "$r_set_v4" src -p tcp --dport "$r_port" -j "$target"
+                fi
+                if [ "$r_proto" = "udp" ] || [ "$r_proto" = "all" ]; then
+                  /usr/sbin/iptables -A "$chain" -m set --match-set "$r_set_v4" src -p udp --dport "$r_port" -j "$target"
+                fi
+              else
+                if [ "$r_proto" = "tcp" ]; then
+                  /usr/sbin/iptables -A "$chain" -m set --match-set "$r_set_v4" src -p tcp -j "$target"
+                elif [ "$r_proto" = "udp" ]; then
+                  /usr/sbin/iptables -A "$chain" -m set --match-set "$r_set_v4" src -p udp -j "$target"
+                else
+                  /usr/sbin/iptables -A "$chain" -m set --match-set "$r_set_v4" src -j "$target"
+                fi
+              fi
+            fi
+
+            # Apply IPv6 rule
+            if [[ "$r_ver" == "v6" || "$r_ver" == "both" ]] && [ "$r_set_v6" != "none" ] && [ -n "$r_set_v6" ]; then
+              if [ "$r_port" != "all" ] && [ -n "$r_port" ]; then
+                if [ "$r_proto" = "tcp" ] || [ "$r_proto" = "all" ]; then
+                  /usr/sbin/ip6tables -A "$chain" -m set --match-set "$r_set_v6" src -p tcp --dport "$r_port" -j "$target"
+                fi
+                if [ "$r_proto" = "udp" ] || [ "$r_proto" = "all" ]; then
+                  /usr/sbin/ip6tables -A "$chain" -m set --match-set "$r_set_v6" src -p udp --dport "$r_port" -j "$target"
+                fi
+              else
+                if [ "$r_proto" = "tcp" ]; then
+                  /usr/sbin/ip6tables -A "$chain" -m set --match-set "$r_set_v6" src -p tcp -j "$target"
+                elif [ "$r_proto" = "udp" ]; then
+                  /usr/sbin/ip6tables -A "$chain" -m set --match-set "$r_set_v6" src -p udp -j "$target"
+                else
+                  /usr/sbin/ip6tables -A "$chain" -m set --match-set "$r_set_v6" src -j "$target"
+                fi
+              fi
+            fi
+          done < "$conf"
+        fi
+        echo "GEO_RULES_APPLIED"
+        ;;
+      clear)
+        /usr/sbin/iptables -F SAM_GEO_HIGH 2>/dev/null || true
+        /usr/sbin/iptables -F SAM_GEO_NORM 2>/dev/null || true
+        /usr/sbin/ip6tables -F SAM_GEO_HIGH 2>/dev/null || true
+        /usr/sbin/ip6tables -F SAM_GEO_NORM 2>/dev/null || true
+        for s in $(/usr/sbin/ipset list -n 2>/dev/null | grep '^sam_geo_'); do
+          /usr/sbin/ipset destroy "$s" 2>/dev/null || true
+        done
+        echo "GEO_RULES_CLEARED"
+        ;;
+      list)
+        echo "=== IPv4 SAM_GEO_HIGH ==="
+        /usr/sbin/iptables -L SAM_GEO_HIGH -n -v --line-numbers 2>&1 || true
+        echo "=== IPv4 SAM_GEO_NORM ==="
+        /usr/sbin/iptables -L SAM_GEO_NORM -n -v --line-numbers 2>&1 || true
+        echo "=== IPv6 SAM_GEO_HIGH ==="
+        /usr/sbin/ip6tables -L SAM_GEO_HIGH -n -v --line-numbers 2>&1 || true
+        echo "=== IPv6 SAM_GEO_NORM ==="
+        /usr/sbin/ip6tables -L SAM_GEO_NORM -n -v --line-numbers 2>&1 || true
+        echo "=== IPSET SETS ==="
+        /usr/sbin/ipset list -n 2>&1 | grep '^sam_geo_' || echo "None"
+        ;;
+      *) exit 2;;
+    esac
+    ;;
+  *) exit 2;;
+esac

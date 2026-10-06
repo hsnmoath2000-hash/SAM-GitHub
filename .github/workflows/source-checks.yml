@@ -1,0 +1,18 @@
+name: Source checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  syntax-and-source:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify available runtimes
+        run: |
+          php --version
+          node --version
+          python3 --version
+      - name: Check source and syntax
+        run: python3 tools/check_repo.py --syntax
+      - name: Verify packaging
+        run: python3 tools/build_release.py

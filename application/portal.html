@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>بوابة المشترك | حالة الكرت والاتصال</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0284c7;
+            --accent: #10b981;
+            --bg-start: #0b1120;
+            --bg-end: #151f32;
+            --card-bg: #151f32;
+            --card-border: #23334d;
+            --card-inner: #0b1322;
+            --radius: 16px;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --purple: #8b5cf6;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body {
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 16px 12px 36px;
+        }
+        .portal-container {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Brand Header */
+        .brand-header {
+            text-align: center;
+            padding: 6px 0 2px;
+        }
+        .brand-logo-wrap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            margin-bottom: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .brand-logo-img { max-width: 50px; max-height: 50px; object-fit: contain; }
+        .brand-logo-icon { font-size: 30px; }
+        .brand-title { font-size: 21px; font-weight: 900; color: #fff; line-height: 1.3; }
+        .brand-slogan { font-size: 12.5px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #34d399;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse-dot 1.8s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.6; }
+        }
+
+        /* Card Container */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 18px 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
+        }
+        .card-title {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 10.5px;
+            font-weight: 800;
+        }
+
+        /* Circular Balance Progress */
+        .balance-circle-wrap {
+            position: relative;
+            width: 155px;
+            height: 155px;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .balance-svg {
+            transform: rotate(-90deg);
+            width: 155px;
+            height: 155px;
+        }
+        .balance-bg-ring {
+            fill: none;
+            stroke: #1e293b;
+            stroke-width: 10;
+        }
+        .balance-prog-ring {
+            fill: none;
+            stroke: url(#balance-grad);
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s ease;
+        }
+        .balance-inner-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .balance-val {
+            font-size: 23px;
+            font-weight: 900;
+            color: #38bdf8;
+            letter-spacing: -0.5px;
+            direction: ltr;
+        }
+        .balance-lbl {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .balance-pct {
+            font-size: 11px;
+            color: #34d399;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .stat-box {
+            background: var(--card-inner);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 8px 6px;
+            text-align: center;
+        }
+        .stat-box span {
+            display: block;
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+        .stat-box b {
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            word-break: break-word;
+        }
+
+        /* Speed Tiers Grid */
+        .speed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .speed-btn {
+            background: var(--card-inner);
+            border: 1.5px solid rgba(56, 189, 248, 0.15);
+            border-radius: 12px;
+            padding: 8px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #fff;
+        }
+        .speed-btn:hover {
+            border-color: #38bdf8;
+            transform: translateY(-2px);
+        }
+        .speed-btn.active {
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.18);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+        }
+        .speed-btn i { font-size: 16px; display: block; margin-bottom: 2px; font-style: normal; }
+        .speed-btn b { font-size: 11px; display: block; font-weight: 800; }
+        .speed-btn small { font-size: 9px; color: var(--text-muted); }
+
+        /* Form & Buttons */
+        .form-input {
+            width: 100%;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1.5px solid var(--card-border);
+            border-radius: 10px;
+            padding: 0 12px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            outline: none;
+        }
+        .form-input:focus { border-color: var(--primary); }
+
+        .btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-danger { background: var(--danger); }
+        .btn-danger:hover { background: var(--danger-hover); }
+        .btn-success { background: var(--accent); }
+        .btn-outline {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: #38bdf8;
+        }
+
+        .btn-submit {
+            width: 100%;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, #0284c7 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
+            text-decoration: none;
+        }
+
+        /* Devices List */
+        .device-item {
+            background: var(--card-inner);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 9px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .actions-toolbar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Ads Slider */
+        .ad-slider { position: relative; border-radius: 14px; overflow: hidden; background: rgba(0,0,0,0.3); border: 1px solid var(--card-border); min-height: 95px; }
+        .ad-slide { display: none; padding: 14px; }
+        .ad-slide.active { display: block; animation: fadeIn 0.4s ease; }
+        .ad-badge { font-size: 11px; background: var(--accent); color: #022c22; padding: 2px 8px; border-radius: 6px; font-weight: 800; display: inline-block; margin-bottom: 6px; }
+        .ad-heading { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+        .ad-text { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+        .ad-dots { display: flex; justify-content: center; gap: 6px; padding: 6px 0 10px; }
+        .ad-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: all 0.2s ease; }
+        .ad-dot.active { width: 18px; border-radius: 4px; background: var(--accent); }
+
+        /* Packages Grid */
+        .pkg-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .pkg-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        .pkg-card.featured { border-color: var(--accent); background: rgba(16, 185, 129, 0.05); }
+        .pkg-name { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+        .pkg-price { font-size: 15px; font-weight: 900; color: var(--accent); margin-bottom: 6px; }
+        .pkg-meta { font-size: 11px; color: var(--text-muted); display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+        .pkg-btn {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 6px 4px;
+            color: #10b981;
+            font-size: 11px;
+            font-weight: 800;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Shortcuts */
+        .sc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .sc-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 10px;
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sc-icon { font-size: 20px; }
+        .sc-title { font-size: 12px; font-weight: 800; display: block; }
+        .sc-desc { font-size: 10px; color: var(--text-muted); display: block; }
+
+        .footer-note { text-align: center; font-size: 11px; color: #64748b; margin-top: 4px; }
+
+        /* Loader & Toast */
+        #page-loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            gap: 14px;
+            text-align: center;
+        }
+        .spinner {
+            width: 42px;
+            height: 42px;
+            border: 4px solid rgba(56, 189, 248, 0.2);
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 50%;
+            transform: translateX(50%);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            border: 1px solid #38bdf8;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            display: none;
+            z-index: 10000;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        
+        <!-- Brand Header -->
+        <header class="brand-header">
+            <div class="brand-logo-wrap">
+                <img id="net-brand-logo-img" src="" alt="Logo" class="brand-logo-img" style="display:none;">
+                <span id="net-brand-logo-icon" class="brand-logo-icon">📶</span>
+            </div>
+            <h1 id="net-brand-title" class="brand-title">شبكتنا لخدمات الإنترنت</h1>
+            <p id="net-brand-slogan" class="brand-slogan">إنترنت فائق السرعة واستقرار عالي</p>
+            <div class="status-pill" id="header-status-pill" style="display:none;">
+                <span class="status-dot"></span>
+                <span id="conn-status-text">متصل بالإنترنت بنجاح</span>
+            </div>
+        </header>
+
+        <!-- Initial Page Loader -->
+        <div id="page-loader">
+            <div class="spinner"></div>
+            <p style="font-size:13px; color:var(--text-muted);">جاري فحص رصيد وبيانات الكرت الحية...</p>
+        </div>
+
+        <!-- Offline / Not Connected Card (Only if no card found) -->
+        <main class="card" id="offline-view" style="display:none; text-align:center; padding:24px 16px;">
+            <div style="font-size:36px; margin-bottom:8px;">⚠️</div>
+            <h2 style="font-size:16px; font-weight:800; color:#f87171; margin-bottom:6px;">لا توجد جلسة نشطة متصلة</h2>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;" id="offline-msg">لم يتم العثور على اشتراك نشط متصل بهذا الجهاز حالياً.</p>
+            <a href="hotspot-portal.php" id="offline-login-btn" class="btn-submit">
+                <span>🔑</span>
+                <span>تسجيل الدخول للشبكة</span>
+            </a>
+        </main>
+
+        <!-- Main Card Status Dashboard -->
+        <div id="card-view" style="display:none; flex-direction:column; gap:14px;">
+            
+            <!-- Balance & Package Card -->
+            <main class="card" style="text-align:center;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="badge" style="background:rgba(2, 132, 199, 0.25); border:1px solid var(--primary); color:#38bdf8;" id="p-package">الباقة الأساسية</span>
+                    <span style="font-size:12px; color:var(--text-muted); font-weight:700;" id="p-card-num">كرت: ---</span>
+                    <span class="badge" style="background:rgba(16, 185, 129, 0.25); border:1px solid var(--accent); color:#34d399;" id="p-status">نشط 🟢</span>
+                </div>
+
+                <!-- Circular Progress Ring -->
+                <div class="balance-circle-wrap">
+                    <svg class="balance-svg" viewBox="0 0 160 160">
+                        <defs>
+                            <linearGradient id="balance-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#38bdf8" />
+                                <stop offset="100%" stop-color="var(--accent)" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="balance-bg-ring" cx="80" cy="80" r="70" />
+                        <circle id="balance-ring" class="balance-prog-ring" cx="80" cy="80" r="70" />
+                    </svg>
+                    <div class="balance-inner-content">
+                        <div class="balance-val" id="p-remaining">-- MB</div>
+                        <div class="balance-lbl">الرصيد المتبقي</div>
+                        <div class="balance-pct" id="p-percent">100% متبقي</div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span>الاستهلاك</span>
+                        <b id="p-consumed">0 MB</b>
+                    </div>
+                    <div class="stat-box">
+                        <span>الصلاحية</span>
+                        <b id="p-validity">--</b>
+                    </div>
+                    <div class="stat-box">
+                        <span>الوقت المتبقي</span>
+                        <b id="p-uptime">غير محدود</b>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Speed Control Card (CoA) -->
+            <section class="card" id="speed-card">
+                <div class="card-title">
+                    <span>⚡ سرعة الكرت (CoA)</span>
+                    <span class="badge" style="background:var(--primary); color:#fff;" id="p-current-speed">قياسية</span>
+                </div>
+                
+                <div id="speed-locked-notice" style="display:none; background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.25); border-radius:10px; padding:10px; text-align:center;">
+                    <div style="font-size:12px; font-weight:700; color:#f87171;">🔒 السرعة محددة بالباقة</div>
+                    <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;" id="speed-locked-desc">سرعة ثابتة محددة بالاشتراك</div>
+                </div>
+
+                <div id="speed-unlocked-container" style="display:none;">
+                    <p style="font-size:11px; color:var(--text-muted); margin-bottom:6px;">انقر على السرعة لتطبيقها فوراً على الراوتر:</p>
+                    <div class="speed-grid" id="speed-buttons-container"></div>
+                </div>
+            </section>
+
+            <!-- Multi-Device Limit Control -->
+            <section class="card">
+                <div class="card-title">
+                    <span>📶 عدد الأجهزة المسموح بها</span>
+                    <span class="badge" style="background:var(--purple); color:#fff;" id="p-max-profile-limit">الحد: 1</span>
+                </div>
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:6px;">حدد كم جهاز يُسمح له بالاتصال في نفس الوقت:</p>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <select id="device-limit-select" class="form-input" style="flex:1;"></select>
+                    <button class="btn btn-success" style="white-space:nowrap; height:40px; padding:0 14px;" onclick="saveDeviceLimit()">💾 حفظ</button>
+                </div>
+            </section>
+
+            <!-- MAC Lock Card -->
+            <section class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+                    <div>
+                        <h3 style="font-size:14px; margin:0;">🔒 تثبيت الجهاز لمنع السرقة</h3>
+                        <p style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">يربط الكرت بجهازك الأول لمنع مشاركته مع غيرك.</p>
+                        <div id="mac-lock-value" style="font-size:10.5px; color:#38bdf8; margin-top:4px;">غير مفعل</div>
+                    </div>
+                    <button id="mac-lock-toggle" class="btn" style="min-width:95px; padding:8px 12px; font-size:12px;" onclick="toggleMacLock()">تفعيل</button>
+                </div>
+            </section>
+
+            <!-- Connected Devices List -->
+            <section class="card">
+                <div class="card-title">
+                    <span>👥 الأجهزة المتصلة حالياً (<span id="dev-count">0</span>)</span>
+                    <button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="loadDevices()">⟳ تحديث</button>
+                </div>
+                <div id="devices-list">
+                    <div style="text-align:center; padding:10px; font-size:11.5px; color:var(--text-muted);">لا توجد أجهزة متصلة حالياً بهذا الكرت</div>
+                </div>
+            </section>
+
+            <!-- Actions Toolbar: Refresh & Logout -->
+            <div class="actions-toolbar">
+                <button class="btn btn-outline" style="width:100%;" onclick="refreshStatus(true)">
+                    🔄 تحديث الرصيد
+                </button>
+                <button class="btn btn-danger" style="width:100%;" onclick="doHotspotLogout()">
+                    🚪 تسجيل الخروج
+                </button>
+            </div>
+        </div>
+
+        <!-- Dynamic Ads Slider Section -->
+        <section class="card" id="network-ads-section" style="display:none; padding:10px;">
+            <div class="ad-slider" id="adSlider"></div>
+            <div class="ad-dots" id="adDots"></div>
+        </section>
+
+        <!-- Dynamic Packages Grid Section -->
+        <section class="card" id="network-packages-section" style="display:none;">
+            <h2 class="card-title">💎 باقات وعروض الشبكة</h2>
+            <div class="pkg-grid" id="packages-container"></div>
+        </section>
+
+        <!-- Dynamic Shortcuts Section -->
+        <section class="card" id="network-shortcuts-section" style="display:none;">
+            <h2 class="card-title">🌟 خدمات وروابط سريعة</h2>
+            <div class="sc-grid" id="shortcuts-container"></div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer-note" style="text-align:center; padding:12px 0 6px;">
+            <div style="margin-bottom:8px;">
+                <a href="services.html" target="_blank" style="color:#38bdf8; text-decoration:none; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:6px; background:rgba(56,189,248,0.08); padding:5px 14px; border-radius:20px; border:1px solid rgba(56,189,248,0.25);">
+                    <span>✨</span> <span>استعراض مميزات وخدمات شبكتنا ومنظومة SAM</span>
+                </a>
+            </div>
+            <p id="footer-text">SAM User Manager | جميع الحقوق محفوظة</p>
+        </footer>
+
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let currentCard = '';
+        let cardData = null;
+        let refreshTimer = null;
+        let logoutUrl = '';
+        let networkSettings = null;
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            if (!t) return;
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3200);
+        }
+
+        function escapeHtml(str) {
+            return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        function normalizeInput(val) {
+            if (!val) return '';
+            const arabicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩','۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+            const standardDigits = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
+            let out = String(val).trim();
+            for (let i = 0; i < arabicDigits.length; i++) {
+                out = out.split(arabicDigits[i]).join(standardDigits[i]);
+            }
+            return out.replace(/^#+/, '').trim();
+        }
+
+        function cleanCardCode(val) {
+            if (!val) return '';
+            let s = normalizeInput(val);
+            if (s.startsWith('$(') || s.includes('$') || s.includes('(') || s.includes(')') || s.toLowerCase() === 'username') {
+                return '';
+            }
+            return s;
+        }
+
+        function formatValidity(value, expiresAt) {
+            const raw = String(value || '').trim().toLowerCase();
+            const match = raw.match(/^(\d+)\s*(mo|[mhdy])$/i);
+            if (match) {
+                const labels = { m: 'دقيقة', h: 'ساعة', d: 'يوم', mo: 'شهر', y: 'سنة' };
+                return `${match[1]} ${labels[match[2].toLowerCase()] || raw}`;
+            }
+            if (raw) return raw;
+            if (expiresAt) return `ينتهي ${expiresAt}`;
+            return 'غير محددة';
+        }
+
+        async function loadNetworkBrandSettings() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const netId = params.get('network_id') || '';
+                const res = await fetch(`hotspot-settings-api.php${netId ? '?network_id=' + encodeURIComponent(netId) : ''}`).then(r => r.json());
+                if (res) {
+                    networkSettings = res;
+                    if (res.theme) {
+                        const t = res.theme;
+                        const root = document.documentElement;
+                        if (t.primary_color) root.style.setProperty('--primary', t.primary_color);
+                        if (t.accent_color) root.style.setProperty('--accent', t.accent_color);
+                        if (t.bg_gradient_start) root.style.setProperty('--bg-start', t.bg_gradient_start);
+                        if (t.bg_gradient_end) root.style.setProperty('--bg-end', t.bg_gradient_end);
+                        if (t.card_bg) root.style.setProperty('--card-bg', t.card_bg);
+                        if (t.card_border) root.style.setProperty('--card-border', t.card_border);
+                        if (t.border_radius) root.style.setProperty('--radius', t.border_radius);
+                    }
+                    if (res['الشبكة']) {
+                        document.getElementById('net-brand-title').innerText = res['الشبكة'];
+                        document.title = `${res['الشبكة']} | حالة الكرت والاتصال`;
+                    }
+                    if (res.icon && !res.icon.includes('$(hostname)')) {
+                        const img = document.getElementById('net-brand-logo-img');
+                        img.src = res.icon;
+                        img.style.display = 'inline-block';
+                        document.getElementById('net-brand-logo-icon').style.display = 'none';
+                    }
+                    if (res.ads && res.ads.length > 0) renderAds(res.ads);
+                    if (res.packages && res.packages.length > 0) renderPackages(res.packages, res.whatsapp, res['الشبكة']);
+                    if (res.shortcuts && res.shortcuts.length > 0) renderShortcuts(res.shortcuts);
+                }
+            } catch (e) {
+                console.warn('Could not load dynamic network brand settings:', e);
+            }
+        }
+
+        function renderAds(ads) {
+            const active = ads.filter(x => x.enabled);
+            if (!active.length) return;
+            const sec = document.getElementById('network-ads-section');
+            const slider = document.getElementById('adSlider');
+            const dots = document.getElementById('adDots');
+            sec.style.display = 'block';
+
+            slider.innerHTML = active.map((ad, idx) => `
+                <div class="ad-slide ${idx === 0 ? 'active' : ''}" data-idx="${idx}">
+                    <span class="ad-badge">${escapeHtml(ad.badge || 'عرض مميز')}</span>
+                    <h3 class="ad-heading">${escapeHtml(ad.title || '')}</h3>
+                    <p class="ad-text">${escapeHtml(ad.desc || '')}</p>
+                </div>
+            `).join('');
+
+            dots.innerHTML = active.map((_, idx) => `
+                <span class="ad-dot ${idx === 0 ? 'active' : ''}" onclick="goToAdSlide(${idx})"></span>
+            `).join('');
+
+            if (active.length > 1) {
+                setInterval(() => {
+                    const slides = document.querySelectorAll('.ad-slide');
+                    let cur = 0;
+                    slides.forEach((s, i) => { if (s.classList.contains('active')) cur = i; });
+                    goToAdSlide((cur + 1) % slides.length);
+                }, 4000);
+            }
+        }
+
+        function goToAdSlide(idx) {
+            const slides = document.querySelectorAll('.ad-slide');
+            const dots = document.querySelectorAll('.ad-dot');
+            slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+            dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        }
+
+        function renderPackages(pkgs, wa, netName) {
+            const active = pkgs.filter(x => x.enabled);
+            if (!active.length) return;
+            const sec = document.getElementById('network-packages-section');
+            const container = document.getElementById('packages-container');
+            sec.style.display = 'block';
+
+            container.innerHTML = active.map(pkg => {
+                const isFree = (pkg.package_type === 'free') || (Number(pkg.price) <= 0);
+                const pPrice = isFree ? 0 : Number(pkg.price);
+                const waText = isFree 
+                    ? `مرحباً، أود الحصول على الباقة المجانية ${pkg.name} من شبكة ${netName || 'سام'}`
+                    : `مرحباً، أود الاشتراك في باقة ${pkg.name} بسعر ${pPrice} ريال من شبكة ${netName || 'سام'}`;
+                const waClean = (wa || '').replace(/[^0-9]/g, '');
+
+                return `
+                    <div class="pkg-card ${pkg.featured ? 'featured' : ''}">
+                        <div>
+                            <div class="pkg-name">${escapeHtml(pkg.name)}</div>
+                            <div class="pkg-price">${isFree ? 'مجاناً 🎁' : pPrice + ' ريال'}</div>
+                            <div class="pkg-meta">
+                                <span>⏳ ${escapeHtml(pkg.validity || '30 يوم')}</span>
+                                <span>📊 ${escapeHtml(pkg.quota_label || 'غير محدود')}</span>
+                                ${pkg.rate_limit && pkg.rate_limit !== 'سرعة قياسية' ? `<span>⚡ ${escapeHtml(pkg.rate_limit)}</span>` : ''}
+                            </div>
+                        </div>
+                        ${waClean ? `
+                            <a href="https://wa.me/${waClean}?text=${encodeURIComponent(waText)}" target="_blank" class="pkg-btn">
+                                ${isFree ? 'طلب الباقة المجانية 🎁' : 'طلب الباقة ⚡'}
+                            </a>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderShortcuts(scs) {
+            const active = scs.filter(x => x.enabled);
+            if (!active.length) return;
+            const sec = document.getElementById('network-shortcuts-section');
+            const container = document.getElementById('shortcuts-container');
+            sec.style.display = 'block';
+
+            container.innerHTML = active.map(sc => `
+                <a href="${escapeHtml(sc.url || '#')}" target="_blank" class="sc-item">
+                    <span class="sc-icon">${escapeHtml(sc.icon || '🔗')}</span>
+                    <div>
+                        <span class="sc-title">${escapeHtml(sc.title || 'خدمة')}</span>
+                        <span class="sc-desc">${escapeHtml(sc.badge || 'رابط')}</span>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        async function fetchCardStatus(code = '') {
+            try {
+                const url = code ? `api.php?action=subscriber_get_status&code=${encodeURIComponent(code)}` : `api.php?action=subscriber_get_status`;
+                return await fetch(url).then(r => r.json());
+            } catch (err) {
+                return { success: false, error: 'تعذر الاتصال بالخادم' };
+            }
+        }
+
+        async function initPortal() {
+            await loadNetworkBrandSettings();
+
+            const params = new URLSearchParams(window.location.search);
+            const isLoggedOutState = params.has('logged_out') || params.get('logout') === 'true';
+
+            let rawCode = params.get('code') || params.get('username') || params.get('user') || params.get('voucher') || params.get('login_user') || '';
+            let code = cleanCardCode(rawCode);
+
+            logoutUrl = cleanLogoutUrl(params.get('link_logout') || params.get('logout_url') || params.get('link-logout') || params.get('logout') || '');
+
+            if (!code && !isLoggedOutState) {
+                code = cleanCardCode(localStorage.getItem('sam_portal_card') || '');
+            }
+
+            if (isLoggedOutState) {
+                localStorage.removeItem('sam_portal_card');
+                code = '';
+            }
+
+            const res = await fetchCardStatus(code);
+            document.getElementById('page-loader').style.display = 'none';
+
+            if (res && res.success && res.card) {
+                currentCard = res.card.username;
+                localStorage.setItem('sam_portal_card', currentCard);
+                cardData = res.card;
+                renderCardView(cardData);
+                startAutoRefresh();
+            } else {
+                document.getElementById('offline-view').style.display = 'block';
+                if (isLoggedOutState) {
+                    document.getElementById('offline-msg').innerText = 'تم تسجيل الخروج وفصل الاتصال بنجاح.';
+                    showToast('تم تسجيل الخروج وفصل الاتصال');
+                } else if (res?.error) {
+                    document.getElementById('offline-msg').innerText = res.error;
+                }
+            }
+        }
+
+        function renderCardView(c) {
+            document.getElementById('offline-view').style.display = 'none';
+            document.getElementById('card-view').style.display = 'flex';
+            document.getElementById('header-status-pill').style.display = 'inline-flex';
+
+            document.getElementById('p-card-num').innerText = `كرت: ${c.username}`;
+            document.getElementById('p-package').innerText = c.name_for_users || c.profile_name || 'الباقة الأساسية';
+            document.getElementById('p-status').innerText = (c.status === 'active') ? 'نشط 🟢' : c.status;
+            
+            const remainingMb = (typeof c.remaining_mb === 'number') ? `${c.remaining_mb} MB` : c.remaining_mb;
+            document.getElementById('p-remaining').innerText = remainingMb;
+            
+            const pct = Math.max(0, Math.min(100, Number(c.remaining_percent) || 0));
+            document.getElementById('p-percent').innerText = `${pct}% متبقي`;
+            document.getElementById('p-consumed').innerText = `${c.total_consumed_mb} MB`;
+            document.getElementById('p-validity').innerText = formatValidity(c.effective_validity || c.validity, c.expires_at);
+            document.getElementById('p-uptime').innerText = c.uptime_limit_seconds ? `${Math.round(c.uptime_limit_seconds / 3600)} ساعة` : 'غير محدود';
+
+            // SVG Circular Ring (Circumference 440)
+            const ring = document.getElementById('balance-ring');
+            if (ring) {
+                const circumference = 440;
+                ring.style.strokeDashoffset = circumference - (pct / 100) * circumference;
+            }
+
+            // Speed Control
+            document.getElementById('p-current-speed').innerText = c.effective_speed || 'قياسية';
+            const isSpeedChangeAllowed = (c.allow_speed_change == 1 || c.allow_speed_change === true);
+            const lockedNotice = document.getElementById('speed-locked-notice');
+            const unlockedContainer = document.getElementById('speed-unlocked-container');
+            const speedBtnsContainer = document.getElementById('speed-buttons-container');
+
+            if (!isSpeedChangeAllowed) {
+                lockedNotice.style.display = 'block';
+                unlockedContainer.style.display = 'none';
+                document.getElementById('speed-locked-desc').innerText = `سرعة ثابتة (${c.effective_speed}) محددة بالباقة`;
+            } else {
+                lockedNotice.style.display = 'none';
+                unlockedContainer.style.display = 'block';
+                speedBtnsContainer.innerHTML = '';
+
+                const availableTiers = (c.available_speeds && c.available_speeds.length > 0) ? c.available_speeds : [];
+                availableTiers.forEach(tier => {
+                    const btn = document.createElement('div');
+                    btn.className = 'speed-btn';
+                    
+                    const isCur = (c.effective_speed === tier.rate || c.effective_speed === tier.key || c.effective_speed.startsWith(tier.key + '/'));
+                    if (isCur) btn.classList.add('active');
+
+                    let icon = '🚀';
+                    if (tier.mbps <= 1) icon = '🐢';
+                    else if (tier.mbps <= 3) icon = '📱';
+                    else if (tier.mbps <= 10) icon = '⚡';
+                    else if (tier.mbps <= 50) icon = '👑';
+                    else icon = '🔥';
+
+                    btn.innerHTML = `
+                        <i>${icon}</i>
+                        <b>${escapeHtml(tier.label)}</b>
+                        <small>${escapeHtml(tier.rate)}</small>
+                    `;
+                    btn.onclick = () => changeSpeed(tier.key);
+                    speedBtnsContainer.appendChild(btn);
+                });
+            }
+
+            // MAC Lock
+            const macBtn = document.getElementById('mac-lock-toggle');
+            const macValue = document.getElementById('mac-lock-value');
+            const macEnabled = Number(c.mac_lock_enabled) === 1;
+            macBtn.dataset.enabled = macEnabled ? '1' : '0';
+            macBtn.innerText = macEnabled ? '🔓 تعطيل' : '🔒 تفعيل';
+            macBtn.className = macEnabled ? 'btn btn-danger' : 'btn btn-success';
+            macValue.innerText = macEnabled ? (c.locked_mac ? `MAC المثبت: ${c.locked_mac}` : 'بانتظار أول دخول لتثبيت MAC تلقائيًا') : 'التثبيت غير مفعل';
+
+            // Device limit selector
+            const maxAllowed = parseInt(c.max_shared_users) || 1;
+            const currentDevices = parseInt(c.current_allowed_devices) || 1;
+            document.getElementById('p-max-profile-limit').innerText = `الحد: ${maxAllowed}`;
+
+            const sel = document.getElementById('device-limit-select');
+            sel.innerHTML = '';
+            for (let i = 1; i <= maxAllowed; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = (i === 1) ? 'جهاز واحد فقط (1)' : `${i} أجهزة متصلة`;
+                if (i === currentDevices) opt.selected = true;
+                sel.appendChild(opt);
+            }
+
+            loadDevices();
+        }
+
+        async function refreshStatus(showMsg = false) {
+            if (!currentCard) return;
+            if (showMsg) showToast('جاري تحديث البيانات...');
+            const res = await fetchCardStatus(currentCard);
+            if (res && res.success && res.card) {
+                cardData = res.card;
+                renderCardView(cardData);
+                if (showMsg) showToast('تم تحديث الرصيد بنجاح');
+            }
+        }
+
+        function startAutoRefresh() {
+            if (refreshTimer) clearInterval(refreshTimer);
+            refreshTimer = setInterval(() => {
+                refreshStatus(false);
+            }, 25000);
+        }
+
+        async function saveDeviceLimit() {
+            if (!currentCard) return;
+            const sel = document.getElementById('device-limit-select');
+            const count = parseInt(sel.value) || 1;
+
+            showToast('جاري حفظ حد الأجهزة...');
+            try {
+                const res = await fetch('api.php?action=subscriber_set_max_devices', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: currentCard, max_devices: count })
+                }).then(r => r.json());
+
+                if (res && res.success) {
+                    showToast(res.message || 'تم حفظ عدد الأجهزة');
+                } else {
+                    showToast(res?.error || 'تعذر حفظ عدد الأجهزة');
+                }
+            } catch (err) {
+                showToast('خطأ في الاتصال بالخادم');
+            }
+        }
+
+        async function changeSpeed(tierKey) {
+            if (!currentCard) return;
+            showToast('جاري تطبيق السرعة على الراوتر...');
+            try {
+                const res = await fetch('api.php?action=subscriber_change_speed', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: currentCard, speed: tierKey })
+                }).then(r => r.json());
+
+                if (res && res.success) {
+                    showToast(res.message || 'تم تطبيق السرعة الجديدة');
+                    refreshStatus(false);
+                } else {
+                    showToast(res?.error || 'تعذر تغيير السرعة');
+                }
+            } catch (err) {
+                showToast('خطأ في تطبيق السرعة');
+            }
+        }
+
+        async function toggleMacLock() {
+            if (!currentCard) return;
+            const btn = document.getElementById('mac-lock-toggle');
+            const enable = btn.dataset.enabled !== '1';
+            if (!enable && !confirm('سيتم إزالة MAC المثبت والسماح للكرت بالدخول من جهاز آخر. هل تريد المتابعة؟')) return;
+            btn.disabled = true;
+            showToast(enable ? 'جاري تفعيل تثبيت MAC...' : 'جاري تعطيل تثبيت MAC...');
+            try {
+                const res = await fetch('api.php?action=subscriber_set_mac_lock', {
+                    method: 'POST', headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({code: currentCard, enabled: enable})
+                }).then(r => r.json());
+                if (!res?.success) showToast(res?.error || 'تعذر تحديث تثبيت MAC');
+                else { showToast(res.message || 'تم التحديث بنجاح'); refreshStatus(false); }
+            } catch (e) { showToast('خطأ في الاتصال بالخادم'); }
+            finally { btn.disabled = false; }
+        }
+
+        async function loadDevices() {
+            if (!currentCard) return;
+            try {
+                const res = await fetch(`api.php?action=subscriber_get_devices&code=${encodeURIComponent(currentCard)}`).then(r => r.json());
+                const devices = res?.devices || [];
+                document.getElementById('dev-count').innerText = devices.length;
+                const container = document.getElementById('devices-list');
+
+                if (devices.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; padding:10px; font-size:11.5px; color:var(--text-muted);">لا توجد أجهزة متصلة حالياً بهذا الكرت</div>';
+                    return;
+                }
+
+                container.innerHTML = devices.map(d => `
+                    <div class="device-item">
+                        <div>
+                            <div style="font-weight:700; color:#38bdf8;">📱 ${escapeHtml(d.callingstationid || 'جهاز متصل')}</div>
+                            <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">IP: ${escapeHtml(d.framedipaddress || '-')} | استهلاك: ${d.session_mb} MB</div>
+                        </div>
+                        <button class="btn btn-danger" style="padding:4px 8px; font-size:11px;" onclick="kickDevice('${escapeHtml(d.callingstationid)}')">
+                            🚫 فصل
+                        </button>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function kickDevice(mac) {
+            if (!confirm(`هل تريد بالتأكيد فصل وطرد هذا الجهاز (${mac}) من الكرت؟`)) return;
+            showToast('جاري إرسال أمر فصل الجهاز...');
+            try {
+                const res = await fetch('api.php?action=subscriber_disconnect_device', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: currentCard, mac: mac })
+                }).then(r => r.json());
+
+                if (res && res.success) {
+                    showToast(res.message || 'تم فصل الجهاز بنجاح');
+                    loadDevices();
+                } else {
+                    showToast(res?.error || 'تعذر فصل الجهاز');
+                }
+            } catch (err) {
+                showToast('خطأ في إرسال أمر الفصل');
+            }
+        }
+
+        function cleanLogoutUrl(raw) {
+            if (!raw) return '';
+            let url = String(raw).trim();
+            const m = url.match(/^\$\((https?:\/\/[^)]+)\)$/i);
+            if (m) {
+                url = m[1];
+            } else {
+                const m2 = url.match(/(https?:\/\/[^\s"'()]+)/i);
+                if (m2) url = m2[1];
+            }
+            if (url.startsWith('$(') || url.includes('$(link-logout)') || url.includes('$(')) return '';
+            url = url.replace(/\/logout\.html(\?.*)?$/i, '/logout$1');
+            if (!url.includes('erase-cookie=')) {
+                url += (url.includes('?') ? '&' : '?') + 'erase-cookie=on';
+            }
+            return url;
+        }
+
+        async function doHotspotLogout() {
+            if (!confirm('هل تريد تسجيل الخروج وقطع اتصال الإنترنت عن هذا الجهاز؟')) return;
+            showToast('جاري تسجيل الخروج وفصل الاتصال...');
+
+            const cardToDisconnect = currentCard;
+            localStorage.removeItem('sam_portal_card');
+            document.cookie = "sam_portal_card=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+            try {
+                await fetch('api.php?action=subscriber_disconnect_device', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: cardToDisconnect })
+                });
+            } catch (e) {}
+
+            let target = cleanLogoutUrl(logoutUrl);
+            if (!target) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const host = urlParams.get('hostname') || urlParams.get('host') || 's.net';
+                target = `http://${host}/logout?erase-cookie=on`;
+            }
+
+            setTimeout(() => {
+                window.location.href = target;
+            }, 300);
+        }
+
+        window.addEventListener('DOMContentLoaded', initPortal);
+    </script>
+</body>
+</html>

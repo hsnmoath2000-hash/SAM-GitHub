@@ -1,0 +1,42 @@
+/* Compact controls and polished header */
+body.sam-compact-controls .mt-header { min-height:64px !important; padding:10px 18px !important; }
+body.sam-compact-controls .mt-brand { gap:8px; font-size:14px; }
+body.sam-compact-controls .mt-header-right { display:flex; align-items:center; gap:6px; flex-wrap:nowrap; }
+body.sam-compact-controls .mt-header-right .mt-btn { min-height:32px !important; padding:5px 9px !important; font-size:12px !important; }
+body.sam-compact-controls .sam-toolbar-menu-wrap { position:relative; display:inline-flex; }
+body.sam-compact-controls .sam-toolbar-more { min-width:92px; background:#f7f9fc !important; color:#455a64 !important; border-color:#d6e0e9 !important; }
+body.sam-compact-controls .sam-toolbar-more:hover { background:#e8f1fb !important; color:#1976d2 !important; }
+body.sam-compact-controls .sam-toolbar-menu { position:absolute; top:calc(100% + 7px); right:0; z-index:5000; display:none; min-width:190px; padding:6px; background:#fff; border:1px solid #dfe7ef; border-radius:10px; box-shadow:0 12px 28px rgba(38,50,56,.15); }
+body.sam-compact-controls .sam-toolbar-menu.open { display:flex; flex-direction:column; gap:4px; }
+body.sam-compact-controls .sam-toolbar-menu .sam-menu-action { width:100%; min-height:38px; justify-content:flex-start; text-align:right; background:#fff !important; color:#455a64 !important; border:0 !important; border-radius:7px; }
+body.sam-compact-controls .sam-toolbar-menu .sam-menu-action:hover { background:#edf5fd !important; color:#1976d2 !important; }
+body.sam-compact-controls .mt-toolbar-right > button:nth-child(n+2) { min-width:82px; }
+@media (max-width:640px) {
+  body.sam-compact-controls .mt-header { min-height:48px !important; height:48px !important; padding:0 8px !important; flex-wrap:nowrap !important; overflow:hidden !important; }
+  body.sam-compact-controls .mt-brand { font-size:13px; gap:4px; min-width:0; }
+  body.sam-compact-controls .brand-title-full { display:none !important; }
+  body.sam-compact-controls .brand-title-short { display:inline !important; }
+  body.sam-compact-controls .mt-header-right { gap:4px; flex-wrap:nowrap !important; min-width:0; flex-shrink:1; }
+  body.sam-compact-controls .mt-header-right .btn-label, body.sam-compact-controls .mt-header-right .user-greeting { display:none !important; }
+  body.sam-compact-controls .mt-header-right .mt-btn { min-width:32px; height:32px; padding:4px 6px !important; font-size:13px !important; }
+  body.sam-compact-controls #sam-header-net-switcher, body.sam-compact-controls .sam-header-net-switcher { display:inline-flex !important; align-items:center !important; max-width:130px !important; padding:2px 5px !important; font-size:11px !important; flex-shrink:1 !important; min-width:0 !important; }
+  body.sam-compact-controls #sam-header-net-switcher .net-switcher-btn-modal, body.sam-compact-controls .sam-header-net-switcher .net-switcher-btn-modal, body.sam-compact-controls .sam-net-switcher-btn { display:none !important; }
+  body.sam-compact-controls #sam-active-network, body.sam-compact-controls .sam-active-network-select { max-width:80px !important; font-size:11px !important; padding:1px 2px !important; }
+  body.sam-compact-controls .sam-toolbar-menu { position:fixed; top:64px; right:10px; left:10px; min-width:0; }
+  body.sam-compact-controls .mt-toolbar-right { grid-template-columns:1fr auto !important; }
+  body.sam-compact-controls .mt-toolbar-right > .sam-toolbar-menu-wrap { grid-column:auto; }
+  body.sam-compact-controls .sam-toolbar-more { width:100%; }
+}
+@media (max-width:420px) {
+  body.sam-compact-controls .mt-header { padding:0 5px !important; }
+  body.sam-compact-controls .mt-brand .badge { display:none !important; }
+  body.sam-compact-controls #sam-header-net-switcher, body.sam-compact-controls .sam-header-net-switcher { max-width:105px !important; padding:1px 4px !important; }
+  body.sam-compact-controls #sam-active-network, body.sam-compact-controls .sam-active-network-select { max-width:62px !important; font-size:10px !important; }
+  body.sam-compact-controls .mt-header-right { gap:3px !important; }
+  body.sam-compact-controls .mt-header-right .mt-btn { min-width:28px !important; height:30px !important; padding:3px 5px !important; font-size:12px !important; }
+}
+
+/* Dropdown follows the measured header height on every viewport. */
+body.sam-compact-controls { --sam-header-height:64px; }
+body.sam-compact-controls .sam-toolbar-menu { top:calc(var(--sam-header-height,64px) + 7px); }
+@media (max-width:640px) { body.sam-compact-controls .sam-toolbar-menu { top:calc(var(--sam-header-height,64px) + 6px); } }

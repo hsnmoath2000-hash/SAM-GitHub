@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -uo pipefail
+LOG=/var/log/sam-health.log
+LOCK=/run/sam-health-check.lock
+exec 9>"$LOCK"
+flock -n 9 || exit 0
+now(){ date -Is; }
+fail=0
+out(){ printf '%s %s\n' "$(now)" "$*"; }
+services=(mariadb freeradius accel-ppp php8.3-fpm apache2 sam-telemetry sam-whatsapp mikrotik-usermanager-api-worker)
+for s in "${services[@]}"; do
+  if systemctl is-active --quiet "$s"; then out "OK service=$s"; else out "FAIL service=$s"; fail=1; fi
+done
+if apache2ctl configtest >/dev/null 2>&1; then out "OK apache_config"; else out "FAIL apache_config"; fail=1; fi
+code=$(curl -k -sS -o /dev/null -w '%{http_code}' --max-time 10 https://127.0.0.1:8099/ 2>/dev/null || echo 000)
+if [ "$code" = 200 ]; then out "OK console_https code=$code"; else out "FAIL console_https code=$code"; fail=1; fi
+if mariadb --protocol=socket -N -e 'SELECT 1' >/dev/null 2>&1; then out 'OK mariadb_query'; else out 'FAIL mariadb_query'; fail=1; fi
+queue=$(mariadb --protocol=socket -N -e "SELECT CONCAT('queued=',COALESCE(SUM(status='queued'),0),',running=',COALESCE(SUM(status='running'),0),',failed=',COALESCE(SUM(status='failed'),0)) FROM radius.um_api_jobs" 2>/dev/null || echo 'unavailable')
+out "INFO api_jobs $queue"
+usage=$(df -P / | awk 'NR==2 {gsub(/%/,"",$5); print $5}')
+if [ "${usage:-100}" -lt 85 ]; then out "OK disk_root_percent=$usage"; else out "FAIL disk_root_percent=$usage"; fail=1; fi
+if [ "$fail" -eq 0 ]; then out 'RESULT healthy'; else out 'RESULT degraded'; fi
+exit "$fail"

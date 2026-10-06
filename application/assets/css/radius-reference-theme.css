@@ -1,0 +1,27 @@
+/* Radius ERP reference identity — presentation layer only */
+:root { --radius-navy:#17212b; --radius-navy-2:#202d38; --radius-teal:#0f9d8a; --radius-green:#2bb673; --radius-bg:#f1f4f6; --radius-line:#dfe7ea; }
+body.sam-material-theme { background:var(--radius-bg); }
+body.sam-material-theme .mt-header { background:#fff !important; border-bottom:1px solid var(--radius-line) !important; }
+body.sam-material-theme .mt-sidebar { background:linear-gradient(180deg,var(--radius-navy),#111a21) !important; color:#d9e4e8 !important; border:0 !important; box-shadow:4px 0 18px rgba(15,30,40,.14) !important; }
+body.sam-material-theme .mt-sidebar-search input { background:#263642 !important; border-color:#3b4b56 !important; color:#f4f8f9 !important; }
+body.sam-material-theme .mt-sidebar-search input::placeholder { color:#a9bbc2 !important; }
+body.sam-material-theme .mt-nav-dept-header { color:#b8cbd1 !important; }
+body.sam-material-theme .mt-nav-dept-header:hover { background:rgba(255,255,255,.07) !important; color:#fff !important; }
+body.sam-material-theme .mt-nav-dept-badge { background:#334954 !important; color:#d9e4e8 !important; }
+body.sam-material-theme .mt-nav-item { color:#b8cbd1 !important; }
+body.sam-material-theme .mt-nav-item:hover { background:rgba(15,157,138,.16) !important; color:#79e0ce !important; }
+body.sam-material-theme .mt-nav-item.active { background:linear-gradient(90deg,rgba(15,157,138,.28),rgba(15,157,138,.08)) !important; color:#70e1ce !important; border-right:3px solid var(--radius-teal) !important; }
+body.sam-material-theme .mt-nav-item.active i { color:#70e1ce !important; }
+body.sam-material-theme .mt-content { background:var(--radius-bg) !important; }
+body.sam-material-theme .mt-breadcrumb-bar { color:#78909c !important; }
+body.sam-material-theme .mt-breadcrumb-bar .tab-name { color:#263238 !important; }
+body.sam-material-theme .mt-btn-primary { background:var(--radius-teal) !important; border-color:var(--radius-teal) !important; }
+body.sam-material-theme .mt-btn-primary:hover { background:#087b6c !important; }
+body.sam-material-theme .sam-sidebar-collapse-toggle { color:#087b6c !important; background:#e5f6f2 !important; border-color:#b8e6dc !important; }
+body.sam-material-theme .mt-toolbar, body.sam-material-theme .md-insight-panel { border-radius:14px !important; }
+body.sam-material-theme .kpi-card:hover { border-color:#9edfd4 !important; }
+body.sam-material-theme .kpi-icon { box-shadow:inset 0 0 0 1px rgba(15,157,138,.08); }
+body.sam-material-theme .status-active, body.sam-material-theme .status-online { background:#e4f7ee !important; color:#168b5b !important; }
+body.sam-material-theme .status-disabled, body.sam-material-theme .status-offline { background:#fff0f0 !important; color:#c62828 !important; }
+body.sam-material-theme .sam-toolbar-more { color:#087b6c !important; background:#e5f6f2 !important; border-color:#b8e6dc !important; }
+@media (max-width:900px) { body.sam-material-theme .mt-sidebar { box-shadow:8px 0 24px rgba(15,30,40,.2) !important; } }

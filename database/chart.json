@@ -1,0 +1,610 @@
+[
+  {
+    "account_code": "1",
+    "name_ar": "الأصول",
+    "account_type": "asset",
+    "parent_code": null,
+    "level": 1,
+    "is_system": 1
+  },
+  {
+    "account_code": "11",
+    "name_ar": "الأصول المتداولة",
+    "account_type": "asset",
+    "parent_code": "1",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "12",
+    "name_ar": "الأصول الثابتة",
+    "account_type": "asset",
+    "parent_code": "1",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "1101",
+    "name_ar": "النقدية وما في حكمها",
+    "account_type": "asset",
+    "parent_code": "11",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "1102",
+    "name_ar": "البنوك ومحافظ الصرافة",
+    "account_type": "asset",
+    "parent_code": "11",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "1103",
+    "name_ar": "المدينون والعملاء والوكلاء",
+    "account_type": "asset",
+    "parent_code": "11",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "1104",
+    "name_ar": "مخزون الكروت والمعدات",
+    "account_type": "asset",
+    "parent_code": "11",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "1105",
+    "name_ar": "عهد وسلف ومصروفات مدفوعة مقدماً",
+    "account_type": "asset",
+    "parent_code": "11",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "110101",
+    "name_ar": "الصندوق الرئيسي / الخزينة العامة",
+    "account_type": "asset",
+    "parent_code": "1101",
+    "level": 4,
+    "is_system": 1
+  },
+  {
+    "account_code": "110102",
+    "name_ar": "صناديق الفروع والمحصلين",
+    "account_type": "asset",
+    "parent_code": "1101",
+    "level": 4,
+    "is_system": 0
+  },
+  {
+    "account_code": "110201",
+    "name_ar": "بنك الكريمي للتمويل الأصغر",
+    "account_type": "asset",
+    "parent_code": "1102",
+    "level": 4,
+    "is_system": 0
+  },
+  {
+    "account_code": "110202",
+    "name_ar": "بنك التضامن الإسلامي",
+    "account_type": "asset",
+    "parent_code": "1102",
+    "level": 4,
+    "is_system": 0
+  },
+  {
+    "account_code": "110203",
+    "name_ar": "محفظة جايبي (Jawali / Jayebe)",
+    "account_type": "asset",
+    "parent_code": "1102",
+    "level": 4,
+    "is_system": 0
+  },
+  {
+    "account_code": "110204",
+    "name_ar": "محفظة ون كاش (OneCash)",
+    "account_type": "asset",
+    "parent_code": "1102",
+    "level": 4,
+    "is_system": 0
+  },
+  {
+    "account_code": "110205",
+    "name_ar": "محفظة فلوسك / كاش",
+    "account_type": "asset",
+    "parent_code": "1102",
+    "level": 4,
+    "is_system": 0
+  },
+  {
+    "account_code": "110301",
+    "name_ar": "حسابات الوكلاء والموزعين",
+    "account_type": "asset",
+    "parent_code": "1103",
+    "level": 4,
+    "is_system": 1
+  },
+  {
+    "account_code": "110302",
+    "name_ar": "حسابات نقاط البيع (POS)",
+    "account_type": "asset",
+    "parent_code": "1103",
+    "level": 4,
+    "is_system": 0
+  },
+  {
+    "account_code": "110303",
+    "name_ar": "مشتركو الخطوط والاشتراكات الشهرية",
+    "account_type": "asset",
+    "parent_code": "1103",
+    "level": 4,
+    "is_system": 0
+  },
+  {
+    "account_code": "110401",
+    "name_ar": "مخزون كروت المايكروتك الجاهزة",
+    "account_type": "asset",
+    "parent_code": "1104",
+    "level": 4,
+    "is_system": 1
+  },
+  {
+    "account_code": "110402",
+    "name_ar": "مخزون أجهزة ومعدات للبيع",
+    "account_type": "asset",
+    "parent_code": "1104",
+    "level": 4,
+    "is_system": 0
+  },
+  {
+    "account_code": "1201",
+    "name_ar": "أبراج ومواقع البث",
+    "account_type": "asset",
+    "parent_code": "12",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "1202",
+    "name_ar": "أجهزة الراوترات والسيرفرات (MikroTik / CCR)",
+    "account_type": "asset",
+    "parent_code": "12",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "1203",
+    "name_ar": "الهوائيات والصحون والسكترات (Antennas)",
+    "account_type": "asset",
+    "parent_code": "12",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "1204",
+    "name_ar": "كابلات الألياف والشبكة",
+    "account_type": "asset",
+    "parent_code": "12",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "1205",
+    "name_ar": "منظومة الطاقة الشمسية والبطاريات والمولدات",
+    "account_type": "asset",
+    "parent_code": "12",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "1206",
+    "name_ar": "أجهزة المكاتب والكمبيوتر",
+    "account_type": "asset",
+    "parent_code": "12",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "1209",
+    "name_ar": "مجمع إهلاك الأصول الثابتة",
+    "account_type": "asset",
+    "parent_code": "12",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "2",
+    "name_ar": "الخصوم والالتزامات",
+    "account_type": "liability",
+    "parent_code": null,
+    "level": 1,
+    "is_system": 1
+  },
+  {
+    "account_code": "21",
+    "name_ar": "الخصوم المتداولة",
+    "account_type": "liability",
+    "parent_code": "2",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "2101",
+    "name_ar": "الموردون وحسابات الدائنين",
+    "account_type": "liability",
+    "parent_code": "21",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "210101",
+    "name_ar": "مزودو سعات وخطوط الإنترنت (ISP Providers)",
+    "account_type": "liability",
+    "parent_code": "2101",
+    "level": 4,
+    "is_system": 1
+  },
+  {
+    "account_code": "210102",
+    "name_ar": "موردو الأجهزة والمعدات وقطع الغيار",
+    "account_type": "liability",
+    "parent_code": "2101",
+    "level": 4,
+    "is_system": 0
+  },
+  {
+    "account_code": "2102",
+    "name_ar": "مستحقات الرواتب والأجور",
+    "account_type": "liability",
+    "parent_code": "21",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "2103",
+    "name_ar": "تأمينات وأمانات الوكلاء",
+    "account_type": "liability",
+    "parent_code": "21",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "2104",
+    "name_ar": "إيرادات اشتراكات مقبوضة مقدماً",
+    "account_type": "liability",
+    "parent_code": "21",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "3",
+    "name_ar": "حقوق الملكية",
+    "account_type": "equity",
+    "parent_code": null,
+    "level": 1,
+    "is_system": 1
+  },
+  {
+    "account_code": "31",
+    "name_ar": "رأس المال",
+    "account_type": "equity",
+    "parent_code": "3",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "3101",
+    "name_ar": "رأس المال المدفوع",
+    "account_type": "equity",
+    "parent_code": "31",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "3102",
+    "name_ar": "الأرصدة الافتتاحية والتسويات",
+    "account_type": "equity",
+    "parent_code": "31",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "32",
+    "name_ar": "جاري الشركاء والمساهمين",
+    "account_type": "equity",
+    "parent_code": "3",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "3201",
+    "name_ar": "جاري الشركاء والمساهمين",
+    "account_type": "equity",
+    "parent_code": "32",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "33",
+    "name_ar": "الأرباح المبقاة والمرحلة",
+    "account_type": "equity",
+    "parent_code": "3",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "3301",
+    "name_ar": "أرباح مرحلة من سنوات سابقة",
+    "account_type": "equity",
+    "parent_code": "33",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "3302",
+    "name_ar": "أرباح وخسائر الفترة الحالية",
+    "account_type": "equity",
+    "parent_code": "33",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "4",
+    "name_ar": "الإيرادات",
+    "account_type": "revenue",
+    "parent_code": null,
+    "level": 1,
+    "is_system": 1
+  },
+  {
+    "account_code": "41",
+    "name_ar": "إيرادات النشاط الرئيسي",
+    "account_type": "revenue",
+    "parent_code": "4",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "4101",
+    "name_ar": "إيرادات مبيعات كروت المايكروتك",
+    "account_type": "revenue",
+    "parent_code": "41",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "4102",
+    "name_ar": "إيرادات الاشتراكات الشهرية والخطوط",
+    "account_type": "revenue",
+    "parent_code": "41",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "4103",
+    "name_ar": "إيرادات الشحن الفوري والرصيد المباشر",
+    "account_type": "revenue",
+    "parent_code": "41",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "4104",
+    "name_ar": "إيرادات كروت VIP والخدمات الخاصة",
+    "account_type": "revenue",
+    "parent_code": "41",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "42",
+    "name_ar": "إيرادات خدمات وأرباح أخرى",
+    "account_type": "revenue",
+    "parent_code": "4",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "4201",
+    "name_ar": "إيرادات تركيب وصيانة شبكات للغير",
+    "account_type": "revenue",
+    "parent_code": "42",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "4202",
+    "name_ar": "أرباح مبيعات أجهزة ومعدات شبكية",
+    "account_type": "revenue",
+    "parent_code": "42",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "4203",
+    "name_ar": "إيرادات فروق أسعار الصرف",
+    "account_type": "revenue",
+    "parent_code": "42",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "5",
+    "name_ar": "المصروفات",
+    "account_type": "expense",
+    "parent_code": null,
+    "level": 1,
+    "is_system": 1
+  },
+  {
+    "account_code": "51",
+    "name_ar": "تكاليف التشغيل المباشرة",
+    "account_type": "expense",
+    "parent_code": "5",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "5101",
+    "name_ar": "تكلفة سعات وخطوط الإنترنت الرئيسية (Bandwidth)",
+    "account_type": "expense",
+    "parent_code": "51",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "5102",
+    "name_ar": "إيجارات مواقع وأبراج البث",
+    "account_type": "expense",
+    "parent_code": "51",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "5103",
+    "name_ar": "وقود ومحروقات المولدات وكهرباء الأبراج",
+    "account_type": "expense",
+    "parent_code": "51",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "5104",
+    "name_ar": "صيانة دورية لشبكات التوزيع والأبراج",
+    "account_type": "expense",
+    "parent_code": "51",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "52",
+    "name_ar": "الرواتب والأجور والمكافآت",
+    "account_type": "expense",
+    "parent_code": "5",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "5201",
+    "name_ar": "رواتب المهندسين والفنيين",
+    "account_type": "expense",
+    "parent_code": "52",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "5202",
+    "name_ar": "رواتب الإدارة والمحاسبة والمبيعات",
+    "account_type": "expense",
+    "parent_code": "52",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "5203",
+    "name_ar": "مكافآت وحوافز وبدلات إضافية",
+    "account_type": "expense",
+    "parent_code": "52",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "53",
+    "name_ar": "المصروفات الإدارية والعمومية",
+    "account_type": "expense",
+    "parent_code": "5",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "5301",
+    "name_ar": "إيجار المقر والمكاتب",
+    "account_type": "expense",
+    "parent_code": "53",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "5302",
+    "name_ar": "فواتير المياه والكهرباء والاتصالات للمكاتب",
+    "account_type": "expense",
+    "parent_code": "53",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "5303",
+    "name_ar": "مطبوعات وقرطاسية وتغليف كروت",
+    "account_type": "expense",
+    "parent_code": "53",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "5304",
+    "name_ar": "ضيافة ونظافة ومصاريف بوفيه",
+    "account_type": "expense",
+    "parent_code": "53",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "5305",
+    "name_ar": "عمولات بنكية ومصاريف تحويل صرافة",
+    "account_type": "expense",
+    "parent_code": "53",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "54",
+    "name_ar": "مصاريف التسويق والترويج",
+    "account_type": "expense",
+    "parent_code": "5",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "5401",
+    "name_ar": "رسائل SMS وتنبيهات WhatsApp",
+    "account_type": "expense",
+    "parent_code": "54",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "5402",
+    "name_ar": "إعلانات وبنرات ولافتات ترويجية",
+    "account_type": "expense",
+    "parent_code": "54",
+    "level": 3,
+    "is_system": 0
+  },
+  {
+    "account_code": "55",
+    "name_ar": "الإهلاك والخسائر",
+    "account_type": "expense",
+    "parent_code": "5",
+    "level": 2,
+    "is_system": 1
+  },
+  {
+    "account_code": "5501",
+    "name_ar": "إهلاك الأجهزة والمعدات والأبراج",
+    "account_type": "expense",
+    "parent_code": "55",
+    "level": 3,
+    "is_system": 1
+  },
+  {
+    "account_code": "5502",
+    "name_ar": "ديون معدومة وخسائر فروق صرف",
+    "account_type": "expense",
+    "parent_code": "55",
+    "level": 3,
+    "is_system": 1
+  }
+]

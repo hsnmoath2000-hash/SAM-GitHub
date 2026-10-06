@@ -1,0 +1,7 @@
+/* Responsive menu behavior: hamburger on phones, collapse control on desktop. */
+body.sam-material-theme .mt-mobile-toggle { display:none !important; align-items:center; justify-content:center; width:38px !important; height:38px !important; min-width:38px; background:#0f9d8a !important; border:1px solid #087b6c !important; color:#fff !important; border-radius:9px !important; font-size:19px !important; line-height:1; opacity:1 !important; visibility:visible !important; position:relative; z-index:10; }
+body.sam-material-theme .mt-mobile-toggle:hover, body.sam-material-theme .mt-mobile-toggle:active { background:#087b6c !important; color:#fff !important; }
+@media (max-width:768px) { body.sam-material-theme .mt-mobile-toggle { display:inline-flex !important; } }
+@media (max-width:640px) { body.sam-material-theme .mt-mobile-toggle { width:42px !important; height:42px !important; min-width:42px; font-size:21px !important; } }
+/* Keep one back action: the breadcrumb back button is canonical. */
+body.sam-material-theme .mt-header-back-btn { display:none !important; }

@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سام حديبو - تسجيل الدخول</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1b300d;
+            --accent: #181b1a;
+            --bg: #314e36;
+            --card: #151f32;
+            --card-border: #23334d;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --radius: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 16px 12px 30px;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .brand-header {
+            text-align: center;
+            padding: 10px 0 4px 0;
+        }
+        .brand-logo-img {
+            max-height: 70px;
+            max-width: 180px;
+            object-fit: contain;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+        }
+        .brand-logo-icon {
+            font-size: 42px;
+            margin-bottom: 4px;
+            display: inline-block;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+        }
+        .brand-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: #38bdf8;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .brand-slogan {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            font-weight: 600;
+        }
+        
+        .card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .card-section-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 2px;
+            text-align: center;
+        }
+        .card-section-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .welcome-text {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 16px;
+            font-weight: 600;
+            line-height: 1.5;
+            text-align: center;
+        }
+        .alert-error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid #ef4444;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-align: right;
+        }
+        .input-group {
+            margin-bottom: 14px;
+            text-align: right;
+        }
+        .input-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+        }
+        .input-box {
+            width: 100%;
+            padding: 13px 14px;
+            background: #090e1a;
+            border: 2px solid var(--card-border);
+            border-radius: 10px;
+            font-size: 18px;
+            text-align: center;
+            font-weight: 800;
+            color: #fff;
+            outline: none;
+            transition: all 0.2s ease;
+            letter-spacing: 1px;
+            direction: ltr;
+        }
+        .input-box:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            background: #0d1527;
+        }
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, #0369a1 100%);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.2s ease;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-login:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        /* Auto-Login Notification Banner */
+        .auto-login-box {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid #38bdf8;
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .auto-login-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #38bdf8;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Recent Cards Chips */
+        .recent-card-chip {
+            background: #090e1a;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 5px 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .recent-card-chip:hover {
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.08);
+        }
+        .recent-card-chip .card-num {
+            color: #38bdf8;
+            cursor: pointer;
+            direction: ltr;
+        }
+        .recent-card-chip .btn-del-card {
+            color: #f87171;
+            cursor: pointer;
+            font-size: 11px;
+            padding: 0 2px;
+        }
+
+        /* Animated Ads Carousel Styles */
+        .ads-carousel-container {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .ads-slides-track {
+            position: relative;
+            min-height: 90px;
+        }
+        .ad-slide-item {
+            display: none;
+            padding: 14px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .ad-slide-item.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ad-link-wrapper {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .ad-img-box {
+            width: 100%;
+            max-height: 130px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .ad-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .ad-content-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .ad-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ad-badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+        .ad-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+        .ad-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin: 0;
+        }
+        .ads-dots-nav {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding-bottom: 10px;
+        }
+        .ad-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .ad-dot.active {
+            background: #38bdf8;
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        /* Shortcuts / Live Links */
+        .shortcuts-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .shortcut-card {
+            background: #090e1a;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: 0.2s;
+        }
+        .shortcut-card:hover {
+            border-color: #38bdf8;
+            transform: translateX(-3px);
+            background: rgba(56, 189, 248, 0.06);
+        }
+        .sc-icon-col {
+            font-size: 26px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .sc-info-col {
+            flex: 1;
+        }
+        .sc-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sc-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .sc-badge {
+            background: #0284c7;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+        .sc-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+        .sc-arrow {
+            color: #38bdf8;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        /* Packages Grid & Cards */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .pkg-card {
+            background: #090e1a;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 16px 14px 14px;
+            text-align: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .pkg-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .pkg-card.featured-pkg {
+            border: 2px solid #38bdf8;
+            background: linear-gradient(180deg, rgba(56, 189, 248, 0.08) 0%, #090e1a 100%);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+        }
+        .pkg-badge {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 2px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+            letter-spacing: 0.3px;
+        }
+        .pkg-badge.featured-badge {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        }
+        .pkg-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-top: 4px;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .pkg-price {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 4px;
+        }
+        .pkg-price-num {
+            font-size: 22px;
+            font-weight: 900;
+            color: #38bdf8;
+            letter-spacing: -0.5px;
+        }
+        .pkg-price-num.free {
+            font-size: 18px;
+        }
+        .pkg-currency {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+        .pkg-features-list {
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            text-align: right;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .pkg-feat-item {
+            font-size: 11px;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .feat-icon { font-size: 12px; }
+        .feat-label { color: var(--text-muted); }
+        .feat-val { color: #fff; margin-right: auto; }
+        .pkg-desc-note {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px dashed var(--card-border);
+            line-height: 1.4;
+        }
+        .btn-pkg-order {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 9px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+        }
+        .btn-pkg-order:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(16, 185, 129, 0.45);
+        }
+
+        /* Contacts */
+        .contact-buttons-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 800;
+            text-decoration: none;
+            color: #ffffff;
+            transition: opacity 0.2s;
+        }
+        .contact-btn:hover { opacity: 0.9; }
+        .wa-btn { background: #16a34a; }
+        .call-btn { background: #0284c7; }
+        .tg-btn { background: #0ea5e9; }
+        .pos-notice {
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--text-muted);
+            background: #090e1a;
+            border: 1px solid var(--card-border);
+            padding: 8px 10px;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 11px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/arabic-fonts-local.css">
+    <link rel="stylesheet" href="assets/css/subscriber-accessibility.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Brand Header -->
+        <header class="brand-header">
+            <div class="brand-logo-icon">📶</div>
+            <h1 class="brand-title">سام حديبو</h1>
+            <p class="brand-slogan">إنترنت فائق السرعة واستقرار عالي</p>
+        </header>
+
+        <!-- Animated Ads Carousel Banner -->
+                <!-- Animated Ads Carousel -->
+        <div id="hs-ad-slider-login" class="ads-carousel-container" data-speed="4">
+            <div class="ads-slides-track">
+                
+            <div class="ad-slide-item active" data-slide-index="0">
+                <div class="ad-link-wrapper">
+                    
+                    <div class="ad-content-box">
+                        <div class="ad-badge-row">
+                            <span class="ad-badge">عرض حصري</span>
+                            <span class="ad-title">⚡ باقات مميزة وسرعات مضاعفة</span>
+                        </div>
+                        <p class="ad-desc">تصفح غير محدود وسرعات فائقة تناسب الألعاب ومقاطع الفيديو بدقة عالية.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="ad-slide-item " data-slide-index="1">
+                <div class="ad-link-wrapper">
+                    
+                    <div class="ad-content-box">
+                        <div class="ad-badge-row">
+                            <span class="ad-badge">جديد</span>
+                            <span class="ad-title">💳 كروت متوفرة في جميع نقاط البيع</span>
+                        </div>
+                        <p class="ad-desc">يمكنك شراء وتجديد رصيدك من أقرب نقطة بيع أو عبر الواتساب مباشرة.</p>
+                    </div>
+                </div>
+            </div>
+            </div>
+            ">
+                <div style="font-size:13px; font-weight:800; color:#38bdf8; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span class="auto-login-spinner"></span>
+                    <span>جاري الدخول التلقائي بالكرت (<b id="auto-card-code" style="direction:ltr;"></b>)...</span>
+                </div>
+                <div style="margin-top:6px;">
+                    <button type="button" onclick="cancelAutoLogin()" style="background:#ef4444; color:#fff; border:none; padding:4px 12px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;">
+                        إلغاء الدخول التلقائي ✕
+                    </button>
+                </div>
+            </div>
+
+            $(if error)
+            <div class="alert-error" id="error-box" role="alert" aria-live="assertive">⚠️ $(error)</div>
+            $(endif)
+
+            <form name="login" action="$(link-login-only)" method="post" onsubmit="return handleFormSubmit(event)" $(if chap-id) data-chap="1" $(endif)>
+                <input type="hidden" name="dst" value="$(link-orig)" />
+                <input type="hidden" name="popup" value="true" />
+                
+                <div class="input-group">
+                    <label class="input-label">رقم الكرت / كود المشترك:</label>
+                    <input type="text" id="username-field" name="username" class="input-box" placeholder="أدخل رقم الكرت هنا" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="رقم كرت الإنترنت" value="$(username)" required autofocus oninput="document.getElementById('password-field').value=this.value;" />
+                </div>
+                
+                <div class="input-group" style="display:none;">
+                    <input type="password" id="password-field" name="password" class="input-box" inputmode="numeric" pattern="[0-9]*" autocomplete="current-password" aria-label="كلمة مرور الكرت" value="" />
+                </div>
+
+                <!-- Remember & Auto-Login Checkbox -->
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; font-size:12px; color:#cbd5e1;">
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-weight:700;">
+                        <input type="checkbox" id="remember-card-checkbox" checked />
+                        حفظ الكرت وتسجيل الدخول تلقائياً
+                    </label>
+                </div>
+
+                <button type="submit" id="btn-submit-login" class="btn-login">⚡ تسجيل الدخول الآن</button>
+
+                <!-- Recent 3 Cards Chips Container -->
+                <div id="recent-cards-box" style="display:none; margin-top:14px; border-top:1px dashed var(--card-border); padding-top:10px; text-align:right;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-size:11px; font-weight:800; color:var(--text-muted);">💳 الكروت السابقة على هذا الجهاز (3 كروت):</span>
+                        <button type="button" onclick="clearAllRecentCards()" style="background:none; border:none; color:#f87171; font-size:11px; cursor:pointer; font-weight:700;">مسح الكل ✕</button>
+                    </div>
+                    <div id="recent-cards-list" style="display:flex; flex-wrap:wrap; gap:6px;">
+                        <!-- Injected via JavaScript -->
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Custom Shortcuts & Live Streaming Links -->
+                <!-- Custom Shortcuts & Entertainment Links -->
+        <div class="card shortcuts-card-box">
+            <div class="card-section-title">🌟 خدمات وروابط الشبكة الترفيهية</div>
+            <div class=\"card-section-subtitle\">بث مباشر، خدمات الاستراحات، وسيرفرات ترفيهية داخلية بدون استهلاك رصيد</div>
+            <div class="shortcuts-grid">
+                
+            <a href="http://192.168.88.254:8080/live" target="_blank" class="shortcut-card">
+                <div class="sc-icon-col">⚽</div>
+                <div class="sc-info-col">
+                    <div class="sc-title-row">
+                        <span class="sc-title">⚽ بث مباشر للمباريات</span>
+                        <span class="sc-badge">مباشر</span>
+                    </div>
+                    <div class="sc-desc">مشاهدة مباريات اليوم بجودة عالية وبث مباشر سريع بدون تقطيع</div>
+                </div>
+                <div class="sc-arrow">➜</div>
+            </a>
+            <a href="http://192.168.88.254/lounge" target="_blank" class="shortcut-card">
+                <div class="sc-icon-col">🌴</div>
+                <div class="sc-info-col">
+                    <div class="sc-title-row">
+                        <span class="sc-title">🌴 استراحة وشاليهات</span>
+                        <span class="sc-badge">استراحة</span>
+                    </div>
+                    <div class="sc-desc">حجز وخدمات الاستراحات والشاليهات والمرافق الترفيهية</div>
+                </div>
+                <div class="sc-arrow">➜</div>
+            </a>
+            <a href="http://192.168.88.254:8096" target="_blank" class="shortcut-card">
+                <div class="sc-icon-col">📺</div>
+                <div class="sc-info-col">
+                    <div class="sc-title-row">
+                        <span class="sc-title">📺 سيرفر الأفلام والمسلسلات</span>
+                        <span class="sc-badge">سيرفر محلي</span>
+                    </div>
+                    <div class="sc-desc">تصفح مكتبة الأفلام والمسلسلات والبرامج المحلية بسرعة فائقة</div>
+                </div>
+                <div class="sc-arrow">➜</div>
+            </a>
+            <a href="http://192.168.88.254:3000" target="_blank" class="shortcut-card">
+                <div class="sc-icon-col">🎮</div>
+                <div class="sc-info-col">
+                    <div class="sc-title-row">
+                        <span class="sc-title">🎮 ألعاب وبطولات الشبكة</span>
+                        <span class="sc-badge">ألعاب</span>
+                    </div>
+                    <div class="sc-desc">سيرفر الألعاب المحلية والبطولات التنافسية بين المشتركين</div>
+                </div>
+                <div class="sc-arrow">➜</div>
+            </a>
+            </div>
+        </div>
+
+        <!-- Packages Showcase -->
+        
+                <div class="card packages-section-card" style="margin-top:16px;">
+                    <div class="card-section-title">💎 باقات وعروض الشبكة</div>
+                    <div class="card-section-subtitle">اختر الباقة المناسبة لاحتياجك واستمتع بأقصى سرعة</div>
+                    <div class="packages-grid">
+                        
+                    <div class="pkg-card ">
+                        <span class="pkg-badge">مجاني</span>
+                        <div class="pkg-name">1 قيقا خلال يوم</div>
+                        <div class="pkg-price"><span class="pkg-price-num free" style="color:#181b1a;">مجاناً</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">1 GB</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">1d</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">512K/1M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+1+%D9%82%D9%8A%D9%82%D8%A7+%D8%AE%D9%84%D8%A7%D9%84+%D9%8A%D9%88%D9%85+%D8%A8%D8%B3%D8%B9%D8%B1+%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    <div class="pkg-card ">
+                        <span class="pkg-badge">مجاني</span>
+                        <div class="pkg-name">5 قيقا خلال اسبوعين</div>
+                        <div class="pkg-price"><span class="pkg-price-num free" style="color:#181b1a;">مجاناً</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">5 GB</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">14d</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">1M/2M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+5+%D9%82%D9%8A%D9%82%D8%A7+%D8%AE%D9%84%D8%A7%D9%84+%D8%A7%D8%B3%D8%A8%D9%88%D8%B9%D9%8A%D9%86+%D8%A8%D8%B3%D8%B9%D8%B1+%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    <div class="pkg-card ">
+                        <span class="pkg-badge">مجاني</span>
+                        <div class="pkg-name">10 قيقا خلال شهر</div>
+                        <div class="pkg-price"><span class="pkg-price-num free" style="color:#181b1a;">مجاناً</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">10 GB</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">30d</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">1M/2M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+10+%D9%82%D9%8A%D9%82%D8%A7+%D8%AE%D9%84%D8%A7%D9%84+%D8%B4%D9%87%D8%B1+%D8%A8%D8%B3%D8%B9%D8%B1+%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    <div class="pkg-card ">
+                        <span class="pkg-badge">مجاني</span>
+                        <div class="pkg-name">20 قيقا خلال شهر</div>
+                        <div class="pkg-price"><span class="pkg-price-num free" style="color:#181b1a;">مجاناً</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">20 GB</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">30d</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">1M/2M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+20+%D9%82%D9%8A%D9%82%D8%A7+%D8%AE%D9%84%D8%A7%D9%84+%D8%B4%D9%87%D8%B1+%D8%A8%D8%B3%D8%B9%D8%B1+%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    <div class="pkg-card ">
+                        <span class="pkg-badge">مجاني</span>
+                        <div class="pkg-name">باقة رصيد مفتوح (360 يوم - سرعة 2M - 2 مشتركين)</div>
+                        <div class="pkg-price"><span class="pkg-price-num free" style="color:#181b1a;">مجاناً</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">غير محدود</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">1y</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">1M/2M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+%D8%A8%D8%A7%D9%82%D8%A9+%D8%B1%D8%B5%D9%8A%D8%AF+%D9%85%D9%81%D8%AA%D9%88%D8%AD+%28360+%D9%8A%D9%88%D9%85+-+%D8%B3%D8%B1%D8%B9%D8%A9+2M+-+2+%D9%85%D8%B4%D8%AA%D8%B1%D9%83%D9%8A%D9%86%29+%D8%A8%D8%B3%D8%B9%D8%B1+%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    <div class="pkg-card ">
+                        <span class="pkg-badge">مجاني</span>
+                        <div class="pkg-name">باقة رصيد مفتوح (360 يوم - سرعة عالية - 4 مشتركين)</div>
+                        <div class="pkg-price"><span class="pkg-price-num free" style="color:#181b1a;">مجاناً</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">غير محدود</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">1y</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">3M/10M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+%D8%A8%D8%A7%D9%82%D8%A9+%D8%B1%D8%B5%D9%8A%D8%AF+%D9%85%D9%81%D8%AA%D9%88%D8%AD+%28360+%D9%8A%D9%88%D9%85+-+%D8%B3%D8%B1%D8%B9%D8%A9+%D8%B9%D8%A7%D9%84%D9%8A%D8%A9+-+4+%D9%85%D8%B4%D8%AA%D8%B1%D9%83%D9%8A%D9%86%29+%D8%A8%D8%B3%D8%B9%D8%B1+%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    <div class="pkg-card ">
+                        
+                        <div class="pkg-name">500</div>
+                        <div class="pkg-price"><span class="pkg-price-num">500</span> <span class="pkg-currency">ريال</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">1.3 GB</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">3d</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">1M/2M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+500+%D8%A8%D8%B3%D8%B9%D8%B1+500+%D8%B1%D9%8A%D8%A7%D9%84+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    <div class="pkg-card ">
+                        
+                        <div class="pkg-name">1000</div>
+                        <div class="pkg-price"><span class="pkg-price-num">1,000</span> <span class="pkg-currency">ريال</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">3 GB</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">7d</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">1M/2M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+1000+%D8%A8%D8%B3%D8%B9%D8%B1+1%2C000+%D8%B1%D9%8A%D8%A7%D9%84+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    <div class="pkg-card ">
+                        
+                        <div class="pkg-name">2000</div>
+                        <div class="pkg-price"><span class="pkg-price-num">2,000</span> <span class="pkg-currency">ريال</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">7 GB</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">15d</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">1M/2M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+2000+%D8%A8%D8%B3%D8%B9%D8%B1+2%2C000+%D8%B1%D9%8A%D8%A7%D9%84+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    <div class="pkg-card ">
+                        
+                        <div class="pkg-name">5000</div>
+                        <div class="pkg-price"><span class="pkg-price-num">5,000</span> <span class="pkg-currency">ريال</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">19 GB</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">20d</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">1M/2M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+5000+%D8%A8%D8%B3%D8%B9%D8%B1+5%2C000+%D8%B1%D9%8A%D8%A7%D9%84+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    <div class="pkg-card ">
+                        
+                        <div class="pkg-name">10000</div>
+                        <div class="pkg-price"><span class="pkg-price-num">10,000</span> <span class="pkg-currency">ريال</span></div>
+                        
+                        <div class="pkg-features-list">
+                            <div class="pkg-feat-item"><span class="feat-icon">📊</span><span class="feat-label">الرصيد:</span> <b class="feat-val">40 GB</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⏳</span><span class="feat-label">الصلاحية:</span> <b class="feat-val">30d</b></div>
+                            <div class="pkg-feat-item"><span class="feat-icon">⚡</span><span class="feat-label">السرعة:</span> <b class="feat-val">1M/2M</b></div>
+                            
+                        </div>
+                        
+                        <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83+%D9%81%D9%8A+%D8%A8%D8%A7%D9%82%D8%A9+10000+%D8%A8%D8%B3%D8%B9%D8%B1+10%2C000+%D8%B1%D9%8A%D8%A7%D9%84+%D9%85%D9%86+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="btn-pkg-order"><span>💬</span> طلب الباقة ⚡</a>
+                    </div>
+                    </div>
+                </div>
+
+        <!-- Contacts and Points of Sale -->
+        
+            <div class="card contacts-box" style="margin-top:16px;">
+                <div class="card-section-title">📞 أرقام التواصل ونقاط البيع</div>
+                <div class="contact-buttons-row">
+                    <a href="https://wa.me/770000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C+%D8%A3%D9%88%D8%AF+%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1+%D8%B9%D9%86+%D9%83%D8%B1%D9%88%D8%AA+%D9%88%D8%A8%D8%A7%D9%82%D8%A7%D8%AA+%D8%A7%D9%84%D8%A5%D9%86%D8%AA%D8%B1%D9%86%D8%AA+%D9%81%D9%8A+%D8%B4%D8%A8%D9%83%D8%A9+%D8%B3%D8%A7%D9%85+%D8%AD%D8%AF%D9%8A%D8%A8%D9%88" target="_blank" class="contact-btn wa-btn"><span>💬</span> واتساب الإدارة والمبيعات</a>
+                    <a href="tel:770000000" class="contact-btn call-btn"><span>📞</span> اتصال فوري للدعم (770000000)</a>
+                    
+                </div>
+                <div class="pos-notice">📍 <b>أماكن بيع الكروت:</b> متوفر في جميع البقالات ومراكز التسوق ونقاط البيع المعتمدة</div>
+            </div>
+
+        <!-- Footer -->
+        <div class="footer-note">
+            خدمة الإنترنت السريع والآمن | جميع الحقوق محفوظة<br>
+            <small>بوابة مصادقة MikroTik Hotspot & RADIUS</small>
+        </div>
+    </div>
+
+    $(if chap-id)
+    <form name="sendin" action="$(link-login-only)" method="post" style="display:none">
+        <input type="hidden" name="username" />
+        <input type="hidden" name="password" />
+        <input type="hidden" name="dst" value="$(link-orig)" />
+        <input type="hidden" name="popup" value="true" />
+    </form>
+    <script type="text/javascript" src="/md5.js"></script>
+    $(endif)
+
+    <script>
+        const ALLOW_REMEMBER = true;
+        const ALLOW_AUTO_LOGIN = true;
+        const AUTO_LOGIN_DELAY_SEC = 2;
+        const MAX_RECENT_CARDS = 3;
+
+        $(if error)
+        const HAS_ROUTER_ERROR = true;
+        $(else)
+        const HAS_ROUTER_ERROR = false;
+        $(endif)
+
+        let autoLoginTimer = null;
+
+        // Cookie Helpers
+        function setCookie(name, value, days = 30) {
+            const expires = new Date(Date.now() + days * 864e5).toUTCString();
+            document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/; SameSite=Lax';
+        }
+        function getCookie(name) {
+            return document.cookie.split('; ').reduce((r, v) => {
+                const parts = v.split('=');
+                return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+            }, '');
+        }
+        function deleteCookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        }
+
+        // Recent cards management
+        function getRecentCards() {
+            try {
+                const raw = localStorage.getItem('hs_recent_cards') || getCookie('hs_recent_cards');
+                return raw ? JSON.parse(raw) : [];
+            } catch(e) { return []; }
+        }
+
+        function saveCardToStorage(code, autoLogin = true) {
+            if (!code || !ALLOW_REMEMBER) return;
+            code = String(code).replace(/^#+/, '').trim();
+            if (!code) return;
+
+            let list = getRecentCards().filter(c => c !== code);
+            list.unshift(code);
+            if (list.length > MAX_RECENT_CARDS) list = list.slice(0, MAX_RECENT_CARDS);
+
+            try { localStorage.setItem('hs_recent_cards', JSON.stringify(list)); } catch(e){}
+            setCookie('hs_recent_cards', JSON.stringify(list), 60);
+
+            if (autoLogin && ALLOW_AUTO_LOGIN) {
+                try { localStorage.setItem('hs_auto_card', code); } catch(e){}
+                setCookie('hs_auto_card', code, 30);
+            }
+        }
+
+        function removeRecentCard(code) {
+            let list = getRecentCards().filter(c => c !== code);
+            try { localStorage.setItem('hs_recent_cards', JSON.stringify(list)); } catch(e){}
+            setCookie('hs_recent_cards', JSON.stringify(list), 60);
+
+            const autoCard = getCookie('hs_auto_card') || localStorage.getItem('hs_auto_card');
+            if (autoCard === code) {
+                deleteCookie('hs_auto_card');
+                try { localStorage.removeItem('hs_auto_card'); } catch(e){}
+            }
+            renderRecentCards();
+        }
+
+        function clearAllRecentCards() {
+            try { localStorage.removeItem('hs_recent_cards'); localStorage.removeItem('hs_auto_card'); } catch(e){}
+            deleteCookie('hs_recent_cards');
+            deleteCookie('hs_auto_card');
+            renderRecentCards();
+        }
+
+        function renderRecentCards() {
+            if (!ALLOW_REMEMBER) return;
+            const list = getRecentCards();
+            const box = document.getElementById('recent-cards-box');
+            const container = document.getElementById('recent-cards-list');
+            if (!box || !container) return;
+
+            if (list.length === 0) {
+                box.style.display = 'none';
+                return;
+            }
+
+            box.style.display = 'block';
+            container.innerHTML = list.map(card => `
+                <div class="recent-card-chip">
+                    <span class="card-num" onclick="useCard('${card}')" title="تسجيل الدخول بهذا الكرت">💳 ${card}</span>
+                    <span class="btn-del-card" onclick="removeRecentCard('${card}')" title="حذف من السجل">✕</span>
+                </div>
+            `).join('');
+        }
+
+        function useCard(cardCode) {
+            cancelAutoLogin();
+            document.getElementById('username-field').value = cardCode;
+            document.getElementById('password-field').value = cardCode;
+            doActualSubmit();
+        }
+
+        function handleFormSubmit(e) {
+            cancelAutoLogin();
+            const u = document.getElementById('username-field').value.trim();
+            const chk = document.getElementById('remember-card-checkbox');
+            saveCardToStorage(u, chk ? chk.checked : true);
+            return doActualSubmit();
+        }
+
+        function doActualSubmit() {
+            $(if chap-id)
+            if (document.sendin && typeof hexMD5 === 'function') {
+                document.sendin.username.value = document.login.username.value;
+                document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+                document.sendin.submit();
+                return false;
+            }
+            $(endif)
+            return true;
+        }
+
+        function cancelAutoLogin() {
+            if (autoLoginTimer) {
+                clearTimeout(autoLoginTimer);
+                autoLoginTimer = null;
+            }
+            const banner = document.getElementById('auto-login-banner');
+            if (banner) banner.style.display = 'none';
+        }
+
+        function checkAutoLogin() {
+            if (!ALLOW_AUTO_LOGIN || HAS_ROUTER_ERROR) {
+                // If there is an error, clear auto card so it doesn't loop
+                if (HAS_ROUTER_ERROR) {
+                    deleteCookie('hs_auto_card');
+                    try { localStorage.removeItem('hs_auto_card'); } catch(e){}
+                }
+                return;
+            }
+
+            const autoCard = getCookie('hs_auto_card') || localStorage.getItem('hs_auto_card');
+            if (!autoCard) return;
+
+            // Fill the input
+            const uField = document.getElementById('username-field');
+            const pField = document.getElementById('password-field');
+            if (uField) uField.value = autoCard;
+            if (pField) pField.value = autoCard;
+
+            // Show countdown banner
+            const banner = document.getElementById('auto-login-banner');
+            const codeEl = document.getElementById('auto-card-code');
+            if (banner && codeEl) {
+                codeEl.innerText = autoCard;
+                banner.style.display = 'block';
+            }
+
+            autoLoginTimer = setTimeout(() => {
+                doActualSubmit();
+                document.login.submit();
+            }, AUTO_LOGIN_DELAY_SEC * 1000);
+        }
+
+        // Ads carousel rotation
+        function setupAdSlider(sliderId) {
+            const container = document.getElementById(sliderId);
+            if (!container) return;
+            const slides = container.querySelectorAll('.ad-slide-item');
+            const dots = container.querySelectorAll('.ad-dot');
+            if (slides.length <= 1) return;
+
+            let current = 0;
+            const speed = (parseInt(container.dataset.speed) || 4) * 1000;
+
+            function showSlide(idx) {
+                slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+                dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+                current = idx;
+            }
+
+            window.goToSlide = function(sId, idx) {
+                if (sId === sliderId) showSlide(idx);
+            };
+
+            setInterval(() => {
+                showSlide((current + 1) % slides.length);
+            }, speed);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setupAdSlider('hs-ad-slider-login');
+            renderRecentCards();
+            checkAutoLogin();
+        });
+    </script>
+</body>
+</html>

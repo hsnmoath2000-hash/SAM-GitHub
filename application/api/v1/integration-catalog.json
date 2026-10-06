@@ -1,0 +1,4696 @@
+{
+  "version": "2026-10-06",
+  "authentication": "Bearer access_token",
+  "network_header": "X-SAM-Network-ID",
+  "legacy_operations": [
+    {
+      "action": "add_roaming_peer",
+      "endpoint": "/api.php?action=add_roaming_peer",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "admin_get_card_requests",
+      "endpoint": "/api.php?action=admin_get_card_requests",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "admin_get_customer_requests",
+      "endpoint": "/api.php?action=admin_get_customer_requests",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "admin_get_pos_requests",
+      "endpoint": "/api.php?action=admin_get_pos_requests",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "admin_invite_pos_agent",
+      "endpoint": "/api.php?action=admin_invite_pos_agent",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "admin_review_card_request",
+      "endpoint": "/api.php?action=admin_review_card_request",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "admin_review_customer_request",
+      "endpoint": "/api.php?action=admin_review_customer_request",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "admin_review_pos_request",
+      "endpoint": "/api.php?action=admin_review_pos_request",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "approve_all_queue",
+      "endpoint": "/api.php?action=approve_all_queue",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "approve_stock_transfer",
+      "endpoint": "/api.php?action=approve_stock_transfer",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "assign_asset_network",
+      "endpoint": "/api.php?action=assign_asset_network",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "balance_topup_request_create",
+      "endpoint": "/api.php?action=balance_topup_request_create",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "balance_topup_request_review",
+      "endpoint": "/api.php?action=balance_topup_request_review",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "balance_topup_requests",
+      "endpoint": "/api.php?action=balance_topup_requests",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "batch_update_asset_prices",
+      "endpoint": "/api.php?action=batch_update_asset_prices",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "batch_update_network_devices",
+      "endpoint": "/api.php?action=batch_update_network_devices",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "bootstrap_router",
+      "endpoint": "/api.php?action=bootstrap_router",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "change_own_password",
+      "endpoint": "/api.php?action=change_own_password",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "change_users_profile",
+      "endpoint": "/api.php?action=change_users_profile",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "check_auth",
+      "endpoint": "/api.php?action=check_auth",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "cleanup_stale_sessions",
+      "endpoint": "/api.php?action=cleanup_stale_sessions",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "cleanup_unassigned_free_vouchers",
+      "endpoint": "/api.php?action=cleanup_unassigned_free_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "clear_all_notifications",
+      "endpoint": "/api.php?action=clear_all_notifications",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "clear_auth_logs",
+      "endpoint": "/api.php?action=clear_auth_logs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "commit_usermanager_sqlite_import",
+      "endpoint": "/api.php?action=commit_usermanager_sqlite_import",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "confirm_print_batch",
+      "endpoint": "/api.php?action=confirm_print_batch",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "convert_currency",
+      "endpoint": "/api.php?action=convert_currency",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "create_backup",
+      "endpoint": "/api.php?action=create_backup",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "create_direct_expense_voucher",
+      "endpoint": "/api.php?action=create_direct_expense_voucher",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "create_direct_operating_expense",
+      "endpoint": "/api.php?action=create_direct_operating_expense",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "create_journal_entry",
+      "endpoint": "/api.php?action=create_journal_entry",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "create_notification",
+      "endpoint": "/api.php?action=create_notification",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "create_router_backup",
+      "endpoint": "/api.php?action=create_router_backup",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "create_sale_invoice",
+      "endpoint": "/api.php?action=create_sale_invoice",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "create_stock_adjustment",
+      "endpoint": "/api.php?action=create_stock_adjustment",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "credit_agent_wallet",
+      "endpoint": "/api.php?action=credit_agent_wallet",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "customer_get_portal_data",
+      "endpoint": "/api.php?action=customer_get_portal_data",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "customer_submit_request",
+      "endpoint": "/api.php?action=customer_submit_request",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "daily_cashbox",
+      "endpoint": "/api.php?action=daily_cashbox",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "daily_morning",
+      "endpoint": "/api.php?action=daily_morning",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "dashboard_stats",
+      "endpoint": "/api.php?action=dashboard_stats",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_admin",
+      "endpoint": "/api.php?action=delete_admin",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_all_free_vouchers",
+      "endpoint": "/api.php?action=delete_all_free_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_asset",
+      "endpoint": "/api.php?action=delete_asset",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_backup",
+      "endpoint": "/api.php?action=delete_backup",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_chart_account",
+      "endpoint": "/api.php?action=delete_chart_account",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_chatbot_rule",
+      "endpoint": "/api.php?action=delete_chatbot_rule",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_cost_center",
+      "endpoint": "/api.php?action=delete_cost_center",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_employee_salary",
+      "endpoint": "/api.php?action=delete_employee_salary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_financial_voucher",
+      "endpoint": "/api.php?action=delete_financial_voucher",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_free_voucher_schedule",
+      "endpoint": "/api.php?action=delete_free_voucher_schedule",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_network",
+      "endpoint": "/api.php?action=delete_network",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_network_node",
+      "endpoint": "/api.php?action=delete_network_node",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_notification",
+      "endpoint": "/api.php?action=delete_notification",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_partner",
+      "endpoint": "/api.php?action=delete_partner",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_pos_free_voucher_rule",
+      "endpoint": "/api.php?action=delete_pos_free_voucher_rule",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_profile",
+      "endpoint": "/api.php?action=delete_profile",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_recurring_expense",
+      "endpoint": "/api.php?action=delete_recurring_expense",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_roaming_peer",
+      "endpoint": "/api.php?action=delete_roaming_peer",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_role",
+      "endpoint": "/api.php?action=delete_role",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_router",
+      "endpoint": "/api.php?action=delete_router",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_speed_tier",
+      "endpoint": "/api.php?action=delete_speed_tier",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_stock_transfer",
+      "endpoint": "/api.php?action=delete_stock_transfer",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_supplier",
+      "endpoint": "/api.php?action=delete_supplier",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_template",
+      "endpoint": "/api.php?action=delete_template",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_unassigned_free_vouchers",
+      "endpoint": "/api.php?action=delete_unassigned_free_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_user",
+      "endpoint": "/api.php?action=delete_user",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_users",
+      "endpoint": "/api.php?action=delete_users",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "delete_users_batch",
+      "endpoint": "/api.php?action=delete_users_batch",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "deploy_hotspot_template",
+      "endpoint": "/api.php?action=deploy_hotspot_template",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "deploy_hotspot_to_router",
+      "endpoint": "/api.php?action=deploy_hotspot_to_router",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "deposit_partner_capital",
+      "endpoint": "/api.php?action=deposit_partner_capital",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "diagnose_router_fleet",
+      "endpoint": "/api.php?action=diagnose_router_fleet",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "discard_usermanager_sqlite_preview",
+      "endpoint": "/api.php?action=discard_usermanager_sqlite_preview",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "disconnect_session",
+      "endpoint": "/api.php?action=disconnect_session",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "dispatch_queue_now",
+      "endpoint": "/api.php?action=dispatch_queue_now",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "dispatch_scheduled_free_vouchers",
+      "endpoint": "/api.php?action=dispatch_scheduled_free_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "distribute_profits",
+      "endpoint": "/api.php?action=distribute_profits",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "distributor_get_dashboard",
+      "endpoint": "/api.php?action=distributor_get_dashboard",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "distributor_get_statement",
+      "endpoint": "/api.php?action=distributor_get_statement",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "distributor_login",
+      "endpoint": "/api.php?action=distributor_login",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "distributors_wallets_overview",
+      "endpoint": "/api.php?action=distributors_wallets_overview",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "download_backup",
+      "endpoint": "/api.php?action=download_backup",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "download_custom_tlgrm_pack",
+      "endpoint": "/api.php?action=download_custom_tlgrm_pack",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "download_hotspot_bundle",
+      "endpoint": "/api.php?action=download_hotspot_bundle",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "duplicate_template",
+      "endpoint": "/api.php?action=duplicate_template",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "evaluate_widget_metric",
+      "endpoint": "/api.php?action=evaluate_widget_metric",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "execute_network_merge",
+      "endpoint": "/api.php?action=execute_network_merge",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "execute_router_terminal_command",
+      "endpoint": "/api.php?action=execute_router_terminal_command",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "export_activity_logs",
+      "endpoint": "/api.php?action=export_activity_logs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "export_assets",
+      "endpoint": "/api.php?action=export_assets",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "export_profiles",
+      "endpoint": "/api.php?action=export_profiles",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "export_vouchers",
+      "endpoint": "/api.php?action=export_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "fast_sync_router_hotspot_settings",
+      "endpoint": "/api.php?action=fast_sync_router_hotspot_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "fetch_router_neighbors",
+      "endpoint": "/api.php?action=fetch_router_neighbors",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "forgot_password_request_otp",
+      "endpoint": "/api.php?action=forgot_password_request_otp",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "forgot_password_verify_and_reset",
+      "endpoint": "/api.php?action=forgot_password_verify_and_reset",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "generate_batch",
+      "endpoint": "/api.php?action=generate_batch",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "generate_mikrotik_script",
+      "endpoint": "/api.php?action=generate_mikrotik_script",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "generate_smart_router_script",
+      "endpoint": "/api.php?action=generate_smart_router_script",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_account_statement",
+      "endpoint": "/api.php?action=get_account_statement",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_accounting_history",
+      "endpoint": "/api.php?action=get_accounting_history",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_active_sessions",
+      "endpoint": "/api.php?action=get_active_sessions",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_activity_logs",
+      "endpoint": "/api.php?action=get_activity_logs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_admin",
+      "endpoint": "/api.php?action=get_admin",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_admin_details",
+      "endpoint": "/api.php?action=get_admin_details",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_admins",
+      "endpoint": "/api.php?action=get_admins",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_admins_with_roles",
+      "endpoint": "/api.php?action=get_admins_with_roles",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_agent_wallet",
+      "endpoint": "/api.php?action=get_agent_wallet",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_alert_settings",
+      "endpoint": "/api.php?action=get_alert_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_asset",
+      "endpoint": "/api.php?action=get_asset",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_asset_details",
+      "endpoint": "/api.php?action=get_asset_details",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_asset_outages",
+      "endpoint": "/api.php?action=get_asset_outages",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_assets",
+      "endpoint": "/api.php?action=get_assets",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_assets_list",
+      "endpoint": "/api.php?action=get_assets_list",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_auth_logs",
+      "endpoint": "/api.php?action=get_auth_logs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_available_sheets",
+      "endpoint": "/api.php?action=get_available_sheets",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_backup_radius_settings",
+      "endpoint": "/api.php?action=get_backup_radius_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_batch_for_print",
+      "endpoint": "/api.php?action=get_batch_for_print",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_batches",
+      "endpoint": "/api.php?action=get_batches",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_card_warehouses",
+      "endpoint": "/api.php?action=get_card_warehouses",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_cashbox_statement",
+      "endpoint": "/api.php?action=get_cashbox_statement",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_cashbox_summary",
+      "endpoint": "/api.php?action=get_cashbox_summary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_central_subscribers",
+      "endpoint": "/api.php?action=get_central_subscribers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_chart_of_accounts",
+      "endpoint": "/api.php?action=get_chart_of_accounts",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_chatbot_rules",
+      "endpoint": "/api.php?action=get_chatbot_rules",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_chatbot_settings",
+      "endpoint": "/api.php?action=get_chatbot_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_cloud_backup_settings",
+      "endpoint": "/api.php?action=get_cloud_backup_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_comprehensive_financial_statements",
+      "endpoint": "/api.php?action=get_comprehensive_financial_statements",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_cost_centers",
+      "endpoint": "/api.php?action=get_cost_centers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_cost_centers_report",
+      "endpoint": "/api.php?action=get_cost_centers_report",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_current_network_subscription",
+      "endpoint": "/api.php?action=get_current_network_subscription",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_distributors",
+      "endpoint": "/api.php?action=get_distributors",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_employee_salaries",
+      "endpoint": "/api.php?action=get_employee_salaries",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_exchange_rates",
+      "endpoint": "/api.php?action=get_exchange_rates",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_fcm_devices",
+      "endpoint": "/api.php?action=get_fcm_devices",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_financial_report",
+      "endpoint": "/api.php?action=get_financial_report",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_financial_voucher_details",
+      "endpoint": "/api.php?action=get_financial_voucher_details",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_financial_vouchers",
+      "endpoint": "/api.php?action=get_financial_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_firebase_settings",
+      "endpoint": "/api.php?action=get_firebase_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_fleet_ping_matrix",
+      "endpoint": "/api.php?action=get_fleet_ping_matrix",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": false,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_free_vouchers_analytics",
+      "endpoint": "/api.php?action=get_free_vouchers_analytics",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_free_vouchers_list",
+      "endpoint": "/api.php?action=get_free_vouchers_list",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_free_vouchers_quotas",
+      "endpoint": "/api.php?action=get_free_vouchers_quotas",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_general_ledger",
+      "endpoint": "/api.php?action=get_general_ledger",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_hotspot_studio_data",
+      "endpoint": "/api.php?action=get_hotspot_studio_data",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_hotspot_sync_script",
+      "endpoint": "/api.php?action=get_hotspot_sync_script",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_hotspot_walled_garden_script",
+      "endpoint": "/api.php?action=get_hotspot_walled_garden_script",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_instant_balance_inventory",
+      "endpoint": "/api.php?action=get_instant_balance_inventory",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_integrated_report",
+      "endpoint": "/api.php?action=get_integrated_report",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_journal_entries",
+      "endpoint": "/api.php?action=get_journal_entries",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_low_stock_alerts",
+      "endpoint": "/api.php?action=get_low_stock_alerts",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_mobile_dashboard",
+      "endpoint": "/api.php?action=get_mobile_dashboard",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_neighbor_scan_settings",
+      "endpoint": "/api.php?action=get_neighbor_scan_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_network_clock",
+      "endpoint": "/api.php?action=get_network_clock",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_network_context",
+      "endpoint": "/api.php?action=get_network_context",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_network_devices_table",
+      "endpoint": "/api.php?action=get_network_devices_table",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_network_manager_candidates",
+      "endpoint": "/api.php?action=get_network_manager_candidates",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_network_nodes",
+      "endpoint": "/api.php?action=get_network_nodes",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_network_topology",
+      "endpoint": "/api.php?action=get_network_topology",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_network_ui_settings",
+      "endpoint": "/api.php?action=get_network_ui_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_networks",
+      "endpoint": "/api.php?action=get_networks",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_next_username",
+      "endpoint": "/api.php?action=get_next_username",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_noc_dashboard",
+      "endpoint": "/api.php?action=get_noc_dashboard",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_node_detail_report",
+      "endpoint": "/api.php?action=get_node_detail_report",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_notification_logs",
+      "endpoint": "/api.php?action=get_notification_logs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_notification_settings",
+      "endpoint": "/api.php?action=get_notification_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_notification_stats",
+      "endpoint": "/api.php?action=get_notification_stats",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_notifications",
+      "endpoint": "/api.php?action=get_notifications",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_paid_voucher_deliveries",
+      "endpoint": "/api.php?action=get_paid_voucher_deliveries",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_partner_capital_summary",
+      "endpoint": "/api.php?action=get_partner_capital_summary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_partners_equity",
+      "endpoint": "/api.php?action=get_partners_equity",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_permission_matrix",
+      "endpoint": "/api.php?action=get_permission_matrix",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_port_router_analytics",
+      "endpoint": "/api.php?action=get_port_router_analytics",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_pos_free_voucher_eligibility",
+      "endpoint": "/api.php?action=get_pos_free_voucher_eligibility",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_pos_free_voucher_rules",
+      "endpoint": "/api.php?action=get_pos_free_voucher_rules",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_pos_retail_book",
+      "endpoint": "/api.php?action=get_pos_retail_book",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_predefined_speed_tiers",
+      "endpoint": "/api.php?action=get_predefined_speed_tiers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_print_batches",
+      "endpoint": "/api.php?action=get_print_batches",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_print_settings",
+      "endpoint": "/api.php?action=get_print_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_profiles",
+      "endpoint": "/api.php?action=get_profiles",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_purchase_details",
+      "endpoint": "/api.php?action=get_purchase_details",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_purchase_form_data",
+      "endpoint": "/api.php?action=get_purchase_form_data",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_purchase_invoices",
+      "endpoint": "/api.php?action=get_purchase_invoices",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_purchase_lookups",
+      "endpoint": "/api.php?action=get_purchase_lookups",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_purchase_modal_data",
+      "endpoint": "/api.php?action=get_purchase_modal_data",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_purchases_list",
+      "endpoint": "/api.php?action=get_purchases_list",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_recurring_expense_payments",
+      "endpoint": "/api.php?action=get_recurring_expense_payments",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_recurring_expenses",
+      "endpoint": "/api.php?action=get_recurring_expenses",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_roaming_clearing_report",
+      "endpoint": "/api.php?action=get_roaming_clearing_report",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_roaming_peers",
+      "endpoint": "/api.php?action=get_roaming_peers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_roaming_summary",
+      "endpoint": "/api.php?action=get_roaming_summary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_roles",
+      "endpoint": "/api.php?action=get_roles",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_router_comprehensive_status",
+      "endpoint": "/api.php?action=get_router_comprehensive_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_router_files_list",
+      "endpoint": "/api.php?action=get_router_files_list",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_router_hotspot_active",
+      "endpoint": "/api.php?action=get_router_hotspot_active",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_router_import_job_status",
+      "endpoint": "/api.php?action=get_router_import_job_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_router_interfaces_traffic",
+      "endpoint": "/api.php?action=get_router_interfaces_traffic",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_router_ports",
+      "endpoint": "/api.php?action=get_router_ports",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_router_provision_info",
+      "endpoint": "/api.php?action=get_router_provision_info",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_routers",
+      "endpoint": "/api.php?action=get_routers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_salary_payments",
+      "endpoint": "/api.php?action=get_salary_payments",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_sale_invoice_details",
+      "endpoint": "/api.php?action=get_sale_invoice_details",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_sales_eligible_accounts",
+      "endpoint": "/api.php?action=get_sales_eligible_accounts",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_sales_invoices",
+      "endpoint": "/api.php?action=get_sales_invoices",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_sales_returns",
+      "endpoint": "/api.php?action=get_sales_returns",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_speed_tiers",
+      "endpoint": "/api.php?action=get_speed_tiers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_sstp_server_vpn_settings",
+      "endpoint": "/api.php?action=get_sstp_server_vpn_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_sstp_status",
+      "endpoint": "/api.php?action=get_sstp_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_stock_adjustments",
+      "endpoint": "/api.php?action=get_stock_adjustments",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_stock_inventories",
+      "endpoint": "/api.php?action=get_stock_inventories",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_stock_inventory_details",
+      "endpoint": "/api.php?action=get_stock_inventory_details",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_stock_transfer_quote",
+      "endpoint": "/api.php?action=get_stock_transfer_quote",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_stock_transfers_log",
+      "endpoint": "/api.php?action=get_stock_transfers_log",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_subscriber_announcements",
+      "endpoint": "/api.php?action=get_subscriber_announcements",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_subscriber_memberships",
+      "endpoint": "/api.php?action=get_subscriber_memberships",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_supplier_statement",
+      "endpoint": "/api.php?action=get_supplier_statement",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_suppliers",
+      "endpoint": "/api.php?action=get_suppliers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_system_alerts_summary",
+      "endpoint": "/api.php?action=get_system_alerts_summary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_system_health",
+      "endpoint": "/api.php?action=get_system_health",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_telegram_settings",
+      "endpoint": "/api.php?action=get_telegram_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_template_for_profile",
+      "endpoint": "/api.php?action=get_template_for_profile",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_templates",
+      "endpoint": "/api.php?action=get_templates",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_trial_balance",
+      "endpoint": "/api.php?action=get_trial_balance",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_ui_settings",
+      "endpoint": "/api.php?action=get_ui_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_um_proxy_settings",
+      "endpoint": "/api.php?action=get_um_proxy_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_unsold_inventory",
+      "endpoint": "/api.php?action=get_unsold_inventory",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_user_details",
+      "endpoint": "/api.php?action=get_user_details",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_user_kpis",
+      "endpoint": "/api.php?action=get_user_kpis",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_user_usage",
+      "endpoint": "/api.php?action=get_user_usage",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_usermanager_import_card_details",
+      "endpoint": "/api.php?action=get_usermanager_import_card_details",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_usermanager_import_cards",
+      "endpoint": "/api.php?action=get_usermanager_import_cards",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_usermanager_import_routers",
+      "endpoint": "/api.php?action=get_usermanager_import_routers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_users",
+      "endpoint": "/api.php?action=get_users",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_users_for_print",
+      "endpoint": "/api.php?action=get_users_for_print",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_voucher_audit_logs",
+      "endpoint": "/api.php?action=get_voucher_audit_logs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_wallet_distribution_sales",
+      "endpoint": "/api.php?action=get_wallet_distribution_sales",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_wallet_sale_quote",
+      "endpoint": "/api.php?action=get_wallet_sale_quote",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_warehouse_audit_report",
+      "endpoint": "/api.php?action=get_warehouse_audit_report",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_warehouse_details",
+      "endpoint": "/api.php?action=get_warehouse_details",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_whatsapp_qr",
+      "endpoint": "/api.php?action=get_whatsapp_qr",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_whatsapp_settings",
+      "endpoint": "/api.php?action=get_whatsapp_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "get_whatsapp_status",
+      "endpoint": "/api.php?action=get_whatsapp_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "grant_all_eligible_pos_free_vouchers",
+      "endpoint": "/api.php?action=grant_all_eligible_pos_free_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "grant_free_vouchers",
+      "endpoint": "/api.php?action=grant_free_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "grant_pos_free_vouchers",
+      "endpoint": "/api.php?action=grant_pos_free_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "handle_chatbot_message",
+      "endpoint": "/api.php?action=handle_chatbot_message",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "hide_expired_free_vouchers",
+      "endpoint": "/api.php?action=hide_expired_free_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "hide_free_voucher",
+      "endpoint": "/api.php?action=hide_free_voucher",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "import_assets",
+      "endpoint": "/api.php?action=import_assets",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "import_profiles",
+      "endpoint": "/api.php?action=import_profiles",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "import_router_neighbors",
+      "endpoint": "/api.php?action=import_router_neighbors",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "import_vouchers",
+      "endpoint": "/api.php?action=import_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_grant",
+      "endpoint": "/api.php?action=instant_balance_grant",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_invoices",
+      "endpoint": "/api.php?action=instant_balance_invoices",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_issue_voucher",
+      "endpoint": "/api.php?action=instant_balance_issue_voucher",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_refund_voucher",
+      "endpoint": "/api.php?action=instant_balance_refund_voucher",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_resend_voucher",
+      "endpoint": "/api.php?action=instant_balance_resend_voucher",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_sell",
+      "endpoint": "/api.php?action=instant_balance_sell",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_sell_digital_voucher",
+      "endpoint": "/api.php?action=instant_balance_sell_digital_voucher",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_summary",
+      "endpoint": "/api.php?action=instant_balance_summary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_transfer",
+      "endpoint": "/api.php?action=instant_balance_transfer",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_transfers",
+      "endpoint": "/api.php?action=instant_balance_transfers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "instant_balance_warehouses",
+      "endpoint": "/api.php?action=instant_balance_warehouses",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "kick_router_hotspot_user",
+      "endpoint": "/api.php?action=kick_router_hotspot_user",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "list_backups",
+      "endpoint": "/api.php?action=list_backups",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "login",
+      "endpoint": "/api.php?action=login",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "logout",
+      "endpoint": "/api.php?action=logout",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "logout_whatsapp",
+      "endpoint": "/api.php?action=logout_whatsapp",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "low_stock",
+      "endpoint": "/api.php?action=low_stock",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "mark_all_notifications_read",
+      "endpoint": "/api.php?action=mark_all_notifications_read",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "mark_notification_read",
+      "endpoint": "/api.php?action=mark_notification_read",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "network_setup_save",
+      "endpoint": "/api.php?action=network_setup_save",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "network_setup_status",
+      "endpoint": "/api.php?action=network_setup_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_get_master_cashboxes",
+      "endpoint": "/api.php?action=owner_get_master_cashboxes",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_get_master_chart_of_accounts",
+      "endpoint": "/api.php?action=owner_get_master_chart_of_accounts",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_get_master_finance_summary",
+      "endpoint": "/api.php?action=owner_get_master_finance_summary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_get_master_journal_entries",
+      "endpoint": "/api.php?action=owner_get_master_journal_entries",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_get_master_vouchers",
+      "endpoint": "/api.php?action=owner_get_master_vouchers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_save_master_voucher",
+      "endpoint": "/api.php?action=owner_save_master_voucher",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_armor_preset",
+      "endpoint": "/api.php?action=owner_system_armor_preset",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_assign_network_plan",
+      "endpoint": "/api.php?action=owner_system_assign_network_plan",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_broadcast_logs",
+      "endpoint": "/api.php?action=owner_system_broadcast_logs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_broadcast_send",
+      "endpoint": "/api.php?action=owner_system_broadcast_send",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_build_factory",
+      "endpoint": "/api.php?action=owner_system_build_factory",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_cleanup",
+      "endpoint": "/api.php?action=owner_system_cleanup",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": false,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_clear_cache",
+      "endpoint": "/api.php?action=owner_system_clear_cache",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_create_network",
+      "endpoint": "/api.php?action=owner_system_create_network",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_delete_network",
+      "endpoint": "/api.php?action=owner_system_delete_network",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_delete_network_admin",
+      "endpoint": "/api.php?action=owner_system_delete_network_admin",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_delete_network_plan",
+      "endpoint": "/api.php?action=owner_system_delete_network_plan",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_diagnostics",
+      "endpoint": "/api.php?action=owner_system_diagnostics",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_download_backup",
+      "endpoint": "/api.php?action=owner_system_download_backup",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_error_logs",
+      "endpoint": "/api.php?action=owner_system_error_logs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_factory_reset",
+      "endpoint": "/api.php?action=owner_system_factory_reset",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_firewall",
+      "endpoint": "/api.php?action=owner_system_firewall",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_firewall_add_rule",
+      "endpoint": "/api.php?action=owner_system_firewall_add_rule",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_firewall_ban_ip",
+      "endpoint": "/api.php?action=owner_system_firewall_ban_ip",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_firewall_defaults",
+      "endpoint": "/api.php?action=owner_system_firewall_defaults",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_firewall_delete_rule",
+      "endpoint": "/api.php?action=owner_system_firewall_delete_rule",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_firewall_ipv6_status",
+      "endpoint": "/api.php?action=owner_system_firewall_ipv6_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_firewall_ipv6_toggle",
+      "endpoint": "/api.php?action=owner_system_firewall_ipv6_toggle",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_firewall_toggle",
+      "endpoint": "/api.php?action=owner_system_firewall_toggle",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_geo_rule_delete",
+      "endpoint": "/api.php?action=owner_system_geo_rule_delete",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_geo_rule_save",
+      "endpoint": "/api.php?action=owner_system_geo_rule_save",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_geo_rule_toggle",
+      "endpoint": "/api.php?action=owner_system_geo_rule_toggle",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_geo_rules",
+      "endpoint": "/api.php?action=owner_system_geo_rules",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_geoip_lookup",
+      "endpoint": "/api.php?action=owner_system_geoip_lookup",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_get",
+      "endpoint": "/api.php?action=owner_system_get",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_get_network_admins",
+      "endpoint": "/api.php?action=owner_system_get_network_admins",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_get_networks",
+      "endpoint": "/api.php?action=owner_system_get_networks",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": false,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_install_service",
+      "endpoint": "/api.php?action=owner_system_install_service",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_install_service_status",
+      "endpoint": "/api.php?action=owner_system_install_service_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_job_purge",
+      "endpoint": "/api.php?action=owner_system_job_purge",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_job_retry",
+      "endpoint": "/api.php?action=owner_system_job_retry",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_jobs",
+      "endpoint": "/api.php?action=owner_system_jobs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_kill_process",
+      "endpoint": "/api.php?action=owner_system_kill_process",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_logo",
+      "endpoint": "/api.php?action=owner_system_logo",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_logs",
+      "endpoint": "/api.php?action=owner_system_logs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_maintenance_rebuild",
+      "endpoint": "/api.php?action=owner_system_maintenance_rebuild",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_network_subscription_detail",
+      "endpoint": "/api.php?action=owner_system_network_subscription_detail",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_notification_read",
+      "endpoint": "/api.php?action=owner_system_notification_read",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_notifications_get",
+      "endpoint": "/api.php?action=owner_system_notifications_get",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_notifications_read_all",
+      "endpoint": "/api.php?action=owner_system_notifications_read_all",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_notifications_save",
+      "endpoint": "/api.php?action=owner_system_notifications_save",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_port",
+      "endpoint": "/api.php?action=owner_system_port",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_port_forwarding",
+      "endpoint": "/api.php?action=owner_system_port_forwarding",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_port_forwarding_delete",
+      "endpoint": "/api.php?action=owner_system_port_forwarding_delete",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_port_forwarding_save",
+      "endpoint": "/api.php?action=owner_system_port_forwarding_save",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_port_forwarding_toggle",
+      "endpoint": "/api.php?action=owner_system_port_forwarding_toggle",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_reset_ui",
+      "endpoint": "/api.php?action=owner_system_reset_ui",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_save",
+      "endpoint": "/api.php?action=owner_system_save",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_save_alert_settings",
+      "endpoint": "/api.php?action=owner_system_save_alert_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_save_network_admin",
+      "endpoint": "/api.php?action=owner_system_save_network_admin",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_save_network_info",
+      "endpoint": "/api.php?action=owner_system_save_network_info",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_save_network_plan",
+      "endpoint": "/api.php?action=owner_system_save_network_plan",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_send_test_alert",
+      "endpoint": "/api.php?action=owner_system_send_test_alert",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_server_backup",
+      "endpoint": "/api.php?action=owner_system_server_backup",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_service",
+      "endpoint": "/api.php?action=owner_system_service",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_set_subscription_state",
+      "endpoint": "/api.php?action=owner_system_set_subscription_state",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_subscription_center",
+      "endpoint": "/api.php?action=owner_system_subscription_center",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_telegram_get",
+      "endpoint": "/api.php?action=owner_system_telegram_get",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_telegram_save",
+      "endpoint": "/api.php?action=owner_system_telegram_save",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_telegram_test",
+      "endpoint": "/api.php?action=owner_system_telegram_test",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_toggle_admin_status",
+      "endpoint": "/api.php?action=owner_system_toggle_admin_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_toggle_network_status",
+      "endpoint": "/api.php?action=owner_system_toggle_network_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_whatsapp_delete_log",
+      "endpoint": "/api.php?action=owner_system_whatsapp_delete_log",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_whatsapp_get",
+      "endpoint": "/api.php?action=owner_system_whatsapp_get",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_whatsapp_logs",
+      "endpoint": "/api.php?action=owner_system_whatsapp_logs",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_whatsapp_qr",
+      "endpoint": "/api.php?action=owner_system_whatsapp_qr",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_whatsapp_retry",
+      "endpoint": "/api.php?action=owner_system_whatsapp_retry",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_whatsapp_retry_all",
+      "endpoint": "/api.php?action=owner_system_whatsapp_retry_all",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_whatsapp_save",
+      "endpoint": "/api.php?action=owner_system_whatsapp_save",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "owner_system_whatsapp_test",
+      "endpoint": "/api.php?action=owner_system_whatsapp_test",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "parse_raw_neighbors",
+      "endpoint": "/api.php?action=parse_raw_neighbors",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pay_batch_salaries",
+      "endpoint": "/api.php?action=pay_batch_salaries",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pay_employee_salary",
+      "endpoint": "/api.php?action=pay_employee_salary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pay_pos_customer_refund",
+      "endpoint": "/api.php?action=pay_pos_customer_refund",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pay_recurring_expense",
+      "endpoint": "/api.php?action=pay_recurring_expense",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pay_sale_invoice",
+      "endpoint": "/api.php?action=pay_sale_invoice",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pay_supplier",
+      "endpoint": "/api.php?action=pay_supplier",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pay_supplier_invoice",
+      "endpoint": "/api.php?action=pay_supplier_invoice",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pending_topup_alerts",
+      "endpoint": "/api.php?action=pending_topup_alerts",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "ping_router_device",
+      "endpoint": "/api.php?action=ping_router_device",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pos_confirm_network_invitation",
+      "endpoint": "/api.php?action=pos_confirm_network_invitation",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pos_dashboard_details",
+      "endpoint": "/api.php?action=pos_dashboard_details",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pos_get_card_requests",
+      "endpoint": "/api.php?action=pos_get_card_requests",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pos_get_networks_catalog",
+      "endpoint": "/api.php?action=pos_get_networks_catalog",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pos_get_pending_invitations",
+      "endpoint": "/api.php?action=pos_get_pending_invitations",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pos_request_card_batch",
+      "endpoint": "/api.php?action=pos_request_card_batch",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "pos_submit_network_join_request",
+      "endpoint": "/api.php?action=pos_submit_network_join_request",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "post_purchase_invoice",
+      "endpoint": "/api.php?action=post_purchase_invoice",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "post_stock_inventory_adjustment",
+      "endpoint": "/api.php?action=post_stock_inventory_adjustment",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "post_supplier",
+      "endpoint": "/api.php?action=post_supplier",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "post_supplier_payment",
+      "endpoint": "/api.php?action=post_supplier_payment",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "prepare_usermanager_router_transfer",
+      "endpoint": "/api.php?action=prepare_usermanager_router_transfer",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "preview_hotspot_page",
+      "endpoint": "/api.php?action=preview_hotspot_page",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "preview_network_merge",
+      "endpoint": "/api.php?action=preview_network_merge",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "preview_usermanager_sqlite",
+      "endpoint": "/api.php?action=preview_usermanager_sqlite",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "reassign_router_network",
+      "endpoint": "/api.php?action=reassign_router_network",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "reboot_router",
+      "endpoint": "/api.php?action=reboot_router",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "receive_usermanager_router_transfer",
+      "endpoint": "/api.php?action=receive_usermanager_router_transfer",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "record_opening_balance",
+      "endpoint": "/api.php?action=record_opening_balance",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "refresh_token",
+      "endpoint": "/api.php?action=refresh_token",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "refund_failed_wallet_voucher",
+      "endpoint": "/api.php?action=refund_failed_wallet_voucher",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "regenerate_router_token",
+      "endpoint": "/api.php?action=regenerate_router_token",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "register_fcm_token",
+      "endpoint": "/api.php?action=register_fcm_token",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "registration_get_init_data",
+      "endpoint": "/api.php?action=registration_get_init_data",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "registration_request_otp",
+      "endpoint": "/api.php?action=registration_request_otp",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "registration_verify_and_create",
+      "endpoint": "/api.php?action=registration_verify_and_create",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "reject_stock_transfer",
+      "endpoint": "/api.php?action=reject_stock_transfer",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "remove_network_partner",
+      "endpoint": "/api.php?action=remove_network_partner",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "renew_users_validity",
+      "endpoint": "/api.php?action=renew_users_validity",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "resend_free_voucher_whatsapp",
+      "endpoint": "/api.php?action=resend_free_voucher_whatsapp",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "resend_notification_log",
+      "endpoint": "/api.php?action=resend_notification_log",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "resend_paid_voucher_whatsapp",
+      "endpoint": "/api.php?action=resend_paid_voucher_whatsapp",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "reset_financial_system",
+      "endpoint": "/api.php?action=reset_financial_system",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "reset_network_ui_settings",
+      "endpoint": "/api.php?action=reset_network_ui_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "reset_speed_tiers",
+      "endpoint": "/api.php?action=reset_speed_tiers",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "reset_ui_settings",
+      "endpoint": "/api.php?action=reset_ui_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "reset_users_usage",
+      "endpoint": "/api.php?action=reset_users_usage",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "restart_radius",
+      "endpoint": "/api.php?action=restart_radius",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "restart_sstp",
+      "endpoint": "/api.php?action=restart_sstp",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "restore_backup",
+      "endpoint": "/api.php?action=restore_backup",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "return_sale_invoice",
+      "endpoint": "/api.php?action=return_sale_invoice",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "return_warehouse_stock",
+      "endpoint": "/api.php?action=return_warehouse_stock",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "role_dashboard_summary",
+      "endpoint": "/api.php?action=role_dashboard_summary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "run_all_routers_neighbor_scan",
+      "endpoint": "/api.php?action=run_all_routers_neighbor_scan",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "sales_channel_report",
+      "endpoint": "/api.php?action=sales_channel_report",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_admin",
+      "endpoint": "/api.php?action=save_admin",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_admin_scope",
+      "endpoint": "/api.php?action=save_admin_scope",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_alert_settings",
+      "endpoint": "/api.php?action=save_alert_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_asset",
+      "endpoint": "/api.php?action=save_asset",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_backup_radius_settings",
+      "endpoint": "/api.php?action=save_backup_radius_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_central_subscriber",
+      "endpoint": "/api.php?action=save_central_subscriber",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_chart_account",
+      "endpoint": "/api.php?action=save_chart_account",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_chatbot_rule",
+      "endpoint": "/api.php?action=save_chatbot_rule",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_chatbot_settings",
+      "endpoint": "/api.php?action=save_chatbot_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_cloud_backup_settings",
+      "endpoint": "/api.php?action=save_cloud_backup_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_cost_center",
+      "endpoint": "/api.php?action=save_cost_center",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_employee_salary",
+      "endpoint": "/api.php?action=save_employee_salary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_exchange_rate",
+      "endpoint": "/api.php?action=save_exchange_rate",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_financial_voucher",
+      "endpoint": "/api.php?action=save_financial_voucher",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_firebase_settings",
+      "endpoint": "/api.php?action=save_firebase_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_free_vouchers_quota",
+      "endpoint": "/api.php?action=save_free_vouchers_quota",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_free_vouchers_schedule",
+      "endpoint": "/api.php?action=save_free_vouchers_schedule",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_hotspot_studio_data",
+      "endpoint": "/api.php?action=save_hotspot_studio_data",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_hotspot_studio_settings",
+      "endpoint": "/api.php?action=save_hotspot_studio_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_neighbor_scan_settings",
+      "endpoint": "/api.php?action=save_neighbor_scan_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_network",
+      "endpoint": "/api.php?action=save_network",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_network_clock",
+      "endpoint": "/api.php?action=save_network_clock",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_network_node",
+      "endpoint": "/api.php?action=save_network_node",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_network_partner",
+      "endpoint": "/api.php?action=save_network_partner",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_network_ui_settings",
+      "endpoint": "/api.php?action=save_network_ui_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_node_responsible",
+      "endpoint": "/api.php?action=save_node_responsible",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_notification_settings",
+      "endpoint": "/api.php?action=save_notification_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_partner",
+      "endpoint": "/api.php?action=save_partner",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_permission_matrix",
+      "endpoint": "/api.php?action=save_permission_matrix",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_pos_free_voucher_rule",
+      "endpoint": "/api.php?action=save_pos_free_voucher_rule",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_print_settings",
+      "endpoint": "/api.php?action=save_print_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_profile",
+      "endpoint": "/api.php?action=save_profile",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_recurring_expense",
+      "endpoint": "/api.php?action=save_recurring_expense",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_role",
+      "endpoint": "/api.php?action=save_role",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_router",
+      "endpoint": "/api.php?action=save_router",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_speed_tier",
+      "endpoint": "/api.php?action=save_speed_tier",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_sstp_server_vpn_settings",
+      "endpoint": "/api.php?action=save_sstp_server_vpn_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_stock_inventory",
+      "endpoint": "/api.php?action=save_stock_inventory",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_supplier",
+      "endpoint": "/api.php?action=save_supplier",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_telegram_settings",
+      "endpoint": "/api.php?action=save_telegram_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_template",
+      "endpoint": "/api.php?action=save_template",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_ui_settings",
+      "endpoint": "/api.php?action=save_ui_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_um_proxy_settings",
+      "endpoint": "/api.php?action=save_um_proxy_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_user",
+      "endpoint": "/api.php?action=save_user",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "save_whatsapp_settings",
+      "endpoint": "/api.php?action=save_whatsapp_settings",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "sell_instant_balance",
+      "endpoint": "/api.php?action=sell_instant_balance",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": false,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "sell_voucher_from_wallet",
+      "endpoint": "/api.php?action=sell_voucher_from_wallet",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "send_custom_notification",
+      "endpoint": "/api.php?action=send_custom_notification",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "send_whatsapp_message",
+      "endpoint": "/api.php?action=send_whatsapp_message",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "send_whatsapp_report",
+      "endpoint": "/api.php?action=send_whatsapp_report",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "set_account_opening_balance",
+      "endpoint": "/api.php?action=set_account_opening_balance",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "set_base_currency",
+      "endpoint": "/api.php?action=set_base_currency",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "set_router_interface_state",
+      "endpoint": "/api.php?action=set_router_interface_state",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "set_telegram_webhook",
+      "endpoint": "/api.php?action=set_telegram_webhook",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "set_user_status",
+      "endpoint": "/api.php?action=set_user_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "set_users_batch_status",
+      "endpoint": "/api.php?action=set_users_batch_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "settle_roaming",
+      "endpoint": "/api.php?action=settle_roaming",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "start_stock_inventory",
+      "endpoint": "/api.php?action=start_stock_inventory",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "subscriber_card_query",
+      "endpoint": "/api.php?action=subscriber_card_query",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "subscriber_change_speed",
+      "endpoint": "/api.php?action=subscriber_change_speed",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "subscriber_disconnect_device",
+      "endpoint": "/api.php?action=subscriber_disconnect_device",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "subscriber_get_devices",
+      "endpoint": "/api.php?action=subscriber_get_devices",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "subscriber_get_status",
+      "endpoint": "/api.php?action=subscriber_get_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "subscriber_set_mac_lock",
+      "endpoint": "/api.php?action=subscriber_set_mac_lock",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "subscriber_set_max_devices",
+      "endpoint": "/api.php?action=subscriber_set_max_devices",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "switch_active_network",
+      "endpoint": "/api.php?action=switch_active_network",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "test_chatbot_query",
+      "endpoint": "/api.php?action=test_chatbot_query",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "test_cloud_backup_sftp",
+      "endpoint": "/api.php?action=test_cloud_backup_sftp",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "test_cloud_backup_telegram",
+      "endpoint": "/api.php?action=test_cloud_backup_telegram",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "test_firebase_push",
+      "endpoint": "/api.php?action=test_firebase_push",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "test_router_api",
+      "endpoint": "/api.php?action=test_router_api",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "test_router_coa",
+      "endpoint": "/api.php?action=test_router_coa",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "test_telegram_alert",
+      "endpoint": "/api.php?action=test_telegram_alert",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "test_whatsapp_message",
+      "endpoint": "/api.php?action=test_whatsapp_message",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "toggle_chatbot_rule",
+      "endpoint": "/api.php?action=toggle_chatbot_rule",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "toggle_free_voucher_schedule",
+      "endpoint": "/api.php?action=toggle_free_voucher_schedule",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "toggle_recurring_expense",
+      "endpoint": "/api.php?action=toggle_recurring_expense",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "toggle_recurring_expense_status",
+      "endpoint": "/api.php?action=toggle_recurring_expense_status",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "toggle_roaming_peer",
+      "endpoint": "/api.php?action=toggle_roaming_peer",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "toggle_router_license",
+      "endpoint": "/api.php?action=toggle_router_license",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "transfer_instant_balance",
+      "endpoint": "/api.php?action=transfer_instant_balance",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "transfer_sheets",
+      "endpoint": "/api.php?action=transfer_sheets",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "transfer_warehouse_stock",
+      "endpoint": "/api.php?action=transfer_warehouse_stock",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "unregister_fcm_token",
+      "endpoint": "/api.php?action=unregister_fcm_token",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "update_admin_hierarchy",
+      "endpoint": "/api.php?action=update_admin_hierarchy",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "upload_backup",
+      "endpoint": "/api.php?action=upload_backup",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "upload_backup_to_cloud",
+      "endpoint": "/api.php?action=upload_backup_to_cloud",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "upload_bg",
+      "endpoint": "/api.php?action=upload_bg",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "upload_template_icon",
+      "endpoint": "/api.php?action=upload_template_icon",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": true,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    },
+    {
+      "action": "weekly_summary",
+      "endpoint": "/api.php?action=weekly_summary",
+      "transport": "existing_legacy_json",
+      "used_by_web_ui": false,
+      "declared_handler": true,
+      "permission_enforcement": "existing_server_handler",
+      "contract_status": "existing_contract_requires_operation_validation"
+    }
+  ],
+  "new_v1_routes": [
+    {
+      "method": "GET",
+      "path": "/network/setup"
+    },
+    {
+      "method": "PATCH",
+      "path": "/network/setup"
+    },
+    {
+      "method": "GET",
+      "path": "/network/imports/routers"
+    },
+    {
+      "method": "POST",
+      "path": "/network/imports/router-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/network/imports/file-preview"
+    },
+    {
+      "method": "GET",
+      "path": "/network/imports/{token}/cards"
+    },
+    {
+      "method": "GET",
+      "path": "/network/imports/{token}/cards/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/network/imports/{token}/commit"
+    },
+    {
+      "method": "DELETE",
+      "path": "/network/imports/{token}"
+    },
+    {
+      "method": "GET",
+      "path": "/integration/catalog"
+    },
+    {
+      "method": "GET",
+      "path": "/integration/ui"
+    },
+    {
+      "method": "GET",
+      "path": "/network/clock"
+    },
+    {
+      "method": "PATCH",
+      "path": "/network/clock"
+    },
+    {
+      "method": "GET",
+      "path": "/network/appearance"
+    },
+    {
+      "method": "PATCH",
+      "path": "/network/appearance"
+    },
+    {
+      "method": "DELETE",
+      "path": "/network/appearance"
+    },
+    {
+      "method": "GET",
+      "path": "/network/admins"
+    },
+    {
+      "method": "GET",
+      "path": "/network/admins/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/network/stock/inventories"
+    },
+    {
+      "method": "POST",
+      "path": "/network/stock/inventories"
+    },
+    {
+      "method": "GET",
+      "path": "/network/stock/inventories/{id}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/network/stock/inventories/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/network/stock/adjustments"
+    },
+    {
+      "method": "GET",
+      "path": "/network/accounts/{id}/statement"
+    },
+    {
+      "method": "GET",
+      "path": "/integration/origins"
+    },
+    {
+      "method": "PATCH",
+      "path": "/integration/origins"
+    },
+    {
+      "method": "GET",
+      "path": "/network/commerce/wallet"
+    },
+    {
+      "method": "GET",
+      "path": "/network/commerce/instant-balance"
+    },
+    {
+      "method": "GET",
+      "path": "/network/commerce/deliveries"
+    },
+    {
+      "method": "POST",
+      "path": "/network/stock/transfers/{id}/reject"
+    },
+    {
+      "method": "DELETE",
+      "path": "/network/stock/transfers/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/network/stock/inventories/{id}/post"
+    },
+    {
+      "method": "GET",
+      "path": "/network/stock/transfers/{id}/quote"
+    },
+    {
+      "method": "POST",
+      "path": "/network/stock/transfers/{id}/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/network/stock/adjustments"
+    },
+    {
+      "method": "POST",
+      "path": "/network/commerce/vouchers/{id}/refund"
+    },
+    {
+      "method": "POST",
+      "path": "/network/commerce/instant-balance/transfers"
+    },
+    {
+      "method": "POST",
+      "path": "/network/commerce/vouchers/{id}/resend"
+    },
+    {
+      "method": "GET",
+      "path": "/network/commerce/wallet/quote"
+    },
+    {
+      "method": "GET",
+      "path": "/network/commerce/wallet/sales"
+    },
+    {
+      "method": "POST",
+      "path": "/network/commerce/wallet/sales"
+    },
+    {
+      "method": "POST",
+      "path": "/network/commerce/wallet/credits"
+    },
+    {
+      "method": "GET",
+      "path": "/network/commerce/pos/book"
+    },
+    {
+      "method": "POST",
+      "path": "/network/commerce/wallet/sales/{id}/customer-refund"
+    }
+  ],
+  "coverage": {
+    "declared_operations": 495,
+    "literal_frontend_operations": 409,
+    "unmatched_frontend_actions": [
+      "get_fleet_ping_matrix",
+      "owner_system_cleanup",
+      "owner_system_get_networks",
+      "sell_instant_balance"
+    ]
+  },
+  "limits": {
+    "import_page_max": 500,
+    "import_commit_batch": 250,
+    "preview_upload_max_bytes": 67108864
+  },
+  "notes": [
+    "Listing a handler is not evidence that its operation passed acceptance or tenant isolation tests.",
+    "Existing operations keep their existing response contracts. New v1 routes return data/meta/error.",
+    "Client menu visibility is informational; every mutation must be authorized by its server handler."
+  ]
+}

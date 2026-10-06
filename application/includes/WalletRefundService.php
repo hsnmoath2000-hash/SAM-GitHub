@@ -1,0 +1,32 @@
+<?php
+declare(strict_types=1);
+/** Reverse only the recorded wallet debit; never infer it from card cost or price. */
+final class WalletRefundService {
+ public function __construct(private PDO $db,private AuthorizationContext $auth){}
+ private function cents(string $v):int{if(!preg_match('/^(-?)(\d{1,12})(?:\.(\d{1,2}))?$/',$v,$m))throw new InvalidArgumentException('MONEY_RANGE');$n=(int)$m[2]*100+(int)str_pad($m[3]??'',2,'0');return $m[1]==='-'?-$n:$n;}
+ private function money(int $v):string{return ($v<0?'-':'').intdiv(abs($v),100).'.'.str_pad((string)(abs($v)%100),2,'0',STR_PAD_LEFT);}
+ public function refund(int $id,array $input=[]):array{
+  if($id<=0)throw new InvalidArgumentException('INVALID_VOUCHER_ID');if(isset($input['network_id'])&&(!is_int($input['network_id'])&&!is_string($input['network_id'])||!preg_match('/^[1-9][0-9]*$/',(string)$input['network_id'])))throw new InvalidArgumentException('INVALID_NETWORK');
+  $this->auth->assertCan(['wallet_sales','distributor_wallets']);$net=$this->auth->activeNetworkId();if($net<=0||!$this->auth->canAccessNetwork($net)||isset($input['network_id'])&&(int)$input['network_id']!==$net)throw new DomainException('FORBIDDEN_NETWORK');
+  $this->db->beginTransaction();
+  try{
+   $q=$this->db->prepare('SELECT * FROM um_vouchers_meta WHERE network_id=? AND id=? FOR UPDATE');$q->execute([$net,$id]);$v=$q->fetch(PDO::FETCH_ASSOC);if(!$v)throw new DomainException('FORBIDDEN_NETWORK');$admin=(int)$v['sold_by_admin_id'];$this->auth->assertCanAccessAdmin($admin);
+   if(!$this->auth->isGlobal()&&$admin!==$this->auth->id())throw new DomainException('FORBIDDEN_SCOPE');$q=$this->db->prepare('SELECT id FROM um_admins WHERE id=? FOR UPDATE');$q->execute([$admin]);if(!$q->fetchColumn())throw new DomainException('FORBIDDEN_SCOPE');
+   $q=$this->db->prepare("SELECT id,admin_id,amount FROM um_wallet_transactions WHERE network_id=? AND reference_type='voucher' AND reference_id=? AND transaction_type='voucher_sale' ORDER BY id LIMIT 2 FOR UPDATE");$q->execute([$net,$v['username']]);$sales=$q->fetchAll(PDO::FETCH_ASSOC);
+   if(count($sales)!==1||(int)$sales[0]['admin_id']!==$admin||$this->cents((string)$sales[0]['amount'])>=0)throw new DomainException('WALLET_DEBIT_REQUIRED');$amount=-$this->cents((string)$sales[0]['amount']);
+   $q=$this->db->prepare("SELECT id,admin_id,transaction_type,amount FROM um_wallet_transactions WHERE network_id=? AND reference_type='voucher_refund' AND reference_id=? ORDER BY id LIMIT 2 FOR UPDATE");$q->execute([$net,$v['username']]);$refunds=$q->fetchAll(PDO::FETCH_ASSOC);
+   if($v['delivery_status']==='refunded'){$q=$this->db->prepare('SELECT s.status,s.refund_journal_id,j.is_posted,j.total_debit,j.total_credit,i.invoice_status FROM um_wallet_sales s LEFT JOIN um_journal_entries j ON j.id=s.refund_journal_id AND j.network_id=s.network_id LEFT JOIN um_sales_invoices i ON i.id=s.network_invoice_id AND i.network_id=s.network_id WHERE s.network_id=? AND s.voucher_id=?');$q->execute([$net,$id]);$book=$q->fetch(PDO::FETCH_ASSOC);if($book&&($book['status']!=='refunded'||!(int)$book['is_posted']||$book['invoice_status']!=='refunded'||$this->cents((string)$book['total_debit'])!==$amount||$this->cents((string)$book['total_credit'])!==$amount))throw new DomainException('REFUND_INCOMPLETE');if(count($refunds)!==1||(int)$refunds[0]['admin_id']!==$admin||$refunds[0]['transaction_type']!=='refund'||$this->cents((string)$refunds[0]['amount'])!==$amount||$v['status']!=='disabled'||(int)$v['is_sold'])throw new DomainException('REFUND_INCOMPLETE');$this->db->commit();return ['success'=>true,'replayed'=>true,'message'=>'سبق استرداد العملية دون تكرار الرصيد'];}
+   if($refunds)throw new DomainException('REFUND_INCOMPLETE');
+   if($v['comment']!=='بيع إلكتروني بالمحفظة'||$v['delivery_status']!=='failed'||!(int)$v['is_sold']||!in_array($v['status'],['active','disabled'],true)||str_starts_with($v['username'],'router_'))throw new DomainException('REFUND_NOT_ALLOWED');
+   require_once __DIR__.'/WalletCommerceService.php';$commerce=new WalletCommerceService($this->db,$this->auth);if($v['invoice_id']!==null&&!$commerce->canReverseInvoice($v))throw new DomainException('INVOICE_REVERSAL_REQUIRED');
+   $q=$this->db->prepare('SELECT 1 FROM radacct WHERE network_id=? AND username=? LIMIT 1 FOR UPDATE');$q->execute([$net,$v['username']]);if($v['first_login']!==null||$q->fetchColumn())throw new DomainException('VOUCHER_ALREADY_USED');
+   $q=$this->db->prepare('SELECT balance FROM um_agent_wallets WHERE network_id=? AND admin_id=? FOR UPDATE');$q->execute([$net,$admin]);$balance=$q->fetchColumn();if($balance===false)throw new DomainException('WALLET_DEBIT_REQUIRED');$new=$this->cents((string)$balance)+$amount;if(abs($new)>99999999999999)throw new InvalidArgumentException('MONEY_RANGE');
+   $commerce->reverse($id,$amount);
+   $q=$this->db->prepare('UPDATE um_agent_wallets SET balance=? WHERE network_id=? AND admin_id=?');$q->execute([$this->money($new),$net,$admin]);
+   $q=$this->db->prepare("INSERT INTO um_wallet_transactions(network_id,admin_id,transaction_type,amount,balance_after,reference_type,reference_id,notes,created_by) VALUES(?,?,'refund',?,?,'voucher_refund',?,?,?)");$q->execute([$net,$admin,$this->money($amount),$this->money($new),$v['username'],'عكس حركة المحفظة #'.$sales[0]['id'],$this->auth->id()]);
+   $q=$this->db->prepare("UPDATE radcheck SET value='Reject',op=':=' WHERE network_id=? AND username=? AND attribute='Auth-Type'");$q->execute([$net,$v['username']]);if(!$q->rowCount()){$q=$this->db->prepare("SELECT 1 FROM radcheck WHERE network_id=? AND username=? AND attribute='Auth-Type' AND value='Reject'");$q->execute([$net,$v['username']]);if(!$q->fetchColumn())$this->db->prepare("INSERT INTO radcheck(network_id,username,attribute,op,value) VALUES(?,?,'Auth-Type',':=','Reject')")->execute([$net,$v['username']]);}
+   $q=$this->db->prepare("UPDATE um_vouchers_meta SET status='disabled',is_sold=0,delivery_status='refunded',comment='مسترجع بسبب فشل إرسال واتساب' WHERE network_id=? AND id=?");$q->execute([$net,$id]);
+   $this->auth->audit('wallet.voucher.refund','allow','voucher',$id,'reverse recorded wallet debit; unused card rejected');$this->db->commit();return ['success'=>true,'refund_amount'=>$this->money($amount),'wallet_balance'=>$this->money($new),'message'=>'تم عكس المبلغ المخصوم فعليًا وتعطيل الكرت'];
+  }catch(Throwable $e){if($this->db->inTransaction())$this->db->rollBack();throw $e;}
+ }
+}
