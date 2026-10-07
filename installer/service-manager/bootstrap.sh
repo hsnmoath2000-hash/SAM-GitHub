@@ -7,6 +7,8 @@ python3 -m py_compile "$ROOT/manager.py"
 bash -n "$ROOT/sam-system-control"
 install -d -m 0755 /usr/local/libexec /usr/local/share/sam-service-manager /usr/local/sbin
 install -m 0755 "$ROOT/manager.py" /usr/local/libexec/sam-service-manager.py
+[[ -f "$ROOT/sam-radius-client.py" ]] && install -m 0755 "$ROOT/sam-radius-client.py" /usr/local/libexec/sam-radius-client.py
+[[ -f "$ROOT/sam-port-forward.py" ]] && install -m 0755 "$ROOT/sam-port-forward.py" /usr/local/libexec/sam-port-forward.py
 # On an existing server, preserve its other administrative subcommands.
 if [[ -f /usr/local/sbin/sam-system-control ]]; then
  python3 - <<'PY'

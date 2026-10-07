@@ -737,6 +737,7 @@
         if (tab === 'jobs') this.loadOwnerJobs();
         if (tab === 'firewall') this.loadOwnerFirewall();
         if (tab === 'logs') this.loadOwnerLogs();
+        if (tab === 'updates') this.loadOwnerUpdateStatus();
     };
 
     App.renderSystemOwnerConsole = async function () {
@@ -782,6 +783,9 @@
                     </button>
                     <button class="owner-subtab-btn ${currentSub === 'logs' ? 'active' : ''}" data-subtab="logs" onclick="App.switchOwnerSubTab('logs')">
                         <span>📜</span> عارض السجلات والصيانة
+                    </button>
+                    <button class="owner-subtab-btn ${currentSub === 'updates' ? 'active' : ''}" data-subtab="updates" onclick="App.switchOwnerSubTab('updates')" style="border-color:#10b981; color:#047857; font-weight:700;">
+                        <span>🔄</span> تحديثات ومزامنة النظام (OTA)
                     </button>
                 </div>
 
@@ -935,6 +939,112 @@
                             </div>
                         </div>
                         <pre id="owner-terminal-pre" class="owner-terminal-body">جاري جلب السجلات...</pre>
+                    </div>
+                </div>
+
+                <!-- SUBTAB 5: SYSTEM UPDATES & CLOUD SYNC -->
+                <div id="subtab-panel-updates" class="owner-subtab-panel" style="display:${currentSub === 'updates' ? 'block' : 'none'}">
+                    <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                        <div>
+                            <h4 style="margin:0 0 4px; font-size:16px; color:#065f46;">🚀 مركز التحديثات والمزامنة السحابية بنقرة واحدة (OTA System Updates)</h4>
+                            <p style="margin:0; font-size:12.5px; color:#047857;">تحديث وتطوير ملفات النظام، ومزامنة واجهات لوحة التحكم، وتطبيق ترقيات قاعدة البيانات تلقائياً دون الحاجة إلى الطرفية (SSH).</p>
+                        </div>
+                        <button class="mt-btn mt-btn-success" onclick="App.loadOwnerUpdateStatus()">⟳ فحص الحالة</button>
+                    </div>
+
+                    <!-- Update Status KPI Grid -->
+                    <div class="kpi-grid" style="margin-bottom:16px;">
+                        <div class="kpi-card"><b>إصدار النظام الحالي</b><strong id="owner-up-version">SAM v3.2.0</strong><small id="owner-up-build">جاري الفحص...</small></div>
+                        <div class="kpi-card"><b>النسخ الاحتياطي التلقائي</b><strong id="owner-up-backup">مفعل تلقائياً</strong><small id="owner-up-backup-info">يتم قبل أي ترقية</small></div>
+                        <div class="kpi-card"><b>بيئة التشغيل</b><strong id="owner-up-php">PHP 8.3-FPM</strong><small id="owner-up-db">MariaDB</small></div>
+                        <div class="kpi-card"><b>المساحة الحرة على القرص</b><strong id="owner-up-disk">-</strong><small>جاهز للترقية</small></div>
+                    </div>
+
+                    <!-- 3 Update Source Methods Grid -->
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px; margin-bottom:16px;">
+                        <!-- METHOD 1: Direct File Upload -->
+                        <div class="mt-card" style="border:1px solid #cbd5e1; border-radius:8px; padding:16px; background:#fff;">
+                            <h4 style="margin:0 0 8px; font-size:14px; color:#1e293b; display:flex; align-items:center; gap:6px;">
+                                <span>📦</span> 1. الرفع اليدوي المباشر (Direct Upload)
+                            </h4>
+                            <p style="font-size:12px; color:#64748b; margin:0 0 12px; line-height:1.6;">
+                                اختر ملف الحزمة المضغوطة (<code>sam-github-updated.zip</code> أو <code>.tar.gz</code>) من جهازك أو هاتفك لرفعها وتطبيقها مباشرة:
+                            </p>
+                            <input type="file" id="owner-update-file-input" accept=".zip,.tar.gz,.gz" style="display:block; width:100%; font-size:12px; margin-bottom:12px; padding:6px; border:1px dashed #94a3b8; border-radius:6px; background:#f8fafc;" onchange="App.handleUpdateFileSelect(event)" />
+                            <div id="owner-update-upload-progress" style="display:none; margin-bottom:10px;">
+                                <div style="background:#e2e8f0; border-radius:4px; height:8px; overflow:hidden;">
+                                    <div id="owner-update-progress-bar" style="background:#10b981; width:0%; height:100%; transition:width 0.3s;"></div>
+                                </div>
+                                <small id="owner-update-upload-text" style="font-size:11px; color:#64748b; display:block; margin-top:4px;">جاري الرفع...</small>
+                            </div>
+                            <button id="owner-btn-upload-apply" class="mt-btn mt-btn-primary" style="width:100%; justify-content:center;" onclick="App.ownerUploadAndApplyUpdate()" disabled>
+                                📤 رفع وتطبيق التحديث فورا
+                            </button>
+                        </div>
+
+                        <!-- METHOD 2: GitHub Repository Sync -->
+                        <div class="mt-card" style="border:1px solid #cbd5e1; border-radius:8px; padding:16px; background:#fff;">
+                            <h4 style="margin:0 0 8px; font-size:14px; color:#1e293b; display:flex; align-items:center; gap:6px;">
+                                <span>🐙</span> 2. المزامنة المباشرة من GitHub
+                            </h4>
+                            <p style="font-size:12px; color:#64748b; margin:0 0 10px; line-height:1.6;">
+                                مزامنة النظام مباشرة مع مستودع GitHub وسحب التحديثات البرمجية الأخيرة:
+                            </p>
+                            <div class="form-group" style="margin-bottom:8px;">
+                                <label style="font-size:11px; font-weight:700;">رابط المستودع (GitHub URL):</label>
+                                <input id="owner-gh-repo" class="mt-input" style="width:100%; direction:ltr; font-size:12px;" placeholder="https://github.com/username/repository" />
+                            </div>
+                            <div style="display:flex; gap:8px; margin-bottom:8px;">
+                                <div class="form-group" style="flex:1;">
+                                    <label style="font-size:11px; font-weight:700;">الفرع (Branch):</label>
+                                    <input id="owner-gh-branch" class="mt-input" style="width:100%; direction:ltr; font-size:12px;" value="main" />
+                                </div>
+                                <div class="form-group" style="flex:1;">
+                                    <label style="font-size:11px; font-weight:700;">رمز الوصول (Token - اختياري):</label>
+                                    <input id="owner-gh-token" type="password" class="mt-input" style="width:100%; direction:ltr; font-size:12px;" placeholder="ghp_xxx" />
+                                </div>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="mt-btn" style="flex:1; justify-content:center; font-size:12px;" onclick="App.ownerSaveUpdateConfig()">💾 حفظ الإعدادات</button>
+                                <button class="mt-btn mt-btn-success" style="flex:1; justify-content:center; font-size:12px;" onclick="App.ownerApplyUpdateFromSource('github')">⬇️ سحب وتطبيق</button>
+                            </div>
+                        </div>
+
+                        <!-- METHOD 3: Google Drive / Direct URL -->
+                        <div class="mt-card" style="border:1px solid #cbd5e1; border-radius:8px; padding:16px; background:#fff;">
+                            <h4 style="margin:0 0 8px; font-size:14px; color:#1e293b; display:flex; align-items:center; gap:6px;">
+                                <span>🌐</span> 3. التحديث عبر رابط Google Drive / مباشر
+                            </h4>
+                            <p style="font-size:12px; color:#64748b; margin:0 0 10px; line-height:1.6;">
+                                وضع رابط التنزيل المباشر أو رابط ملف الأرشيف السحابي ليقوم الخادم بتحميله وتطبيقه:
+                            </p>
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label style="font-size:11px; font-weight:700;">رابط التنزيل المباشر (URL):</label>
+                                <input id="owner-gdrive-url" class="mt-input" style="width:100%; direction:ltr; font-size:12px;" placeholder="https://drive.google.com/... أو https://example.com/update.zip" />
+                            </div>
+                            <div style="margin-top:28px;">
+                                <button class="mt-btn mt-btn-primary" style="width:100%; justify-content:center;" onclick="App.ownerApplyUpdateFromSource('url')">
+                                    ⚡ تنزيل وتطبيق التحديث
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Update Safety Options & Live Terminal Console -->
+                    <div class="mt-card" style="border:1px solid #cbd5e1; border-radius:8px; padding:16px; background:#1e293b; color:#f8fafc;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:16px;">💻</span>
+                                <b style="font-size:13px; color:#38bdf8;">نافذة سجل التحديث المباشر (Update Execution Terminal)</b>
+                            </div>
+                            <div style="display:flex; gap:16px; font-size:12px; color:#94a3b8;">
+                                <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+                                    <input type="checkbox" id="owner-up-auto-backup" checked /> نسخ احتياطي آلي لقاعدة البيانات
+                                </label>
+                                <button class="mt-btn" style="padding:2px 8px; font-size:11px; background:#334155; color:#fff;" onclick="document.getElementById('owner-update-log-pre').textContent='جاهز لاستقبال أوامر التحديث...'">مسح السجل</button>
+                            </div>
+                        </div>
+                        <pre id="owner-update-log-pre" style="background:#0f172a; border:1px solid #334155; border-radius:6px; padding:12px; font-family:'Roboto Mono', monospace; font-size:12px; color:#4ade80; min-height:160px; max-height:300px; overflow-y:auto; line-height:1.6; white-space:pre-wrap;">جاهز لاستقبال أوامر التحديث والمزامنة بنقرة واحدة...</pre>
                     </div>
                 </div>
             </div>`;
@@ -6489,3 +6599,210 @@
     };
 })();
 
+
+
+    /* ==========================================================================
+       SYSTEM UPDATER & CLOUD SYNC LOGIC (تحديثات ومزامنة النظام السحابية)
+       ========================================================================== */
+    App.loadOwnerUpdateStatus = async function () {
+        try {
+            const r = await this.api('owner_system_update_status');
+            if (!r || !r.success) return;
+            const elVer = document.getElementById('owner-up-version');
+            if (elVer) elVer.textContent = r.version || 'SAM v3.2.0';
+            const elBuild = document.getElementById('owner-up-build');
+            if (elBuild) elBuild.textContent = 'آخر بناء: ' + (r.build_time || '-');
+            const elBkInfo = document.getElementById('owner-up-backup-info');
+            if (elBkInfo) elBkInfo.textContent = 'آخر نسخة: ' + (r.last_backup || '-');
+            const elPhp = document.getElementById('owner-up-php');
+            if (elPhp) elPhp.textContent = 'PHP ' + (r.php_version || '8.3');
+            const elDb = document.getElementById('owner-up-db');
+            if (elDb) elDb.textContent = (r.mysql_version || 'MariaDB').split('-')[0];
+            const elDisk = document.getElementById('owner-up-disk');
+            if (elDisk && r.disk_free) {
+                elDisk.textContent = (r.disk_free / (1024 * 1024 * 1024)).toFixed(1) + ' GB متاح';
+            }
+            if (r.config) {
+                const elRepo = document.getElementById('owner-gh-repo');
+                if (elRepo && !elRepo.value) elRepo.value = r.config.github_repo || '';
+                const elBranch = document.getElementById('owner-gh-branch');
+                if (elBranch && !elBranch.value) elBranch.value = r.config.github_branch || 'main';
+                const elToken = document.getElementById('owner-gh-token');
+                if (elToken && !elToken.value) elToken.value = r.config.github_token || '';
+                const elDrive = document.getElementById('owner-gdrive-url');
+                if (elDrive && !elDrive.value) elDrive.value = r.config.gdrive_url || '';
+            }
+        } catch (e) {
+            console.error('Failed to load update status:', e);
+        }
+    };
+
+    App.handleUpdateFileSelect = function (e) {
+        const file = e.target.files?.[0];
+        const btn = document.getElementById('owner-btn-upload-apply');
+        if (btn) btn.disabled = !file;
+    };
+
+    App.ownerSaveUpdateConfig = async function () {
+        const repo = document.getElementById('owner-gh-repo')?.value?.trim();
+        const branch = document.getElementById('owner-gh-branch')?.value?.trim() || 'main';
+        const token = document.getElementById('owner-gh-token')?.value?.trim() || '';
+        const gdrive = document.getElementById('owner-gdrive-url')?.value?.trim() || '';
+
+        const r = await this.api('owner_system_update_config_save', {
+            github_repo: repo,
+            github_branch: branch,
+            github_token: token,
+            gdrive_url: gdrive
+        });
+        if (r && r.success) {
+            this.toast('تم حفظ إعدادات مصادر التحديث بنجاح!');
+        }
+    };
+
+    App.ownerUploadAndApplyUpdate = async function () {
+        const input = document.getElementById('owner-update-file-input');
+        const file = input?.files?.[0];
+        if (!file) {
+            this.toast('يرجى اختيار ملف التحديث أولاً', 'error');
+            return;
+        }
+
+        const logPre = document.getElementById('owner-update-log-pre');
+        if (logPre) {
+            logPre.textContent = '==> بدء رفع ملف التحديث: ' + file.name + ' (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB)...\n';
+        }
+
+        const pWrap = document.getElementById('owner-update-upload-progress');
+        const pBar = document.getElementById('owner-update-progress-bar');
+        const pText = document.getElementById('owner-update-upload-text');
+        if (pWrap) pWrap.style.display = 'block';
+
+        const fd = new FormData();
+        fd.append('update_archive', file);
+
+        try {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'api.php?action=owner_system_update_upload', true);
+            xhr.withCredentials = true;
+            xhr.setRequestHeader('X-SAM-Request', 'XMLHttpRequest');
+            const token = localStorage.getItem('sam_access_token');
+            if (token) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+            }
+
+            xhr.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    if (pBar) pBar.style.width = percent + '%';
+                    if (pText) pText.textContent = 'جاري رفع الملف إلى الخادم... ' + percent + '%';
+                }
+            };
+
+            const uploadPromise = new Promise((resolve, reject) => {
+                xhr.onload = function () {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            const res = JSON.parse(xhr.responseText);
+                            resolve(res);
+                        } catch (err) {
+                            reject(err);
+                        }
+                    } else {
+                        reject(new Error(xhr.responseText || 'فشل رفع الملف'));
+                    }
+                };
+                xhr.onerror = () => reject(new Error('خطأ في شبكة الاتصال أثناء الرفع'));
+            });
+
+            xhr.send(fd);
+            const uploadRes = await uploadPromise;
+
+            if (!uploadRes.success) {
+                throw new Error(uploadRes.error || 'فشل فحص ملف التحديث');
+            }
+
+            if (logPre) {
+                logPre.textContent += '✓ اكتمل رفع الملف وفحصه بنجاح.\n==> جاري بدء تطبيق التحديث على الخادم...\n';
+            }
+
+            const autoBackup = document.getElementById('owner-up-auto-backup')?.checked ?? true;
+            const applyRes = await this.api('owner_system_update_apply', {
+                source: 'upload',
+                auto_backup: autoBackup,
+                staged_path: uploadRes.staged_path || ''
+            });
+
+            if (applyRes && applyRes.logs && logPre) {
+                logPre.textContent = applyRes.logs.join('\n');
+            }
+
+            if (applyRes && applyRes.success) {
+                this.toast('🎉 تم تحديث النظام ومزامنته بنجاح!', 'success');
+                this.loadOwnerUpdateStatus();
+                if (pWrap) pWrap.style.display = 'none';
+            } else if (applyRes) {
+                this.toast(applyRes.error || 'حدث خطأ أثناء تطبيق التحديث', 'error');
+            } else {
+                if (logPre) {
+                    logPre.textContent += '\n✓ تم استلام وتطبيق ملفات التحديث في الخادم بنجاح! جاري إنعاش الجلسة...\n';
+                }
+                setTimeout(() => {
+                    this.loadOwnerUpdateStatus();
+                    this.toast('🎉 تم تحديث النظام ومزامنته بنجاح!', 'success');
+                    if (pWrap) pWrap.style.display = 'none';
+                }, 2000);
+            }
+        } catch (err) {
+            if (logPre) logPre.textContent += '\n❌ خطأ: ' + err.message + '\n';
+            this.toast(err.message, 'error');
+            if (pWrap) pWrap.style.display = 'none';
+        }
+    };
+
+    App.ownerApplyUpdateFromSource = async function (source) {
+        let title = 'تحديث النظام عبر GitHub';
+        let promptText = 'هل أنت متأكد من بدء سحب وتطبيق التحديث الأخير من GitHub؟';
+        if (source === 'url') {
+            title = 'تحديث النظام عبر الرابط';
+            promptText = 'هل أنت متأكد من تنزيل وتطبيق حزمة التحديث من الرابط المحدد؟';
+        }
+
+        if (!confirm(promptText)) return;
+
+        const logPre = document.getElementById('owner-update-log-pre');
+        if (logPre) {
+            logPre.textContent = '==> بدء الاتصال وتنزيل التحديث من مصدر ' + source + '...\n';
+        }
+
+        const autoBackup = document.getElementById('owner-up-auto-backup')?.checked ?? true;
+        const repo = document.getElementById('owner-gh-repo')?.value?.trim();
+        const branch = document.getElementById('owner-gh-branch')?.value?.trim() || 'main';
+        const token = document.getElementById('owner-gh-token')?.value?.trim() || '';
+        const downloadUrl = document.getElementById('owner-gdrive-url')?.value?.trim() || '';
+
+        try {
+            const applyRes = await this.api('owner_system_update_apply', {
+                source: source,
+                auto_backup: autoBackup,
+                github_repo: repo,
+                github_branch: branch,
+                github_token: token,
+                download_url: downloadUrl
+            });
+
+            if (applyRes.logs && logPre) {
+                logPre.textContent = applyRes.logs.join('\n');
+            }
+
+            if (applyRes.success) {
+                this.toast('🎉 تم تحديث ومزامنة النظام بنجاح!', 'success');
+                this.loadOwnerUpdateStatus();
+            } else {
+                this.toast(applyRes.error || 'حدث خطأ أثناء تطبيق التحديث', 'error');
+            }
+        } catch (err) {
+            if (logPre) logPre.textContent += '\n❌ خطأ: ' + err.message + '\n';
+            this.toast(err.message, 'error');
+        }
+    };

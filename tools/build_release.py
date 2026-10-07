@@ -57,6 +57,10 @@ def build():
     archive = output.with_suffix('.tar.gz')
     with tarfile.open(archive, 'w:gz') as tar:
         tar.add(output, arcname='sam-fresh-web-installer')
+        if (service / 'SHA256SUMS').is_file():
+            tar.add(service / 'SHA256SUMS', arcname='sam-fresh-web-installer/service-manager/SHA256SUMS')
+        if (output / 'SHA256SUMS').is_file():
+            tar.add(output / 'SHA256SUMS', arcname='sam-fresh-web-installer/SHA256SUMS')
     print(json.dumps({'bundle': str(archive), 'sha256': hashlib.sha256(archive.read_bytes()).hexdigest()}))
 
 if __name__ == '__main__':

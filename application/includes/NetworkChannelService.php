@@ -55,7 +55,7 @@ final class NetworkChannelService
         if (!in_array($channelType, ['whatsapp', 'telegram'], true)) {
             throw new InvalidArgumentException('INVALID_CHANNEL_TYPE');
         }
-        $normalizedNetId = $this->normalizeNetworkId($networkId, true);
+        $normalizedNetId = $this->normalizeNetworkId($networkId, $networkId === 0);
         $stmt = $this->db->prepare('SELECT * FROM um_network_channels WHERE network_id=? AND channel_type=? LIMIT 1');
         $stmt->execute([$normalizedNetId, $channelType]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
@@ -124,7 +124,7 @@ final class NetworkChannelService
 
     public function getNotificationSettings(int $networkId = 0): array
     {
-        $normalizedNetId = $this->normalizeNetworkId($networkId, true);
+        $normalizedNetId = $this->normalizeNetworkId($networkId, $networkId === 0);
         $stmt = $this->db->prepare('SELECT * FROM um_network_notification_settings WHERE network_id=? LIMIT 1');
         $stmt->execute([$normalizedNetId]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];

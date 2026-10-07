@@ -174,6 +174,28 @@ final class InstantBalanceService
         return $this->resolveAccount('1101');
     }
 
+    
+    private function resolveAdvanceAccount(int $sellerId): int
+    {
+        $networkId = $this->networkId();
+        $code = 'WALLET-ADV-' . $sellerId;
+        $q = $this->db->prepare('SELECT id FROM um_chart_of_accounts WHERE network_id=? AND account_code=? AND is_active=1 LIMIT 1');
+        $q->execute([$networkId, $code]);
+        if ($id = (int)$q->fetchColumn()) {
+            return $id;
+        }
+
+        $adminStmt = $this->db->prepare("SELECT username, fullname FROM um_admins WHERE id=?");
+        $adminStmt->execute([$sellerId]);
+        $admin = $adminStmt->fetch(PDO::FETCH_ASSOC);
+        $nameAr = 'أمانات ورصيد محفظة: ' . ($admin ? ($admin['fullname'] ?: $admin['username']) : $sellerId);
+        $nameEn = 'Prepaid Wallet Advance: ' . ($admin ? $admin['username'] : $sellerId);
+
+        $ins = $this->db->prepare("INSERT INTO um_chart_of_accounts (network_id, account_code, name_ar, name_en, account_type, linked_admin_id, owner_admin_id, level, is_system, is_active, balance) VALUES (?, ?, ?, ?, 'liability', ?, ?, 3, 1, 1, 0.00)");
+        $ins->execute([$networkId, $code, $nameAr, $nameEn, $sellerId, $sellerId]);
+        return (int)$this->db->lastInsertId();
+    }
+
     private function recordFinancialInvoice(int $invoiceId, string $invoiceNo, int $sellerId, ?array $buyer, string $buyerName, float $net, float $paid, float $remaining, string $paymentType, string $category): void
     {
         $networkId = $this->networkId();
@@ -190,21 +212,32 @@ final class InstantBalanceService
         $this->db->prepare("INSERT INTO um_financial_transactions(network_id,tx_no,account_id,tx_type,reference_id,debit,credit,cashbox_impact,payment_method,description,created_by) VALUES(?,?,?,'sale_invoice',?,?,0,0,?,?,?)")
             ->execute([$networkId,$tx,$accountId,$invoiceNo,$net,$paymentType,"فاتورة $category رقم $invoiceNo",$sellerId]);
         if ($paid > 0) {
-            $voucherNo = $this->nextNo('RV');
-            $this->db->prepare("INSERT INTO um_vouchers_financial(network_id,voucher_no,voucher_type,party_id,party_name,amount,payment_method,category,invoice_id,reference_id,notes,created_by,created_at) VALUES(?,?,'receipt',?,?,?,?,?,?,?, ?,?,NOW())")
-                ->execute([$networkId,$voucherNo,$buyer['id'] ?? null,$buyerName,$paid,'cash',$category,$invoiceId,$invoiceNo,"سداد فاتورة $invoiceNo",$sellerId]);
-            $this->db->prepare("INSERT INTO um_financial_transactions(network_id,tx_no,account_id,tx_type,reference_id,debit,credit,cashbox_impact,payment_method,description,created_by) VALUES(?,?,?,'receipt_voucher',?,0,?,?, 'cash',?,?)")
-                ->execute([$networkId,$this->nextNo('TX'),$accountId,$invoiceNo,$paid,$paid,"قبض فاتورة $invoiceNo",$sellerId]);
+            if ($paymentType === 'wallet') {
+                $this->db->prepare("INSERT INTO um_financial_transactions(network_id,tx_no,account_id,tx_type,reference_id,debit,credit,cashbox_impact,payment_method,description,created_by) VALUES(?,?,?,'adjustment',?,0,?,0,'wallet',?,?)")
+                    ->execute([$networkId,$this->nextNo('TX'),$accountId,$invoiceNo,$paid,"تسوية رصيد محفظة مسبق الدفع للفاتورة $invoiceNo",$sellerId]);
+            } else {
+                $voucherNo = $this->nextNo('RV');
+                $this->db->prepare("INSERT INTO um_vouchers_financial(network_id,voucher_no,voucher_type,party_id,party_name,amount,payment_method,category,invoice_id,reference_id,notes,created_by,created_at) VALUES(?,?,'receipt',?,?,?,?,?,?,?, ?,?,NOW())")
+                    ->execute([$networkId,$voucherNo,$buyer['id'] ?? null,$buyerName,$paid,'cash',$category,$invoiceId,$invoiceNo,"سداد فاتورة $invoiceNo",$sellerId]);
+                $this->db->prepare("INSERT INTO um_financial_transactions(network_id,tx_no,account_id,tx_type,reference_id,debit,credit,cashbox_impact,payment_method,description,created_by) VALUES(?,?,?,'receipt_voucher',?,0,?,?, 'cash',?,?)")
+                    ->execute([$networkId,$this->nextNo('TX'),$accountId,$invoiceNo,$paid,$paid,"قبض فاتورة $invoiceNo",$sellerId]);
+            }
         }
     }
 
-    private function postSaleJournal(int $sellerId, ?array $buyer, string $invoiceNo, float $net, float $paid, float $remaining, float $cost = 0): void
+    private function postSaleJournal(int $sellerId, ?array $buyer, string $invoiceNo, float $net, float $paid, float $remaining, float $cost = 0, string $paymentType = 'cash'): void
     {
         if ($net <= 0 && $paid <= 0 && $remaining <= 0 && $cost <= 0) {
             return; // Free promotional voucher - no accounting impact
         }
         $lines = [];
-        if ($paid > 0) $lines[] = ['account_id'=>$this->resolveCashAccount($sellerId),'debit'=>$paid,'credit'=>0,'line_description'=>"تحصيل $invoiceNo"];
+        if ($paid > 0) {
+            if ($paymentType === 'wallet') {
+                $lines[] = ['account_id'=>$this->resolveAdvanceAccount($sellerId),'debit'=>$paid,'credit'=>0,'line_description'=>"تسوية رصيد مسبق $invoiceNo"];
+            } else {
+                $lines[] = ['account_id'=>$this->resolveCashAccount($sellerId),'debit'=>$paid,'credit'=>0,'line_description'=>"تحصيل $invoiceNo"];
+            }
+        }
         if ($remaining > 0) $lines[] = ['account_id'=>$this->resolveAccount('1301',$buyer['id'] ?? null),'debit'=>$remaining,'credit'=>0,'line_description'=>"ذمة $invoiceNo"];
         $lines[] = ['account_id'=>$this->resolveAccount('4103'),'debit'=>0,'credit'=>$net,'line_description'=>"إيراد رصيد فوري $invoiceNo"];
         if ($cost > 0) {
@@ -384,7 +417,7 @@ final class InstantBalanceService
         $sale = round((float)($profile['retail_price'] > 0 ? $profile['retail_price'] : ($profile['price'] > 0 ? $profile['price'] : $cost)), 2);
         if ($cost < 0 || $sale < 0) throw new RuntimeException('سعر بيع الباقة غير صالح');
 
-        $payment = in_array(($data['payment_type'] ?? 'cash'), ['cash', 'credit', 'partial'], true) ? $data['payment_type'] : 'cash';
+        $payment = in_array(($data['payment_type'] ?? 'cash'), ['cash', 'credit', 'partial', 'wallet'], true) ? $data['payment_type'] : 'cash';
         if ($payment === 'credit' && empty($buyer)) {
             throw new RuntimeException('لا يمكن إصدار كرت بنوع سداد (آجل) إلا باختيار حساب عميل / موزع مسجل');
         }
@@ -424,7 +457,7 @@ final class InstantBalanceService
                 ->execute([$ctx['network_id'],$code, 'DIGITAL-' . date('Ymd'), $profileName, $sale, $profile['validity'], $ctx['id'], $ctx['id'], $sale, $costBasis, $sale - $costBasis, $phone, $name, $passwordMode, $invoiceId, $invoiceId]);
 
             $this->recordFinancialInvoice($invoiceId, $no, $ctx['id'], $buyer, $name, $sale, $paid, $remaining, $payment, 'مبيعات كرت إلكتروني');
-            $this->postSaleJournal($ctx['id'], $buyer, $no, $sale, $paid, $remaining, $costBasis);
+            $this->postSaleJournal($ctx['id'], $buyer, $no, $sale, $paid, $remaining, $costBasis, $payment);
             $this->db->commit();
             try {
                 $this->radius->getNotificationService()->notifyDigitalVoucher($invoiceId, $ctx['id']);
@@ -463,7 +496,10 @@ final class InstantBalanceService
     {
         $ctx=$this->context();$v=$this->voucherRecord($invoiceId);
         if($v['invoice_status']!=='completed'||$v['delivery_status']==='refunded')throw new RuntimeException('الفاتورة مسترجعة أو ملغاة');
-        $passwordLine=($v['login_password_mode']??'blank')==='blank'?"🔓 *كلمة المرور:* فارغة":"🔑 *كلمة المرور:* `{$v['username']}`";
+        $pwStmt = $this->db->prepare("SELECT value FROM radcheck WHERE network_id=? AND username=? AND attribute='Cleartext-Password' LIMIT 1");
+        $pwStmt->execute([$ctx['network_id'], $v['username']]);
+        $storedPw = (string)($pwStmt->fetchColumn() ?: '');
+        $passwordLine = ($storedPw === '') ? "🔓 *كلمة المرور:* فارغة" : "🔑 *كلمة المرور:* `{$storedPw}`";
         $message="🏢 *SAM | كرت إنترنت مدفوع*\n━━━━━━━━━━━━━━━━━━━━\n🎫 *رقم الكرت:* `{$v['username']}`\n$passwordLine\n📦 *الباقة:* {$v['profile_name']}\n💰 *سعر البيع:* ".number_format((float)$v['sale_price'],2)." YER\n⏳ *الصلاحية:* {$v['validity']}\n━━━━━━━━━━━━━━━━━━━━\nشكراً لاستخدامكم خدمتنا.";
         try{$wa=$this->radius->getNotificationService()->getWhatsAppService()->sendMessage('967'.$v['buyer_phone'],$message,'digital_voucher_'.$invoiceId.'_retry_'.time(),$ctx['id']);$sent=!empty($wa['success']);$error=$wa['error']??null;}catch(Throwable $e){$sent=false;$error=$e->getMessage();}
         $this->db->prepare('UPDATE um_vouchers_meta SET delivery_status=?,delivered_at=? WHERE network_id=? AND invoice_id=?')->execute([$sent?'sent':'failed',$sent?date('Y-m-d H:i:s'):null,$ctx['network_id'],$invoiceId]);
@@ -476,9 +512,20 @@ final class InstantBalanceService
         $ctx = $this->context();
         $this->db->beginTransaction();
         try {
-            $v = $this->voucherRecord($invoiceId);
-            
-            // 1. Check if already refunded
+            // 1. Lock invoice and voucher meta with FOR UPDATE before checking status
+            $q = $this->db->prepare("SELECT i.*, v.username, v.status, v.first_login, v.delivery_status, v.sold_by_admin_id 
+                FROM um_sales_invoices i 
+                JOIN um_vouchers_meta v ON v.invoice_id = i.id AND v.network_id = i.network_id 
+                WHERE i.network_id = ? AND i.id = ? AND i.sale_kind IN ('instant_balance','digital_voucher') 
+                FOR UPDATE");
+            $q->execute([$ctx['network_id'], $invoiceId]);
+            $v = $q->fetch(PDO::FETCH_ASSOC);
+            if (!$v) throw new RuntimeException('فاتورة الكرت غير موجودة');
+            if (!in_array($ctx['role'], ['system_owner', 'superadmin'], true) && (int)$v['seller_id'] !== $ctx['id']) {
+                throw new RuntimeException('غير مصرح');
+            }
+
+            // 2. Check if already refunded
             if ($v['invoice_status'] === 'refunded' || $v['delivery_status'] === 'refunded') {
                 throw new RuntimeException('هذه الفاتورة مسترجعة بالفعل مسبقاً');
             }
@@ -514,23 +561,50 @@ final class InstantBalanceService
             // 6. Void receipt voucher
             $this->db->prepare('UPDATE um_vouchers_financial SET is_void = 1, voided_at = NOW() WHERE network_id=? AND invoice_id = ?')->execute([$ctx['network_id'],$invoiceId]);
 
-            // 7. Insert reversal financial transaction
-            $this->db->prepare("INSERT INTO um_financial_transactions (network_id,tx_no, account_id, tx_type, reference_id, debit, credit, cashbox_impact, payment_method, description, created_by) VALUES (?, ?, ?, 'adjustment', ?, ?, 0, ?, 'cash', ?, ?)")
-                ->execute([$ctx['network_id'],$this->nextNo('TXR'), $ctx['id'], $v['invoice_no'], (float)$v['paid_amount'], -(float)$v['paid_amount'], "عكس فاتورة كرت فوري {$v['invoice_no']}", $ctx['id']]);
+            $totalAmount = (float)$v['total_amount'];
+            $paidAmount = (float)$v['paid_amount'];
+            $remainingAmount = (float)$v['remaining_amount'];
+            $costAmount = (float)$v['cost_amount'];
+            $paymentType = (string)($v['payment_type'] ?? 'cash');
 
-            // 8. Reversing Double-Entry Journal Entry
-            $cash = $this->resolveCashAccount($ctx['id']);
+            // 7. Reversal of remaining debt on buyer balance if partial/credit sale
+            if ($remainingAmount > 0 && !empty($v['buyer_id'])) {
+                $this->db->prepare('UPDATE um_admin_network_balances SET balance = balance - ? WHERE network_id = ? AND admin_id = ?')
+                    ->execute([$remainingAmount, $ctx['network_id'], $v['buyer_id']]);
+            }
+
+            // 8. Insert reversal financial transaction
+            $txCashImpact = ($paymentType === 'wallet') ? 0.00 : -$paidAmount;
+            $txMethod = ($paymentType === 'wallet') ? 'wallet' : 'cash';
+            $this->db->prepare("INSERT INTO um_financial_transactions (network_id, tx_no, account_id, tx_type, reference_id, debit, credit, cashbox_impact, payment_method, description, created_by) VALUES (?, ?, ?, 'adjustment', ?, ?, 0, ?, ?, ?, ?)")
+                ->execute([$ctx['network_id'], $this->nextNo('TXR'), $ctx['id'], $v['invoice_no'], $paidAmount, $txCashImpact, $txMethod, "عكس فاتورة كرت فوري {$v['invoice_no']}", $ctx['id']]);
+
+            // 9. Reversing Double-Entry Journal Entry
             $rev = $this->resolveAccount('4103');
-            $cogs = $this->resolveAccount('5101');
-            $stock = $this->resolveAccount('1204');
-
             $lines = [
-                ['account_id' => $rev, 'debit' => (float)$v['total_amount'], 'credit' => 0, 'line_description' => "عكس إيراد كرت فوري {$v['invoice_no']}"],
-                ['account_id' => $cash, 'debit' => 0, 'credit' => (float)$v['paid_amount'], 'line_description' => "استرداد قيمة كرت فوري نقداً {$v['invoice_no']}"]
+                ['account_id' => $rev, 'debit' => $totalAmount, 'credit' => 0, 'line_description' => "عكس إيراد كرت فوري {$v['invoice_no']}"]
             ];
-            if ((float)$v['cost_amount'] > 0) {
-                $lines[] = ['account_id' => $stock, 'debit' => (float)$v['cost_amount'], 'credit' => 0, 'line_description' => "إعادة مخزون كرت فوري {$v['invoice_no']}"];
-                $lines[] = ['account_id' => $cogs, 'debit' => 0, 'credit' => (float)$v['cost_amount'], 'line_description' => "عكس تكلفة مبيعات كرت فوري {$v['invoice_no']}"];
+
+            if ($paidAmount > 0) {
+                if ($paymentType === 'wallet') {
+                    $adv = $this->resolveAdvanceAccount((int)$v['seller_id']);
+                    $lines[] = ['account_id' => $adv, 'debit' => 0, 'credit' => $paidAmount, 'line_description' => "إعادة رصيد محفظة للفاتورة {$v['invoice_no']}"];
+                } else {
+                    $cash = $this->resolveCashAccount((int)$v['seller_id']);
+                    $lines[] = ['account_id' => $cash, 'debit' => 0, 'credit' => $paidAmount, 'line_description' => "استرداد قيمة كرت فوري نقداً {$v['invoice_no']}"];
+                }
+            }
+
+            if ($remainingAmount > 0) {
+                $recv = $this->resolveAccount('1301', !empty($v['buyer_id']) ? (int)$v['buyer_id'] : null);
+                $lines[] = ['account_id' => $recv, 'debit' => 0, 'credit' => $remainingAmount, 'line_description' => "إلغاء ذمة كرت فوري {$v['invoice_no']}"];
+            }
+
+            if ($costAmount > 0) {
+                $stock = $this->resolveAccount('1204');
+                $cogs = $this->resolveAccount('5101');
+                $lines[] = ['account_id' => $stock, 'debit' => $costAmount, 'credit' => 0, 'line_description' => "إعادة مخزون كرت فوري {$v['invoice_no']}"];
+                $lines[] = ['account_id' => $cogs, 'debit' => 0, 'credit' => $costAmount, 'line_description' => "عكس تكلفة مبيعات كرت فوري {$v['invoice_no']}"];
             }
 
             $this->radius->createJournalEntry([

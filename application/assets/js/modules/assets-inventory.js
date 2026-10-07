@@ -11,6 +11,7 @@
 Object.assign(window.App, {
 
     assetsCategoryFilter: '',
+    assetsNetworkFilter: '',
 
     assetsStatusFilter: '',
 
@@ -40,7 +41,7 @@ Object.assign(window.App, {
 
             user_id: this.assetsUserFilter,
 
-            network_id: Number(this.activeNetworkId || 0),
+            network_id: this.assetsNetworkFilter ? Number(this.assetsNetworkFilter) : Number(this.activeNetworkId || 0),
 
             search: this.assetsSearch
 
@@ -103,6 +104,7 @@ Object.assign(window.App, {
         const nodesList = nodesRes?.nodes || (Array.isArray(nodesRes) ? nodesRes : []);
 
         const adminsList = Array.isArray(adminsRes) ? adminsRes : (adminsRes?.admins || []);
+        const networksList = networksRes?.networks || [];
 
 
 
@@ -210,6 +212,12 @@ Object.assign(window.App, {
 
             <div class="mt-toolbar-right" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
 
+                ${networksList.length > 1 ? `
+                <select class="mt-select" style="font-size:11px; border:1px solid #93c5fd; background:#eff6ff;" onchange="App.assetsNetworkFilter=this.value; App.renderAssets();">
+                    <option value="">🌐 كل الشبكات</option>
+                    ${networksList.map(n => `<option value="${n.id}" ${(App.assetsNetworkFilter==n.id || (!App.assetsNetworkFilter && Number(n.id) === Number(App.activeNetworkId))) ? 'selected' : ''}>🌐 ${App.escape(n.name)}</option>`).join('')}
+                </select>
+                ` : ''}
                 <input type="text" class="mt-input" placeholder="🔍 بحث بالاسم، الكود، الماك، السيريال..." value="${this.escape(this.assetsSearch)}" onchange="App.assetsSearch=this.value; App.renderAssets();" onkeyup="if(event.key==='Enter'){ App.assetsSearch=this.value; App.renderAssets(); }" style="min-width:180px; font-size:11px;" />
 
                 
@@ -456,6 +464,7 @@ Object.assign(window.App, {
                         <th style="cursor:pointer;" onclick="App.toggleAssetsSort('name')">اسم الأصل / الجهاز ${this.getTableSortIcon(this.assetsSortCol, 'name', this.assetsSortDir)}</th>
 
                         <th style="cursor:pointer;" onclick="App.toggleAssetsSort('category')">التصنيف ${this.getTableSortIcon(this.assetsSortCol, 'category', this.assetsSortDir)}</th>
+                        <th>🏢 الشبكة</th>
 
                         <th>المصدر</th>
 
@@ -505,6 +514,12 @@ Object.assign(window.App, {
 
                                 </span>
 
+                            </td>
+
+                            <td>
+                                <span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">
+                                    🌐 ${this.escape(a.network_name || ('شبكة #' + (a.network_id || 1)))}
+                                </span>
                             </td>
 
                             <td><span class="badge" style="background:#f8fafc; color:#475569; border:1px solid #cbd5e1;">${sLabels[a.source_type] || sLabels[a.source] || sLabels.manual || '✍️ إضافة يدوية'}</span></td>
