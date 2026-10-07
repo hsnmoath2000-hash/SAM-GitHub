@@ -1632,7 +1632,7 @@ class NetworkTopologyService extends BaseService {
         $where = [];
         $params = [];
         if ($networkId > 0) {
-            $where[] = "(a.network_id = :netid OR a.network_id IS NULL OR a.network_id = 0)";
+            $where[] = "a.network_id = :netid";
             $params[':netid'] = $networkId;
         }
         if (!empty($category)) {
@@ -1840,11 +1840,15 @@ class NetworkTopologyService extends BaseService {
     public function saveAsset($data, string $creationSourceType = 'manual') {
         $activeNetworkId = (int)$this->getActiveNetworkId();
         $requestedNetworkId = (int)($data['network_id'] ?? 0);
-        if ($requestedNetworkId > 0 && $requestedNetworkId !== $activeNetworkId) {
-            throw new DomainException('FORBIDDEN_NETWORK');
+        $isGlobalAdmin = ((int)($_SESSION['admin_id'] ?? 0) === 1 || in_array((string)($_SESSION['role'] ?? ''), ['system_owner', 'superadmin'], true));
+        if ($isGlobalAdmin && $requestedNetworkId > 0) {
+            $networkId = $requestedNetworkId;
+        } else {
+            if ($requestedNetworkId > 0 && $requestedNetworkId !== $activeNetworkId) {
+                throw new DomainException('FORBIDDEN_NETWORK');
+            }
+            $networkId = $activeNetworkId > 0 ? $activeNetworkId : ($requestedNetworkId > 0 ? $requestedNetworkId : 1);
         }
-        $networkId = $activeNetworkId;
-        if ($networkId <= 0) throw new DomainException('NETWORK_CONTEXT_REQUIRED');
         // The caller selects the creation path; a browser field cannot claim
         // that a manually entered asset came from discovery or an invoice.
         if (!in_array($creationSourceType, ['router_discovery','manual','purchase_invoice','file_import'], true)) {

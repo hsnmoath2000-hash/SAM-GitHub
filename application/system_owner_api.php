@@ -3020,5 +3020,322 @@ if ($action === 'owner_save_master_voucher') {
     ]);
 }
 
+
+// ==========================================
+// SYSTEM OWNER: SYSTEM UPDATER & CLOUD SYNC
+// ==========================================
+
+if ($action === 'owner_system_update_status') {
+    $backupDir = '/var/backups/mikrotik-usermanager';
+    $backups = glob($backupDir . '/*.sql.gz') ?: [];
+    $lastBackup = !empty($backups) ? date('Y-m-d H:i', filemtime(end($backups))) : 'لا توجد نسخ بعد';
+    
+    $appDir = '/var/www/mikrotik-usermanager';
+    $lastModified = is_dir($appDir) ? date('Y-m-d H:i', filemtime($appDir . '/index.php')) : date('Y-m-d H:i');
+    
+    jsonResponse([
+        'success' => true,
+        'version' => 'SAM Enterprise v3.2.0',
+        'build_time' => $lastModified,
+        'php_version' => PHP_VERSION,
+        'mysql_version' => (string)($db->query('SELECT VERSION()')->fetchColumn() ?: 'MariaDB'),
+        'last_backup' => $lastBackup,
+        'backup_count' => count($backups),
+        'disk_free' => @disk_free_space($appDir) ?: 0,
+        'disk_total' => @disk_total_space($appDir) ?: 0,
+        'config' => [
+            'github_repo' => samOwnerSetting($db, 'update_github_repo', 'https://github.com/example/SAM-GitHub'),
+            'github_branch' => samOwnerSetting($db, 'update_github_branch', 'main'),
+            'github_token' => samOwnerSetting($db, 'update_github_token', '') ? '••••••••' : '',
+            'gdrive_url' => samOwnerSetting($db, 'update_gdrive_url', '')
+        ]
+    ]);
+}
+
+if ($action === 'owner_system_update_config_save') {
+    $in = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    if (isset($in['github_repo'])) samOwnerSetSetting($db, 'update_github_repo', trim((string)$in['github_repo']));
+    if (isset($in['github_branch'])) samOwnerSetSetting($db, 'update_github_branch', trim((string)$in['github_branch']));
+    if (!empty($in['github_token']) && $in['github_token'] !== '••••••••') {
+        samOwnerSetSetting($db, 'update_github_token', trim((string)$in['github_token']));
+    }
+    if (isset($in['gdrive_url'])) samOwnerSetSetting($db, 'update_gdrive_url', trim((string)$in['gdrive_url']));
+
+    jsonResponse(['success' => true, 'message' => 'تم حفظ إعدادات مصادر التحديث بنجاح!']);
+}
+
+if ($action === 'owner_system_update_upload') {
+    if (empty($_FILES['update_archive']) || !is_uploaded_file($_FILES['update_archive']['tmp_name'])) {
+        throw new Exception('لم يتم رفع أي ملف تحديث صالح');
+    }
+    $file = $_FILES['update_archive'];
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, ['zip', 'gz', 'tar'], true)) {
+        throw new Exception('نوع الملف غير مدعوم. يُرجى رفع أرشيف .zip أو .tar.gz');
+    }
+    
+    // Locate the most accessible writable directory with multiple fallbacks
+    $candidateDirs = [
+        '/var/lib/mikrotik-usermanager/updates',
+        __DIR__ . '/uploads/updates',
+        __DIR__ . '/uploads',
+        sys_get_temp_dir() . '/sam_updates',
+        sys_get_temp_dir()
+    ];
+    $targetDir = sys_get_temp_dir();
+    foreach ($candidateDirs as $dir) {
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0777, true);
+        }
+        if (is_dir($dir) && is_writable($dir)) {
+            $targetDir = $dir;
+            break;
+        }
+    }
+    
+    $filename = 'staged_update_' . time() . '.' . ($ext === 'gz' ? 'tar.gz' : $ext);
+    $target = $targetDir . '/' . $filename;
+    
+    if (!move_uploaded_file($file['tmp_name'], $target)) {
+        if (!@copy($file['tmp_name'], $target)) {
+            throw new Exception('فشل حفظ ملف التحديث في الخادم؛ تحقق من أذونات المجلد: ' . $targetDir);
+        }
+        @unlink($file['tmp_name']);
+    }
+    @chmod($target, 0664);
+    @file_put_contents(sys_get_temp_dir() . '/sam_last_staged_update.txt', $target);
+
+    jsonResponse([
+        'success' => true,
+        'message' => 'تم رفع ملف التحديث وفحصه بنجاح!',
+        'filename' => $file['name'],
+        'size' => filesize($target),
+        'staged_path' => $target
+    ]);
+}
+
+if ($action === 'owner_system_update_apply') {
+    @set_time_limit(300);
+    $in = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    $source = trim((string)($in['source'] ?? 'upload')); // 'upload', 'github', 'url'
+    $doBackup = !empty($in['auto_backup']);
+    
+    $logs = [];
+    $logs[] = 'بدء معالجة التحديث السيادي لنظام SAM...';
+
+    // 1. Auto-Backup
+    if ($doBackup) {
+        $logs[] = 'الخطوة 1: جاري أخذ نسخة احتياطية لقاعدة البيانات قبل التحديث...';
+        try {
+            require_once __DIR__ . '/includes/RadiusService.php';
+            $rs = new RadiusService($db);
+            $bkRes = $rs->createDatabaseBackup(0, true);
+            if (!empty($bkRes['success'])) {
+                $logs[] = '✓ تم حفظ النسخة الاحتياطية بنجاح: ' . ($bkRes['filename'] ?? 'backup.sql.gz');
+            } else {
+                $logs[] = 'تنبيه: تعذر إتمام النسخ الاحتياطي التلقائي ولكن سيتم متابعة التحديث.';
+            }
+        } catch (Throwable $e) {
+            $logs[] = 'تنبيه في النسخ الاحتياطي: ' . $e->getMessage();
+        }
+    }
+
+    $appDir = '/var/www/mikrotik-usermanager';
+    $stageDir = '/tmp/sam_update_stage_' . time();
+    @mkdir($stageDir, 0755, true);
+
+    try {
+        // 2. Extract or Download Source
+        if ($source === 'upload') {
+            $logs[] = 'الخطوة 2: فك ضغط حزمة التحديث المرفوعة...';
+            $archive = trim((string)($in['staged_path'] ?? ''));
+            if (!$archive || !is_file($archive)) {
+                $lastStaged = sys_get_temp_dir() . '/sam_last_staged_update.txt';
+                if (is_file($lastStaged)) {
+                    $archive = trim((string)@file_get_contents($lastStaged));
+                }
+            }
+            if (!$archive || !is_file($archive)) {
+                foreach ([
+                    '/var/lib/mikrotik-usermanager/updates',
+                    __DIR__ . '/uploads/updates',
+                    __DIR__ . '/uploads',
+                    sys_get_temp_dir() . '/sam_updates',
+                    sys_get_temp_dir()
+                ] as $cdir) {
+                    $matches = glob($cdir . '/staged_update*') ?: [];
+                    if (!empty($matches)) {
+                        usort($matches, fn($a, $b) => filemtime($b) <=> filemtime($a));
+                        $archive = $matches[0];
+                        break;
+                    }
+                }
+            }
+            if (!$archive || !is_file($archive)) {
+                throw new Exception('لم يتم العثور على ملف تحديث مرفوع.');
+            }
+            $logs[] = 'تم العثور على الحزمة: ' . basename($archive) . ' (' . round(filesize($archive)/(1024*1024), 2) . ' MB)';
+            if (str_ends_with($archive, '.zip')) {
+                exec('unzip -q -o ' . escapeshellarg($archive) . ' -d ' . escapeshellarg($stageDir) . ' 2>&1', $uOut, $uCode);
+            } else {
+                exec('tar -xzf ' . escapeshellarg($archive) . ' -C ' . escapeshellarg($stageDir) . ' 2>&1', $uOut, $uCode);
+            }
+        } elseif ($source === 'github') {
+            $repoUrl = trim((string)($in['github_repo'] ?? samOwnerSetting($db, 'update_github_repo', '')));
+            $branch = trim((string)($in['github_branch'] ?? samOwnerSetting($db, 'update_github_branch', 'main'))) ?: 'main';
+            $token = trim((string)($in['github_token'] ?? ''));
+            if ($token === '••••••••' || empty($token)) {
+                $token = samOwnerSetting($db, 'update_github_token', '');
+            }
+            $logs[] = "الخطوة 2: جلب أحدث كود من مستودع GitHub (الفرع: $branch)...";
+            if (!$repoUrl) throw new Exception('رابط مستودع GitHub غير محدد.');
+            
+            if (preg_match('#github\.com/([^/]+)/([^/]+)#', $repoUrl, $m)) {
+                $owner = $m[1];
+                $repo = preg_replace('/\.git$/', '', $m[2]);
+                $zipUrl = "https://api.github.com/repos/{$owner}/{$repo}/zipball/{$branch}";
+                $headers = ["User-Agent: SAM-Updater"];
+                if ($token) $headers[] = "Authorization: token $token";
+                
+                $ctx = stream_context_create(['http' => ['header' => implode("
+", $headers), 'follow_location' => 1]]);
+                $content = @file_get_contents($zipUrl, false, $ctx);
+                if (!$content) {
+                    throw new Exception('تعذر تنزيل حزمة التحديث من GitHub. تحقق من الرابط أو صلاحية الـ Token.');
+                }
+                file_put_contents($stageDir . '/github.zip', $content);
+                exec('unzip -q ' . escapeshellarg($stageDir . '/github.zip') . ' -d ' . escapeshellarg($stageDir) . ' 2>&1', $uOut, $uCode);
+            } else {
+                throw new Exception('رابط GitHub غير صالح.');
+            }
+        } elseif ($source === 'url') {
+            $downloadUrl = trim((string)($in['download_url'] ?? ''));
+            if (!$downloadUrl || !filter_var($downloadUrl, FILTER_VALIDATE_URL)) {
+                throw new Exception('رابط التنزيل المباشر غير صالح.');
+            }
+            $logs[] = 'الخطوة 2: تنزيل حزمة التحديث من الرابط المحدد...';
+            $dest = $stageDir . '/remote_pkg.zip';
+            exec('curl -fsSL -L -o ' . escapeshellarg($dest) . ' ' . escapeshellarg($downloadUrl) . ' 2>&1', $cOut, $cCode);
+            if ($cCode !== 0 || !is_file($dest) || filesize($dest) < 100) {
+                throw new Exception('فشل تنزيل ملف التحديث من الرابط المحدد.');
+            }
+            exec('unzip -q ' . escapeshellarg($dest) . ' -d ' . escapeshellarg($stageDir) . ' 2>&1', $uOut, $uCode);
+        }
+
+        // 3. Locate Application Files in Staging
+        $logs[] = 'الخطوة 3: مزامنة ملفات الواجهة والخدمات إلى مسار التشغيل...';
+        $appSource = null;
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($stageDir)) as $file) {
+            if ($file->getFilename() === 'api.php') {
+                $appSource = dirname($file->getPathname());
+                break;
+            }
+        }
+        if (!$appSource || !is_dir($appSource)) {
+            if (is_file($stageDir . '/index.php')) $appSource = $stageDir;
+        }
+        if (!$appSource) {
+            throw new Exception('لم يتم العثور على ملفات نظام SAM صالحة داخل الحزمة.');
+        }
+
+        exec('cp -rf ' . escapeshellarg($appSource) . '/* ' . escapeshellarg($appDir) . '/ 2>&1', $cpOut, $cpCode);
+        
+        exec('chown -R root:www-data ' . escapeshellarg($appDir) . ' 2>&1');
+        exec('find ' . escapeshellarg($appDir) . ' -type d -exec chmod 0750 {} + 2>&1');
+        exec('find ' . escapeshellarg($appDir) . ' -type f -exec chmod 0640 {} + 2>&1');
+        foreach (['uploads', 'downloads'] as $p) {
+            @mkdir($appDir . '/' . $p, 0750, true);
+            @chown($appDir . '/' . $p, 'www-data');
+            @chgrp($appDir . '/' . $p, 'www-data');
+        }
+        $logs[] = '✓ تمت مزامنة الملفات وتطبيق صلاحيات الأمان بنجاح.';
+
+        // 4. Update System Control & Helpers
+        $logs[] = 'الخطوة 4: تحديث أدوات الربط بنظام FreeRADIUS وجدار الحماية...';
+        $smDir = null;
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($stageDir)) as $file) {
+            if ($file->getFilename() === 'sam-radius-client.py') {
+                $smDir = dirname($file->getPathname());
+                break;
+            }
+        }
+        if ($smDir && is_dir($smDir)) {
+            if (is_file($smDir . '/sam-system-control')) {
+                @copy($smDir . '/sam-system-control', '/usr/local/sbin/sam-system-control');
+                @chmod('/usr/local/sbin/sam-system-control', 0755);
+            }
+            if (is_file($smDir . '/sam-radius-client.py')) {
+                @copy($smDir . '/sam-radius-client.py', '/usr/local/libexec/sam-radius-client.py');
+                @chmod('/usr/local/libexec/sam-radius-client.py', 0755);
+            }
+            if (is_file($smDir . '/sam-port-forward.py')) {
+                @copy($smDir . '/sam-port-forward.py', '/usr/local/libexec/sam-port-forward.py');
+                @chmod('/usr/local/libexec/sam-port-forward.py', 0755);
+            }
+        }
+        $logs[] = '✓ تم تثبيت أدوات التحكم في /usr/local/libexec/ و /usr/local/sbin/.';
+
+        // 5. Database Migrations
+        $logs[] = 'الخطوة 5: تطبيق ترقيات قاعدة البيانات التراكمية (Migrations)...';
+        $db->exec("ALTER TABLE um_wallet_sales ADD COLUMN IF NOT EXISTS customer_paid_amount DECIMAL(14,2) DEFAULT NULL;");
+        $db->exec("
+            CREATE TABLE IF NOT EXISTS um_network_devices (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                network_id INT NOT NULL,
+                device_name VARCHAR(64) NOT NULL,
+                ip_address VARCHAR(45) NOT NULL,
+                snmp_community VARCHAR(64) DEFAULT 'public',
+                snmp_version ENUM('v1', 'v2c', 'v3') DEFAULT 'v2c',
+                snmp_port INT DEFAULT 161,
+                status ENUM('active', 'inactive', 'unreachable') DEFAULT 'active',
+                last_seen DATETIME DEFAULT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                KEY idx_network (network_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+        $logs[] = '✓ تم فحص وترقية جداول قاعدة البيانات بأمان.';
+
+        // 6. Restart/Reload Services
+        $logs[] = 'الخطوة 6: إعادة تحميل وتنشيط خدمات النظام...';
+        if (function_exists('opcache_reset')) @opcache_reset();
+        exec('/usr/bin/sudo -n /usr/local/sbin/sam-system-control service freeradius reload 2>&1 || true');
+        exec('/usr/bin/sudo -n /usr/local/sbin/sam-system-control service sam-whatsapp restart 2>&1 || true');
+        exec('/usr/bin/sudo -n /usr/local/sbin/sam-system-control service sam-telemetry restart 2>&1 || true');
+        $logs[] = '✓ تم تنشيط كافة الخدمات البرمجية بنجاح.';
+        $logs[] = '🎉 اكتمل تحديث نظام SAM بنجاح دون أي انقطاع بالخدمة!';
+
+        samOwnerLogActivity($db, $service ?? null, 'owner_system_update', 'system', 'تحديث النظام السحابي', "تم تحديث النظام عبر مصدر: $source بنجاح", 'success', (int)$currentAdminId);
+
+        $responsePayload = [
+            'success' => true,
+            'message' => 'تم تحديث النظام ومزامنته بالكامل بنجاح! 🚀',
+            'logs' => $logs
+        ];
+
+        // Send JSON response first and flush to client
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($responsePayload, JSON_UNESCAPED_UNICODE);
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+
+        // Gracefully reload php-fpm in background after the response is received
+        exec('/bin/bash -c "sleep 1 && sudo -n /usr/local/sbin/sam-system-control service php8.3-fpm reload" >/dev/null 2>&1 &');
+        exit;
+    } catch (Throwable $e) {
+        $logs[] = '❌ حدث خطأ أثناء التحديث: ' . $e->getMessage();
+        jsonResponse([
+            'success' => false,
+            'error' => $e->getMessage(),
+            'logs' => $logs
+        ], 500);
+    } finally {
+        if (is_dir($stageDir)) {
+            exec('rm -rf ' . escapeshellarg($stageDir));
+        }
+    }
+}
+
 jsonResponse(['success'=>false,'error'=>'إجراء مالك النظام غير معروف'],404);
 

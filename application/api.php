@@ -113,8 +113,18 @@ if (in_array($action, $temporarilyDisabledActions, true)) {
         $netId = (int)($_GET['network_id'] ?? 1);
         $type = (string)($_GET['type'] ?? 'login');
         $bundle = $hsService->generateHotspotBundle($netId);
+        $html = $bundle[$type === 'status' ? 'status.html' : 'login.html'] ?? $bundle['login.html'];
+        
+        // Strip or resolve raw RouterOS template directives for clean browser preview
+        $html = preg_replace('/\$\(if error\).*?\$\(endif\)/s', '', $html);
+        $html = preg_replace('/\$\(if [a-zA-Z0-9_-]+\)(.*?)\$\(endif\)/s', '$1', $html);
+        $html = str_replace(
+            ['$(link-login-only)', '$(link-login)', '$(link-orig)', '$(mac)', '$(ip)', '$(username)'],
+            ['#', '#', '#', 'AA:BB:CC:DD:EE:FF', '192.168.88.100', '123456'],
+            $html
+        );
         header('Content-Type: text/html; charset=utf-8');
-        echo $bundle[$type === 'status' ? 'status.html' : 'login.html'] ?? $bundle['login.html'];
+        echo $html;
         exit;
     }
 
@@ -3103,6 +3113,69 @@ case 'send_whatsapp_report':
                 'raw_output' => trim($output),
                 'command' => "radclient {$targetIp}:{$coaPort} disconnect"
             ]);
+            break;
+
+                // --- ENTERPRISE SNMP FLEET MONITORING SUITE ---
+        case 'get_snmp_devices':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_view', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse(['success' => true, 'devices' => $snmp->getDevices($netId)]);
+            break;
+
+        case 'add_snmp_device':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_manage', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse($snmp->addDevice($input, $netId));
+            break;
+
+        case 'update_snmp_device':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_manage', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+            $id = (int)($input['id'] ?? ($_GET['id'] ?? 0));
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse($snmp->updateDevice($id, $input, $netId));
+            break;
+
+        case 'delete_snmp_device':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_manage', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+            $id = (int)($input['id'] ?? ($_GET['id'] ?? 0));
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse($snmp->deleteDevice($id, $netId));
+            break;
+
+        case 'poll_snmp_device':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_view', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+            $id = (int)($input['id'] ?? ($_GET['id'] ?? 0));
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse($snmp->pollDevice($id, $netId));
+            break;
+
+        case 'test_snmp_device':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_manage', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse($snmp->testDevice($input, $netId));
             break;
 
         // --- ROUTER CONTROL SUITE & HOTSPOT MANAGER ---

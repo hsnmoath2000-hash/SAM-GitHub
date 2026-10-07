@@ -292,19 +292,32 @@ try {
         $category = mb_substr((string)($_POST['category'] ?? 'general'), 0, 50);
         $networkId = $authorizationContext->activeNetworkId(); $adminId = (int)$actor['admin_id'];
         $dir = '/var/lib/mikrotik-usermanager/uploads/' . date('Y/m');
-        if (!is_dir($dir) && !mkdir($dir, 0750, true) && !is_dir($dir)) throw new RuntimeException('UPLOAD_DIRECTORY_FAILED');
+        if (!is_dir($dir) && !@mkdir($dir, 0775, true) && !is_dir($dir)) {
+            $dir = dirname(__DIR__, 2) . '/uploads/' . date('Y/m');
+            if (!is_dir($dir) && !@mkdir($dir, 0775, true) && !is_dir($dir)) {
+                $dir = sys_get_temp_dir() . '/sam_uploads';
+                @mkdir($dir, 0777, true);
+            }
+        }
         $stored = "$dir/$id." . $allowed[$mime];
         $saved = $mime === 'image/jpeg' ? imagejpeg($image, $stored, 90) : ($mime === 'image/png' ? imagepng($image, $stored, 6) : imagewebp($image, $stored, 90));
         imagedestroy($image);
         if (!$saved) throw new RuntimeException('UPLOAD_SAVE_FAILED');
         chmod($stored, 0640);
-        $oldStmt = $db->prepare('SELECT id,stored_path FROM um_api_uploads WHERE network_id=? AND admin_id=? AND category=? AND id=? FOR UPDATE');
+        $oldStmt = $db->prepare('SELECT id,stored_path FROM um_api_uploads WHERE network_id=? AND category=? AND (id=? OR ?="hotspot-logo") FOR UPDATE');
         $db->beginTransaction();
         try {
-            $replaceId=$_POST['replace_id']??'';if(!is_string($replaceId)||($replaceId!==''&&!preg_match('/^[a-f0-9]{32}$/',$replaceId)))throw new InvalidArgumentException('INVALID_REPLACE_ID');$oldStmt->execute([$networkId, $adminId, $category,$replaceId]); $oldRows = $oldStmt->fetchAll(PDO::FETCH_ASSOC);
+            $replaceId = (string)($_POST['replace_id'] ?? '');
+            if ($replaceId !== '' && !preg_match('/^[a-f0-9]{32}$/', $replaceId)) throw new InvalidArgumentException('INVALID_REPLACE_ID');
+            $oldStmt->execute([$networkId, $category, $replaceId, $category]);
+            $oldRows = $oldStmt->fetchAll(PDO::FETCH_ASSOC);
             $stmt = $db->prepare('INSERT INTO um_api_uploads (id,network_id,admin_id,category,original_name,stored_path,mime_type,file_size,sha256) VALUES (?,?,?,?,?,?,?,?,?)');
             $stmt->execute([$id, $networkId, $adminId, $category, mb_substr(basename((string)$file['name']), 0, 255), $stored, $mime, filesize($stored), hash_file('sha256', $stored)]);
-            $db->prepare('DELETE FROM um_api_uploads WHERE network_id=? AND admin_id=? AND category=? AND id=?')->execute([$networkId, $adminId, $category, $replaceId]);
+            if (!empty($oldRows)) {
+                $delIds = array_column($oldRows, 'id');
+                $inClause = implode(',', array_fill(0, count($delIds), '?'));
+                $db->prepare("DELETE FROM um_api_uploads WHERE id IN ($inClause)")->execute($delIds);
+            }
             $db->commit();
         } catch (Throwable $e) { if ($db->inTransaction()) $db->rollBack(); @unlink($stored); throw $e; }
         foreach ($oldRows ?? [] as $old) { $oldPath = (string)($old['stored_path'] ?? ''); if ($oldPath !== $stored && str_starts_with($oldPath, '/var/lib/mikrotik-usermanager/uploads/') && is_file($oldPath)) @unlink($oldPath); }

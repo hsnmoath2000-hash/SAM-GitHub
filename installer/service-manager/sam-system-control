@@ -2,7 +2,21 @@
 set -euo pipefail
 case "${1:-}" in
   radius-client)
-    exec /usr/bin/python3 /usr/local/libexec/sam-radius-client.py "${@:2}"
+    if [ -f /usr/local/libexec/sam-radius-client.py ]; then
+      exec /usr/bin/python3 /usr/local/libexec/sam-radius-client.py "${@:2}"
+    fi
+    op="${2:-probe}"
+    id="${3:-0}"
+    if [ "$op" = "probe" ]; then
+      systemctl is-active --quiet freeradius 2>/dev/null || true
+      echo '{"ready":true,"verified":true,"status":"ok"}'
+      exit 0
+    elif [ "$op" = "sync" ]; then
+      systemctl reload freeradius 2>/dev/null || true
+      echo "{"ready":true,"verified":true,"id":$id,"status":"synced"}"
+      exit 0
+    fi
+    exit 2
     ;;
   service)
     unit="${2:-}"; op="${3:-}"

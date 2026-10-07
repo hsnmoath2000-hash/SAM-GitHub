@@ -116,6 +116,8 @@ write('/etc/cron.d/sam-system', f'''SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 * * * * * www-data /usr/bin/php8.3 {app}/cron_router_status_monitor.php 2>&1 | /usr/bin/logger -t sam-router-monitor
 * * * * * www-data /usr/bin/php8.3 {app}/cron_dispatch_queue.php 2>&1 | /usr/bin/logger -t sam-message-queue
+*/5 * * * * www-data /usr/bin/php8.3 {app}/cron_snmp_monitor.php 2>&1 | /usr/bin/logger -t sam-snmp-monitor
+0 * * * * www-data /usr/bin/php8.3 {app}/cron_cloud_backup.php 2>&1 | /usr/bin/logger -t sam-cloud-backup
 */5 * * * * www-data /usr/bin/php8.3 {app}/cron_network_notification_reports.php 2>&1 | /usr/bin/logger -t sam-network-reports
 */5 * * * * www-data /usr/bin/php8.3 {app}/sam_maintenance.php cleanup_sessions 2>&1 | /usr/bin/logger -t sam-maintenance
 0 4 * * 0 www-data /usr/bin/php8.3 {app}/sam_maintenance.php cleanup_logs 2>&1 | /usr/bin/logger -t sam-maintenance

@@ -14,6 +14,7 @@ $networkId = $service->getActiveNetworkId(); // SAM_PRINT_NETWORK_SCOPE_V1
 
 $batchId = trim($_GET['batch_id'] ?? '');
 $templateId = !empty($_GET['template_id']) ? (int)$_GET['template_id'] : null;
+$isThermal = (isset($_GET['format']) && $_GET['format'] === 'thermal');
 $usernamesRaw = trim($_GET['usernames'] ?? '');
 
 $vouchers = [];
@@ -105,20 +106,11 @@ $adminName = $_SESSION['fullname'] ?? ($_SESSION['user'] ?? 'admin');
 
 $docTitle = "$batchName - $profName - $countStr - $dateStr - $adminName";
 
-// Helper for QR code SVG
-function renderQR($text, $size = 48) {
-    // Generate lightweight valid SVG QR
-    return '<svg width="'.$size.'" height="'.$size.'" viewBox="0 0 33 33" xmlns="http://www.w3.org/2000/svg">
-        <rect width="33" height="33" fill="#ffffff"/>
-        <rect x="2" y="2" width="7" height="7" fill="#000"/><rect x="3" y="3" width="5" height="5" fill="#fff"/><rect x="4" y="4" width="3" height="3" fill="#000"/>
-        <rect x="24" y="2" width="7" height="7" fill="#000"/><rect x="25" y="3" width="5" height="5" fill="#fff"/><rect x="26" y="4" width="3" height="3" fill="#000"/>
-        <rect x="2" y="24" width="7" height="7" fill="#000"/><rect x="3" y="25" width="5" height="5" fill="#fff"/><rect x="4" y="26" width="3" height="3" fill="#000"/>
-        <rect x="11" y="4" width="2" height="2" fill="#000"/><rect x="15" y="2" width="2" height="2" fill="#000"/><rect x="19" y="4" width="2" height="2" fill="#000"/>
-        <rect x="11" y="8" width="2" height="2" fill="#000"/><rect x="14" y="10" width="3" height="2" fill="#000"/><rect x="19" y="8" width="2" height="2" fill="#000"/>
-        <rect x="12" y="14" width="9" height="9" fill="#000"/><rect x="14" y="16" width="5" height="5" fill="#fff"/><rect x="15" y="17" width="3" height="3" fill="#000"/>
-        <rect x="11" y="25" width="3" height="2" fill="#000"/><rect x="16" y="27" width="2" height="3" fill="#000"/><rect x="20" y="25" width="3" height="2" fill="#000"/>
-        <rect x="25" y="24" width="2" height="2" fill="#000"/><rect x="28" y="27" width="3" height="2" fill="#000"/>
-    </svg>';
+require_once __DIR__ . '/includes/QrCodeGenerator.php';
+
+// Helper for dynamic compliant QR code SVG
+function renderQR(string $text, int $size = 48): string {
+    return QrCodeGenerator::svg($text, $size);
 }
 ?>
 <!DOCTYPE html>
@@ -259,9 +251,9 @@ function renderQR($text, $size = 48) {
     <div class="a4-page">
         <div class="cards-grid">
             <?php foreach ($pageVouchers as $v): 
-                $u = $v['username'];
-                $pass = !empty($v['password']) ? $v['password'] : $u;
-                $loginUrl = ($template['hotspot_url'] ?? 'http://192.168.88.1/login') . "?username=$u&password=$pass";
+                $u = (string)$v['username'];
+                $pass = isset($v['password']) ? (string)$v['password'] : '';
+                $loginUrl = ($template['hotspot_url'] ?? 'http://192.168.88.1/login') . "?username=" . urlencode($u) . ($pass !== '' ? ('&password=' . urlencode($pass)) : '');
                 $prof = $v['profile_name'] ?? ($v['profile'] ?? '');
                 $price = !empty($v['price']) ? $v['price'] . ' YER' : '';
             ?>
@@ -278,7 +270,7 @@ function renderQR($text, $size = 48) {
                 </div>
                 <?php endif; ?>
 
-                <?php if (!empty($elements['password']['enabled']) && !empty($pass) && $pass !== $u): ?>
+                <?php if (!empty($elements['password']['enabled']) && $pass !== '' && $pass !== $u): ?>
                 <div class="elem-pos" style="left:<?= $elements['password']['x'] ?>%; top:<?= $elements['password']['y'] ?>%; transform:translate(-50%,-50%); font-size:<?= $elements['password']['size'] ?>px; font-weight:<?= $elements['password']['weight'] ?>; color:<?= $elements['password']['color'] ?>; font-family:monospace;">
                     كلمة المرور: <?= htmlspecialchars($pass) ?>
                 </div>
@@ -309,10 +301,12 @@ function renderQR($text, $size = 48) {
 
     <script>
         const vouchersData = <?= json_encode(array_map(function($v) use ($template) {
+            $passVal = isset($v['password']) ? (string)$v['password'] : '';
             return [
                 'network_name' => $template['network_name'] ?? 'شبكتي',
                 'username' => $v['username'] ?? '',
-                'password' => !empty($v['password']) ? $v['password'] : ($v['username'] ?? ''),
+                'password' => $passVal,
+                'login_url' => ($template['hotspot_url'] ?? 'http://192.168.88.1/login') . "?username=" . urlencode((string)($v['username'] ?? '')) . ($passVal !== '' ? ('&password=' . urlencode($passVal)) : ''),
                 'profile' => $v['profile_name'] ?? ($v['profile'] ?? ''),
                 'price' => $v['price'] ?? '',
                 'login_url' => $template['hotspot_url'] ?? 'http://192.168.88.1/login'

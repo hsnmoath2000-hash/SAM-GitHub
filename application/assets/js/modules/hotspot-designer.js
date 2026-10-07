@@ -2419,9 +2419,73 @@ Object.assign(window.App, {
 
 
         App.uploadHotspotImage = async function(input, targetId, category) {
-        const file=input?.files?.[0]; if(!file)return;
-        if(file.size>5*1024*1024){this.toast('حجم الصورة يجب ألا يتجاوز 5MB','warning');input.value='';return;}
-        const fd=new FormData(); fd.append('file',file,file.name); fd.append('category',category||'hotspot-image'); fd.append('width',category==='hotspot-ad'?'775':'775'); fd.append('height',category==='hotspot-ad'?'409':'409'); const previous=targetId?document.getElementById(targetId)?.value:input.closest('.hs-ad-card')?.querySelector('.hs-ad-img')?.value;const previousId=previous?.match(/\/uploads\/([a-f0-9]{32})$/)?.[1];if(previousId)fd.append('replace_id',previousId);
-        try{const r=await fetch('api/v1/index.php/uploads/images',{method:'POST',body:fd,credentials:'same-origin',headers:{'X-SAM-Request':'XMLHttpRequest','X-SAM-Network-ID':String(this.activeNetworkId||0)}});const data=await r.json();if(!data?.url)throw new Error(data?.error||'فشل الرفع');if(targetId){const el=document.getElementById(targetId);if(el)el.value=data.url;}else{const card=input.closest('.hs-ad-card');const el=card?.querySelector('.hs-ad-img');if(el)el.value=data.url;}this.toast('تم رفع الصورة وتحجيمها وحذف الصورة السابقة','success');}catch(e){this.toast(e.message||'فشل رفع الصورة','danger');}
+        const file = input?.files?.[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) {
+            this.toast('حجم الصورة يجب ألا يتجاوز 5MB', 'warning');
+            input.value = '';
+            return;
+        }
+
+        const isLogo = (category === 'hotspot-logo');
+        const targetW = isLogo ? 350 : 800;
+        const targetH = isLogo ? 350 : 450;
+
+        const fd = new FormData();
+        fd.append('file', file, file.name);
+        fd.append('category', category || 'hotspot-image');
+        fd.append('width', String(targetW));
+        fd.append('height', String(targetH));
+
+        const previous = targetId
+            ? document.getElementById(targetId)?.value
+            : input.closest('.hs-ad-card')?.querySelector('.hs-ad-img')?.value;
+        const previousId = previous?.match(/\/uploads\/([a-f0-9]{32})$/)?.[1];
+        if (previousId) fd.append('replace_id', previousId);
+
+        const headers = {
+            'X-SAM-Request': 'XMLHttpRequest',
+            'X-SAM-Network-ID': String(this.activeNetworkId || 0)
+        };
+        const token = localStorage.getItem('sam_access_token');
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+
+        try {
+            const r = await fetch('api/v1/index.php/uploads/images', {
+                method: 'POST',
+                body: fd,
+                credentials: 'same-origin',
+                headers: headers
+            });
+            const data = await r.json();
+            const uploadedUrl = data?.data?.url || data?.url;
+            if (!uploadedUrl) {
+                const errMsg = (typeof data?.error === 'object' && data.error?.message) 
+                    ? data.error.message 
+                    : (typeof data?.error === 'string' ? data.error : 'فشل رفع وحفظ الصورة');
+                throw new Error(errMsg);
+            }
+
+            if (targetId) {
+                const el = document.getElementById(targetId);
+                if (el) {
+                    el.value = uploadedUrl;
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            } else {
+                const card = input.closest('.hs-ad-card');
+                const el = card?.querySelector('.hs-ad-img');
+                if (el) {
+                    el.value = uploadedUrl;
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            }
+            this.toast('✓ تم رفع الصورة وتحجيمها بنجاح وحذف السابقة تلقائياً', 'success');
+            if (typeof this.refreshHotspotPreviewFrame === 'function') {
+                this.refreshHotspotPreviewFrame();
+            }
+        } catch(e) {
+            this.toast(e.message || 'فشل رفع الصورة', 'danger');
+        }
     };
 
