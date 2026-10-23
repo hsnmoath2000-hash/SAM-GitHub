@@ -23,7 +23,7 @@ def build():
     if (
         "$databaseCandidates=" not in bootstrap
         or "dirname(__DIR__).'/database'" not in bootstrap
-        or "$candidate+'/'+$catalog" not in bootstrap
+        or "$candidate.'/'.$catalog" not in bootstrap
     ):
         raise SystemExit('Installer bootstrap does not resolve catalogs from the bundle layout.')
     with tarfile.open(output / 'application.tar.gz', 'w:gz') as tar:
