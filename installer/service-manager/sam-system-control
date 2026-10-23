@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 case "${1:-}" in
+  service-manager)
+    exec /usr/bin/python3 /usr/local/libexec/sam-service-manager.py "${@:2}"
+    ;;
   radius-client)
     if [ -f /usr/local/libexec/sam-radius-client.py ]; then
       exec /usr/bin/python3 /usr/local/libexec/sam-radius-client.py "${@:2}"
@@ -20,7 +23,7 @@ case "${1:-}" in
     ;;
   service)
     unit="${2:-}"; op="${3:-}"
-    case "$unit" in apache2|php8.3-fpm|freeradius|mariadb|accel-ppp|sam-telemetry|sam-whatsapp|mikrotik-whatsapp|mikrotik-usermanager-api-worker) ;; *) exit 2;; esac
+    case "$unit" in apache2|php8.[1-9]-fpm|freeradius|mariadb|accel-ppp|sam-telemetry|sam-whatsapp|mikrotik-whatsapp|mikrotik-usermanager-api-worker|redis-server|cron) ;; *) exit 2;; esac
     case "$op" in start|stop|restart) ;; *) exit 2;; esac
     [[ "$unit:$op" != "apache2:stop" ]] || exit 3
     /bin/systemctl "$op" "$unit"
