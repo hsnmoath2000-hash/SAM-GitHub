@@ -20,7 +20,11 @@ def build():
     if missing_catalogs or not (output / 'bootstrap.php').is_file():
         raise SystemExit('Incomplete installer bundle: ' + ', '.join(missing_catalogs or ['bootstrap.php']))
     bootstrap = (output / 'bootstrap.php').read_text(encoding='utf-8')
-    if "$databaseDir=__DIR__.'/database'" not in bootstrap or "$databaseDir.'/'.$catalog" not in bootstrap:
+    if (
+        "$databaseCandidates=" not in bootstrap
+        or "dirname(__DIR__).'/database'" not in bootstrap
+        or "$candidate.'/'.$catalog" not in bootstrap
+    ):
         raise SystemExit('Installer bootstrap does not resolve catalogs from the bundle layout.')
     with tarfile.open(output / 'application.tar.gz', 'w:gz') as tar:
         for path in sorted((ROOT / 'application').rglob('*')):
