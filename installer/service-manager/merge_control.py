@@ -8,7 +8,7 @@ from pathlib import Path
 
 HANDLER = 'exec /usr/bin/python3 /usr/local/libexec/sam-service-manager.py "${@:2}"'
 SERVICE_CASE = 'case "$unit" in '
-SERVICE_CASE_END = ' ;; *) exit 2;; esac'
+SERVICE_CASE_END = ') ;; *) exit 2;; esac'
 ADDITIONAL_UNITS = ('php8.[1-9]-fpm', 'redis-server', 'cron')
 
 
