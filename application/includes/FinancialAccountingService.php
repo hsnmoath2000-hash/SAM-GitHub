@@ -1812,7 +1812,10 @@ class FinancialAccountingService extends BaseService {
             $admin = $this->getAdminById($adminId);
             if (!$admin) return ['success' => false, 'error' => 'حساب الوكيل/المشرف غير موجود'];
         }
-        $this->db->beginTransaction();
+        $ownsTransaction = !$this->db->inTransaction();
+        if ($ownsTransaction) {
+            $this->db->beginTransaction();
+        }
         try {
             // 1. Ensure or find linked chart of account for admin
             $targetAccount = null;
@@ -1928,13 +1931,17 @@ class FinancialAccountingService extends BaseService {
                     $date . ' ' . date('H:i:s')
                 ]);
             }
-            $this->db->commit();
+            if ($ownsTransaction) {
+                $this->db->commit();
+            }
             return [
                 'success' => true,
                 'message' => '✅ تم تسجيل ' . ($balanceType === 'debt' ? 'المديونية السابقة' : 'الرصيد الافتتاحي') . ' بنجاح وتحديث الرصيد والقيد المحاسبي برقم [' . $entryNo . '] ✓'
             ];
         } catch (\Throwable $e) {
-            $this->db->rollBack();
+            if ($ownsTransaction && $this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
             return ['success' => false, 'error' => 'فشل تسجيل المديونية/الرصيد: ' . $e->getMessage()];
         }
     }

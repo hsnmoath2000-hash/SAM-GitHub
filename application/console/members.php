@@ -31,10 +31,10 @@ if (empty($_SESSION['logged_in']) || empty($_SESSION['admin_id'])) {
                 <div class="nav-group-label">إدارة الأعمال</div>
                 <a class="nav-link active" href="members.php" aria-current="page"><span class="nav-icon" aria-hidden="true">◎</span><span>الهويات والعضويات</span></a>
                 <a class="nav-link" href="invitations.php"><span class="nav-icon" aria-hidden="true">✉</span><span>دعوات الانضمام</span></a>
-                <button class="nav-link future-link" type="button" disabled><span class="nav-icon" aria-hidden="true">▤</span><span>المتاجر ونقاط البيع</span><small>لاحقًا</small></button>
-                <button class="nav-link future-link" type="button" disabled><span class="nav-icon" aria-hidden="true">▦</span><span>الكروت والمخزون</span><small>لاحقًا</small></button>
-                <button class="nav-link future-link" type="button" disabled><span class="nav-icon" aria-hidden="true">◷</span><span>المبيعات والمحاسبة</span><small>لاحقًا</small></button>
-                <button class="nav-link future-link" type="button" disabled><span class="nav-icon" aria-hidden="true">⌁</span><span>أجهزة الشبكة</span><small>لاحقًا</small></button>
+                <a class="nav-link" href="pos.php"><span class="nav-icon" aria-hidden="true">▤</span><span>المتاجر ونقاط البيع</span></a>
+                <a class="nav-link" href="inventory.php"><span class="nav-icon" aria-hidden="true">▦</span><span>الكروت والمخزون</span></a>
+                <a class="nav-link" href="commerce.php"><span class="nav-icon" aria-hidden="true">◷</span><span>المبيعات والمحاسبة</span></a>
+                <a class="nav-link" href="network-devices.php"><span class="nav-icon" aria-hidden="true">⌁</span><span>أجهزة الشبكة</span></a>
             </nav>
             <div class="sidebar-bottom">
                 <div class="security-note"><span class="security-dot" aria-hidden="true"></span><span><strong>وصول مقيّد</strong><small>تُحمى البيانات بصلاحيات حسابك</small></span></div>
