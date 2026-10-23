@@ -30,6 +30,7 @@ if (empty($_SESSION['logged_in']) || empty($_SESSION['admin_id'])) {
                 <a class="nav-link" href="index.php"><span class="nav-icon" aria-hidden="true">◫</span><span>لوحة التحكم</span></a>
                 <div class="nav-group-label">إدارة الأعمال</div>
                 <a class="nav-link active" href="members.php" aria-current="page"><span class="nav-icon" aria-hidden="true">◎</span><span>الهويات والعضويات</span></a>
+                <a class="nav-link" href="invitations.php"><span class="nav-icon" aria-hidden="true">✉</span><span>دعوات الانضمام</span></a>
                 <button class="nav-link future-link" type="button" disabled><span class="nav-icon" aria-hidden="true">▤</span><span>المتاجر ونقاط البيع</span><small>لاحقًا</small></button>
                 <button class="nav-link future-link" type="button" disabled><span class="nav-icon" aria-hidden="true">▦</span><span>الكروت والمخزون</span><small>لاحقًا</small></button>
                 <button class="nav-link future-link" type="button" disabled><span class="nav-icon" aria-hidden="true">◷</span><span>المبيعات والمحاسبة</span><small>لاحقًا</small></button>

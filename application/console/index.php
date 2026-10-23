@@ -35,6 +35,9 @@ if (empty($_SESSION['logged_in']) || empty($_SESSION['admin_id'])) {
                 <a class="nav-link" href="members.php">
                     <span class="nav-icon" aria-hidden="true">◎</span><span>الهويات والعضويات</span>
                 </a>
+                <a class="nav-link" href="invitations.php">
+                    <span class="nav-icon" aria-hidden="true">✉</span><span>دعوات الانضمام</span>
+                </a>
                 <button class="nav-link future-link" type="button" disabled title="ستتوفر في مراحل التطوير التالية">
                     <span class="nav-icon" aria-hidden="true">▤</span><span>المتاجر ونقاط البيع</span><small>لاحقًا</small>
                 </button>
