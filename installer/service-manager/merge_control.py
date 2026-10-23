@@ -37,14 +37,15 @@ def merge_control(source):
     index = service_lines[0]
     line = lines[index]
     body = line.rstrip('\r\n')
+    case_start = body.find(SERVICE_CASE)
     if body.count(SERVICE_CASE) != 1 or not body.endswith(SERVICE_CASE_END):
         raise ValueError('Existing service allowlist has an unsupported format.')
-    units = body[len(SERVICE_CASE):-len(SERVICE_CASE_END)].split('|')
+    units = body[case_start + len(SERVICE_CASE):-len(SERVICE_CASE_END)].split('|')
     for unit in ADDITIONAL_UNITS:
         if unit not in units:
             units.append(unit)
     newline = '\r\n' if line.endswith('\r\n') else '\n' if line.endswith('\n') else ''
-    indentation = body[:body.index(SERVICE_CASE)]
+    indentation = body[:case_start]
     lines[index] = indentation + SERVICE_CASE + '|'.join(units) + SERVICE_CASE_END + newline
     merged = ''.join(lines)
     return merged
