@@ -38,18 +38,18 @@ if (empty($_SESSION['logged_in']) || empty($_SESSION['admin_id'])) {
                 <a class="nav-link" href="invitations.php">
                     <span class="nav-icon" aria-hidden="true">✉</span><span>دعوات الانضمام</span>
                 </a>
-                <button class="nav-link future-link" type="button" disabled title="ستتوفر في مراحل التطوير التالية">
-                    <span class="nav-icon" aria-hidden="true">▤</span><span>المتاجر ونقاط البيع</span><small>لاحقًا</small>
-                </button>
-                <button class="nav-link future-link" type="button" disabled title="ستتوفر في مراحل التطوير التالية">
-                    <span class="nav-icon" aria-hidden="true">▦</span><span>الكروت والمخزون</span><small>لاحقًا</small>
-                </button>
-                <button class="nav-link future-link" type="button" disabled title="ستتوفر في مراحل التطوير التالية">
-                    <span class="nav-icon" aria-hidden="true">◷</span><span>المبيعات والمحاسبة</span><small>لاحقًا</small>
-                </button>
-                <button class="nav-link future-link" type="button" disabled title="ستتوفر في مراحل التطوير التالية">
-                    <span class="nav-icon" aria-hidden="true">⌁</span><span>أجهزة الشبكة</span><small>لاحقًا</small>
-                </button>
+                <a class="nav-link" href="pos.php">
+                    <span class="nav-icon" aria-hidden="true">▤</span><span>المتاجر ونقاط البيع</span>
+                </a>
+                <a class="nav-link" href="inventory.php">
+                    <span class="nav-icon" aria-hidden="true">▦</span><span>الكروت والمخزون</span>
+                </a>
+                <a class="nav-link" href="commerce.php">
+                    <span class="nav-icon" aria-hidden="true">◷</span><span>المبيعات والمحاسبة</span>
+                </a>
+                <a class="nav-link" href="network-devices.php">
+                    <span class="nav-icon" aria-hidden="true">⌁</span><span>أجهزة الشبكة</span>
+                </a>
             </nav>
 
             <div class="sidebar-bottom">

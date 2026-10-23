@@ -504,7 +504,7 @@ final class PosDistributorService
     public function adminGetPosRequests(int $actorId, string $actorRole): array
     {
         $networkId = $this->activeNetworkId();
-        if (!in_array($actorRole, ['system_owner', 'superadmin', 'superadmin', 'network_manager', 'admin'], true)) {
+        if (!in_array($actorRole, ['system_owner', 'superadmin', 'superadmin', 'network_manager', 'admin', 'admin2'], true)) {
             throw new DomainException('FORBIDDEN');
         }
 
@@ -522,10 +522,10 @@ final class PosDistributorService
         ];
     }
 
-    public function adminReviewPosRequest(int $actorId, string $actorRole, array $data): array
+    public function adminReviewPosRequest(int $actorId, string $actorRole, array $data, ?array $allowedAdminIds = null): array
     {
         $networkId = $this->activeNetworkId();
-        if (!in_array($actorRole, ['system_owner', 'superadmin', 'superadmin', 'network_manager', 'admin'], true)) {
+        if (!in_array($actorRole, ['system_owner', 'superadmin', 'superadmin', 'network_manager', 'admin', 'admin2'], true)) {
             throw new DomainException('FORBIDDEN');
         }
 
@@ -537,18 +537,27 @@ final class PosDistributorService
         $openingBalance = max(0, (float)($data['opening_balance'] ?? 0));
         $notes = trim((string)($data['notes'] ?? ''));
 
-        $stmt = $this->db->prepare("SELECT * FROM um_pos_network_requests WHERE id = ? AND network_id = ? LIMIT 1");
-        $stmt->execute([$requestId, $networkId]);
-        $req = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$req) throw new DomainException('REQUEST_NOT_FOUND');
-
-        $posAdminId = (int)$req['pos_admin_id'];
-
+        if ($requestId <= 0 || !in_array($decision, ['approved', 'rejected'], true)) {
+            throw new DomainException('INVALID_REVIEW');
+        }
         $this->db->beginTransaction();
         try {
+            $stmt = $this->db->prepare("SELECT * FROM um_pos_network_requests WHERE id = ? AND network_id = ? LIMIT 1 FOR UPDATE");
+            $stmt->execute([$requestId, $networkId]);
+            $req = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$req) throw new DomainException('REQUEST_NOT_FOUND');
+            if ($req['status'] !== 'pending') throw new DomainException('REQUEST_ALREADY_REVIEWED');
+
+            $posAdminId = (int)$req['pos_admin_id'];
+            if ($posAdminId <= 0) throw new DomainException('INVALID_POS_ACCOUNT');
+            if ($allowedAdminIds !== null && !in_array($posAdminId, $allowedAdminIds, true)) {
+                throw new DomainException('REQUEST_OUT_OF_SCOPE');
+            }
+
             if ($decision === 'approved') {
-                $upd = $this->db->prepare("UPDATE um_pos_network_requests SET status = 'approved', discount_rate = ?, credit_limit = ?, opening_debt = ?, opening_balance = ?, reviewed_by_admin_id = ?, reviewed_at = NOW(), review_notes = ? WHERE id = ?");
-                $upd->execute([$discountRate, $creditLimit, $openingDebt, $openingBalance, $actorId, $notes ?: null, $requestId]);
+                $upd = $this->db->prepare("UPDATE um_pos_network_requests SET status = 'approved', discount_rate = ?, credit_limit = ?, opening_debt = ?, opening_balance = ?, reviewed_by_admin_id = ?, reviewed_at = NOW(), review_notes = ? WHERE id = ? AND network_id = ? AND status = 'pending'");
+                $upd->execute([$discountRate, $creditLimit, $openingDebt, $openingBalance, $actorId, $notes ?: null, $requestId, $networkId]);
+                if ($upd->rowCount() !== 1) throw new DomainException('REQUEST_ALREADY_REVIEWED');
 
                 if ($posAdminId > 0) {
                     // Update POS discount rate in um_admins
@@ -567,20 +576,26 @@ final class PosDistributorService
                         require_once __DIR__ . '/FinancialAccountingService.php';
                         $faService = new FinancialAccountingService($this->db);
                         if ($openingDebt > 0) {
-                            $faService->setAccountOpeningBalance([
+                            $openingResult = $faService->setAccountOpeningBalance([
                                 'admin_id' => $posAdminId,
                                 'amount' => $openingDebt,
                                 'balance_type' => 'debt',
                                 'notes' => 'مديونية سابقة مثبتة عند اعتماد نقطة البيع'
                             ], $actorId);
+                            if (empty($openingResult['success'])) {
+                                throw new RuntimeException((string) ($openingResult['error'] ?? 'OPENING_DEBT_FAILED'));
+                            }
                         }
                         if ($openingBalance > 0) {
-                            $faService->setAccountOpeningBalance([
+                            $openingResult = $faService->setAccountOpeningBalance([
                                 'admin_id' => $posAdminId,
                                 'amount' => $openingBalance,
                                 'balance_type' => 'credit',
                                 'notes' => 'رصيد افتتاحي عند اعتماد نقطة البيع'
                             ], $actorId);
+                            if (empty($openingResult['success'])) {
+                                throw new RuntimeException((string) ($openingResult['error'] ?? 'OPENING_BALANCE_FAILED'));
+                            }
                         }
                     }
 
@@ -591,8 +606,9 @@ final class PosDistributorService
                     ]);
                 }
             } else {
-                $upd = $this->db->prepare("UPDATE um_pos_network_requests SET status = 'rejected', reviewed_by_admin_id = ?, reviewed_at = NOW(), review_notes = ? WHERE id = ?");
-                $upd->execute([$actorId, $notes ?: 'تم رفض الطلب', $requestId]);
+                $upd = $this->db->prepare("UPDATE um_pos_network_requests SET status = 'rejected', reviewed_by_admin_id = ?, reviewed_at = NOW(), review_notes = ? WHERE id = ? AND network_id = ? AND status = 'pending'");
+                $upd->execute([$actorId, $notes ?: 'تم رفض الطلب', $requestId, $networkId]);
+                if ($upd->rowCount() !== 1) throw new DomainException('REQUEST_ALREADY_REVIEWED');
 
                 if ($posAdminId > 0) {
                     $this->notify('pos_request', 'تم رفض طلب الانضمام للشبكة', "نعتذر، تم رفض طلب اعتماد نقطة البيع من قبل إدارة الشبكة. ملاحظات: " . ($notes ?: '—'), null, $posAdminId, [

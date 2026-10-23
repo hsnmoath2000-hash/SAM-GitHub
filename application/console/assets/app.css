@@ -214,6 +214,59 @@ h1 { margin: 7px 0 3px; font-size: clamp(23px, 2.5vw, 31px); font-weight: 800; l
 .join-form .primary-button { margin-top: 3px; }
 .join-loading { min-height: 100px; }
 .join-login { display: inline-flex; margin-top: 12px; color: #28684c; font-size: 11px; font-weight: 700; text-decoration: none; }
+.pos-workspace { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); box-shadow: var(--shadow); }
+.pos-toolbar { display: flex; min-height: 66px; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 18px; border-bottom: 1px solid var(--line); }
+.pos-toolbar .members-tabs { min-height: 46px; }
+.pos-toolbar .member-tab.selected::after { bottom: -9px; }
+.pos-readonly-note { margin: 0; padding: 12px 18px; border-top: 1px solid var(--line); color: #7c8982; background: #fafcfa; font-size: 10px; line-height: 1.8; }
+.review-action { display: flex; gap: 6px; }
+.review-action button { padding: 5px 9px; border: 1px solid var(--line); border-radius: 7px; color: #315944; background: #f7faf8; cursor: pointer; font: inherit; font-size: 9px; }
+.review-action button:last-child { border-color: #efd5d1; color: #9a4a3f; background: #fff8f7; }
+.review-action button:disabled { opacity: .55; cursor: wait; }
+.review-dialog { width: min(520px, calc(100% - 28px)); max-height: min(90vh, 740px); padding: 0; border: 1px solid var(--line); border-radius: 14px; color: var(--ink); background: var(--paper); box-shadow: 0 24px 80px rgba(16, 37, 31, .25); }
+.review-dialog::backdrop { background: rgba(16, 37, 31, .5); }
+.review-financial-fields[hidden] { display: none; }
+.review-reject-button { border-color: #efd5d1; background: #a2483e; }
+.review-form { display: grid; gap: 15px; padding: 20px; }
+.review-dialog-heading h2 { margin: 0 0 5px; font-size: 16px; }
+.review-dialog-heading p, .review-financial-fields p { margin: 0; color: #7b8882; font-size: 10px; line-height: 1.7; }
+.review-form label { display: grid; gap: 6px; color: #53655c; font-size: 10px; font-weight: 700; }
+.review-form input, .review-form textarea { width: 100%; min-width: 0; padding: 9px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: #fff; font: inherit; font-size: 11px; }
+.review-form textarea { resize: vertical; }
+.review-financial-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 13px; border: 1px solid #e5ece8; border-radius: 10px; background: #f8faf9; }
+.review-financial-fields p { grid-column: 1 / -1; }
+.review-dialog-actions { display: flex; justify-content: flex-start; gap: 8px; }
+.review-dialog-actions .page-button { min-height: 40px; }
+.review-dialog[hidden] { display: none; }
+.transfer-approve-button { white-space: nowrap; }
+.transfer-quote-dialog { width: min(520px, calc(100% - 28px)); max-height: min(90vh, 720px); padding: 0; border: 1px solid var(--line); border-radius: 14px; color: var(--ink); background: var(--paper); box-shadow: 0 24px 80px rgba(16, 37, 31, .25); }
+.transfer-quote-dialog::backdrop { background: rgba(16, 37, 31, .5); }
+.transfer-quote-content { display: grid; gap: 14px; padding: 20px; }
+.transfer-quote-content h2 { margin: 0; font-size: 16px; }
+.transfer-quote-content > p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.transfer-quote-warning { padding: 10px; border: 1px solid #f0d8a9; border-radius: 9px; color: #79551c !important; background: #fff9ed; }
+.transfer-quote-values { display: grid; gap: 8px; margin: 0; }
+.transfer-quote-values div { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 11px; }
+.transfer-quote-values dt { color: var(--muted); }
+.transfer-quote-values dd { margin: 0; font-weight: 800; }
+.transfer-quote-actions { display: flex; justify-content: flex-start; gap: 8px; }
+.transfer-quote-actions .page-button, .transfer-quote-actions .primary-button { min-height: 40px; }
+.transfer-quote-actions button:disabled { opacity: .55; cursor: wait; }
+.inventory-create-button { min-height: 36px; padding: 7px 12px; white-space: nowrap; }
+.inventory-dialog { width: min(760px, calc(100% - 24px)); max-height: min(92vh, 820px); padding: 0; border: 1px solid var(--line); border-radius: 14px; color: var(--ink); background: var(--paper); box-shadow: 0 24px 80px rgba(16, 37, 31, .25); }
+.inventory-dialog::backdrop { background: rgba(16, 37, 31, .5); }
+.inventory-dialog-content { display: grid; gap: 14px; padding: 20px; }
+.inventory-dialog-content h2 { margin: 0; font-size: 16px; }
+.inventory-dialog-content > p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.inventory-dialog-content label { display: grid; gap: 6px; color: #53655c; font-size: 10px; font-weight: 700; }
+.inventory-dialog-content input, .inventory-dialog-content textarea { width: 100%; min-width: 0; padding: 9px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: #fff; font: inherit; font-size: 11px; }
+.inventory-dialog-content select { width: 100%; min-width: 0; padding: 9px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: #fff; font: inherit; font-size: 11px; }
+.inventory-lines-dialog { width: min(1120px, calc(100% - 24px)); }
+.inventory-lines-scroll { max-height: min(55vh, 540px); overflow: auto; border: 1px solid var(--line); border-radius: 9px; }
+.inventory-lines-scroll .members-table { min-width: 760px; }
+.inventory-line-input { width: 90px !important; text-align: center; }
+.inventory-post-warning { padding: 10px; border: 1px solid #f0d8a9; border-radius: 9px; color: #79551c !important; background: #fff9ed; }
+.inventory-dialog-content .transfer-quote-actions { justify-content: flex-start; }
 
 @keyframes rotate { to { transform: rotate(360deg); } }
 
@@ -248,12 +301,18 @@ h1 { margin: 7px 0 3px; font-size: clamp(23px, 2.5vw, 31px); font-weight: 800; l
     .member-tab.selected::after { right: 8px; bottom: -1px; left: 8px; }
     .member-filters { width: 100%; }
     .search-field { width: auto; flex: 1; }
+    .pos-toolbar { align-items: stretch; flex-direction: column; gap: 8px; padding: 7px 12px 12px; }
+    .pos-toolbar .members-tabs { min-height: 42px; overflow-x: auto; }
+    .pos-toolbar .member-tab { padding: 0 9px; font-size: 10px; }
+    .pos-toolbar .member-tab.selected::after { right: 8px; bottom: -1px; left: 8px; }
     .filter-select select { max-width: 125px; }
     .role-filter { margin: 0 12px; }
     .members-table th, .members-table td { padding-right: 12px; padding-left: 12px; }
     .permission-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .permissions-list { padding: 12px; }
     .invitation-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .review-financial-fields { grid-template-columns: 1fr; }
+    .review-financial-fields p { grid-column: auto; }
 }
 
 @media (max-width: 430px) {

@@ -13,13 +13,31 @@ date_default_timezone_set($config['timezone']);
 $path=getenv('SAM_CONFIG_OUTPUT')?:'/etc/mikrotik-usermanager/app-config.php';
 if(file_exists($path))throw new RuntimeException('Protected config already exists');
 $db=new PDO('mysql:host=127.0.0.1;port='.$config['db_port'].';dbname=radius;charset=utf8mb4','sam_app',$config['db_pass'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+$catalogs=['permissions.json','roles.json','role-permissions.json','chart.json'];
+$databaseCandidates=[__DIR__.'/database',dirname(__DIR__).'/database'];
+$databaseDir=null;
+foreach($databaseCandidates as $candidate){
+ $complete=true;
+ foreach($catalogs as $catalog){
+  if(!is_file($candidate.'/'.$catalog)||!is_readable($candidate.'/'.$catalog)){
+   $complete=false;
+   break;
+  }
+ }
+ if($complete){$databaseDir=$candidate;break;}
+}
+if($databaseDir===null)throw new RuntimeException('Required database catalogs are missing or unreadable in: '.implode(' or ',$databaseCandidates));
+foreach($catalogs as $catalog){
+ $catalogPath=$databaseDir.'/'.$catalog;
+ if(!is_file($catalogPath)||!is_readable($catalogPath))throw new RuntimeException('Required database catalog is missing or unreadable: '.$catalogPath);
+}
 function insertRows(PDO $db,string $table,array $rows): void {
  foreach($rows as $row){$cols=array_keys($row);$q=$db->prepare('INSERT INTO `'.$table.'` (`'.implode('`,`',$cols).'`) VALUES('.implode(',',array_fill(0,count($cols),'?')).')');$q->execute(array_map(static fn($v)=>is_array($v)?json_encode($v,JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE):$v,array_values($row)));}
 }
 $db->beginTransaction();
 try {
  foreach(['permissions'=>'um_permission_catalog','roles'=>'um_roles_def','role-permissions'=>'um_role_permissions'] as $file=>$table){
-  $rows=json_decode(file_get_contents(__DIR__.'/database/'.$file.'.json'),true,512,JSON_THROW_ON_ERROR);
+  $rows=json_decode(file_get_contents($databaseDir.'/'.$file.'.json'),true,512,JSON_THROW_ON_ERROR);
   insertRows($db,$table,$rows);
  }
  insertRows($db,'um_admins',[[
@@ -46,7 +64,7 @@ try {
  ]);
  insertRows($db,'um_card_templates',[['network_id'=>1,'name'=>'قالب الطباعة الافتراضي','network_name'=>required('SAM_NETWORK_NAME'),'cards_per_page'=>24,'hotspot_url'=>'http://10.5.50.1/login']]);
  $accountIds=[];
- foreach(json_decode(file_get_contents(__DIR__.'/database/chart.json'),true,512,JSON_THROW_ON_ERROR) as $account){
+ foreach(json_decode(file_get_contents($databaseDir.'/chart.json'),true,512,JSON_THROW_ON_ERROR) as $account){
   $parent=$account['parent_code'];unset($account['parent_code']);
   $account['parent_id']=$parent!==null?($accountIds[$parent]??null):null;
   insertRows($db,'um_chart_of_accounts',[$account+['network_id'=>1,'is_active'=>1,'balance'=>0,'owner_admin_id'=>1]]);
