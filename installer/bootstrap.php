@@ -13,9 +13,21 @@ date_default_timezone_set($config['timezone']);
 $path=getenv('SAM_CONFIG_OUTPUT')?:'/etc/mikrotik-usermanager/app-config.php';
 if(file_exists($path))throw new RuntimeException('Protected config already exists');
 $db=new PDO('mysql:host=127.0.0.1;port='.$config['db_port'].';dbname=radius;charset=utf8mb4','sam_app',$config['db_pass'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
-$databaseDir=__DIR__.'/database';
-if(!is_dir($databaseDir))$databaseDir=dirname(__DIR__).'/database';
-foreach(['permissions.json','roles.json','role-permissions.json','chart.json'] as $catalog){
+$catalogs=['permissions.json','roles.json','role-permissions.json','chart.json'];
+$databaseCandidates=[__DIR__.'/database',dirname(__DIR__).'/database'];
+$databaseDir=null;
+foreach($databaseCandidates as $candidate){
+ $complete=true;
+ foreach($catalogs as $catalog){
+  if(!is_file($candidate.'/'.$catalog)||!is_readable($candidate.'/'.$catalog)){
+   $complete=false;
+   break;
+  }
+ }
+ if($complete){$databaseDir=$candidate;break;}
+}
+if($databaseDir===null)throw new RuntimeException('Required database catalogs are missing or unreadable in: '.implode(' or ',$databaseCandidates));
+foreach($catalogs as $catalog){
  $catalogPath=$databaseDir.'/'.$catalog;
  if(!is_file($catalogPath)||!is_readable($catalogPath))throw new RuntimeException('Required database catalog is missing or unreadable: '.$catalogPath);
 }
