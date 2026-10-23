@@ -15,6 +15,13 @@ def build():
         raise SystemExit('Output already exists; refusing overwrite.')
     shutil.copytree(ROOT / 'installer', output)
     shutil.copytree(ROOT / 'database', output / 'database')
+    required_catalogs = ['permissions.json', 'roles.json', 'role-permissions.json', 'chart.json']
+    missing_catalogs = [catalog for catalog in required_catalogs if not (output / 'database' / catalog).is_file()]
+    if missing_catalogs or not (output / 'bootstrap.php').is_file():
+        raise SystemExit('Incomplete installer bundle: ' + ', '.join(missing_catalogs or ['bootstrap.php']))
+    bootstrap = (output / 'bootstrap.php').read_text(encoding='utf-8')
+    if "$databaseDir=__DIR__.'/database'" not in bootstrap or "$databaseDir.'/'.$catalog" not in bootstrap:
+        raise SystemExit('Installer bootstrap does not resolve catalogs from the bundle layout.')
     with tarfile.open(output / 'application.tar.gz', 'w:gz') as tar:
         for path in sorted((ROOT / 'application').rglob('*')):
             if not path.is_file():

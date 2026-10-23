@@ -16,6 +16,13 @@ def check(syntax=False):
     for rel in required:
         if not (ROOT / rel).is_file():
             errors.append('Missing: ' + rel)
+    catalogs = ['permissions.json', 'roles.json', 'role-permissions.json', 'chart.json']
+    for catalog in catalogs:
+        if not (ROOT / 'database' / catalog).is_file():
+            errors.append('Missing installer catalog: database/' + catalog)
+    bootstrap = (ROOT / 'installer/bootstrap.php').read_text(encoding='utf-8')
+    if "dirname(__DIR__).'/database'" not in bootstrap or "$databaseDir.'/'.$catalog" not in bootstrap:
+        errors.append('Installer bootstrap must resolve and validate catalogs from repository and bundle layouts')
     for path in files:
         rel = path.relative_to(ROOT).as_posix()
         runtime_module = rel == 'runtime/etc/freeradius/3.0/mods-available/detail.log'
