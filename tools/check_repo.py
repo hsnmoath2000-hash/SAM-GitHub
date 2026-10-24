@@ -12,7 +12,7 @@ IGNORED = {'.git', 'dist', 'node_modules', 'vendor', '__pycache__'}
 def check(syntax=False):
     errors = []
     files = [p for p in ROOT.rglob('*') if p.is_file() and not any(part in IGNORED for part in p.relative_to(ROOT).parts)]
-    required = ['application/api.php', 'application/config.php', 'application/index.php', 'application/includes/WalletCommerceService.php', 'database/schema.sql', 'installer/install.sh', 'installer/service-manager/bootstrap.sh', 'installer/service-manager/manager.py', 'installer/service-manager/sam-system-control', 'runtime/archive-metadata.json']
+    required = ['application/api.php', 'application/config.php', 'application/index.php', 'application/includes/WalletCommerceService.php', 'database/schema.sql', 'installer/install.sh', 'installer/service-manager/bootstrap.sh', 'installer/service-manager/manager.py', 'installer/service-manager/merge_control.py', 'installer/service-manager/sam-system-control', 'runtime/archive-metadata.json']
     for rel in required:
         if not (ROOT / rel).is_file():
             errors.append('Missing: ' + rel)
@@ -26,11 +26,33 @@ def check(syntax=False):
     service_bootstrap = (ROOT / 'installer/service-manager/bootstrap.sh').read_text(encoding='utf-8')
     if 'sha256sum --quiet -c SHA256SUMS' not in service_bootstrap or 'git -C "$ROOT/../.." rev-parse --show-toplevel' not in service_bootstrap:
         errors.append('Service manager bootstrap must verify bundles and allow trusted repository checkouts')
-    for index, embedded_python in enumerate(re.findall(r"python3 - <<'PY'\n(.*?)\nPY", service_bootstrap, re.S), 1):
+    if 'python3 "$ROOT/merge_control.py" /usr/local/sbin/sam-system-control' not in service_bootstrap:
+        errors.append('Service manager bootstrap must use the safe existing-control merger')
+    merge_control_path = ROOT / 'installer/service-manager/merge_control.py'
+    merge_control_source = merge_control_path.read_text(encoding='utf-8')
+    try:
+        merge_namespace = {'__name__': '_sam_merge_control_test'}
+        exec(compile(merge_control_source, str(merge_control_path), 'exec'), merge_namespace)
+        legacy_control = (
+            '#!/bin/bash\ncase "${1:-}" in\n'
+            '  service)\n    unit="${2:-}"; op="${3:-}"\n'
+            '    case "$unit" in apache2|php8.3-fpm|freeradius|mariadb) ;; *) exit 2;; esac\n'
+            '    ;;\nesac\n'
+        )
+        merged_control = merge_namespace['merge_control'](legacy_control)
+        expected_units = 'apache2|php8.3-fpm|freeradius|mariadb|php8.[1-9]-fpm|redis-server|cron'
+        if '  service-manager)' not in merged_control or expected_units not in merged_control:
+            errors.append('Service control merger omitted the manager route or supported units')
+        if merge_namespace['merge_control'](merged_control) != merged_control:
+            errors.append('Service control merger is not idempotent')
+        malformed_control = '#!/bin/bash\ncase "${1:-}" in\n  service) exit 2;;\nesac\n'
         try:
-            compile(embedded_python, 'service-manager-bootstrap-heredoc-' + str(index), 'exec')
-        except SyntaxError as error:
-            errors.append('Invalid embedded Python in service manager bootstrap: ' + str(error))
+            merge_namespace['merge_control'](malformed_control)
+            errors.append('Service control merger accepted an unsupported allowlist format')
+        except ValueError:
+            pass
+    except (SyntaxError, KeyError, ValueError) as error:
+        errors.append('Invalid service control merger: ' + str(error))
     service_control = (ROOT / 'installer/service-manager/sam-system-control').read_text(encoding='utf-8')
     if '  service-manager)' not in service_control or 'php8.[1-9]-fpm' not in service_control or 'redis-server|cron' not in service_control:
         errors.append('Service control must route service-manager commands and allow supported service units')
