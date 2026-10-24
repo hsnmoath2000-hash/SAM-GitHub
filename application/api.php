@@ -2403,7 +2403,20 @@ $currentAdminRole = (string)($_SESSION['role'] ?? 'admin');
                 'signature_roles' => ['المحاسب / المنظم', 'المستلم / العميل', 'المدير العام / الاعتماد'],
                 'paper_format' => 'a4',
                 'show_qr' => true,
-                'show_watermark' => true
+                'show_watermark' => true,
+                'show_logo' => true,
+                'show_header_title' => true,
+                'show_header_subtitle' => true,
+                'show_phone' => true,
+                'show_address' => true,
+                'show_tax_no' => true,
+                'show_doc_title' => true,
+                'show_print_date' => true,
+                'show_footer_notes' => true,
+                'show_signatures' => true,
+                'logo_width' => 80,
+                'logo_height' => 55,
+                'logo_position' => 'right'
             ];
 
             $merged = array_merge($defaults, $settings);
@@ -2442,8 +2455,26 @@ $currentAdminRole = (string)($_SESSION['role'] ?? 'admin');
                 'signature_roles' => $sigRoles,
                 'paper_format'    => in_array($input['paper_format'] ?? '', ['a4', 'thermal'], true) ? $input['paper_format'] : 'a4',
                 'show_qr'         => !empty($input['show_qr']),
-                'show_watermark'  => !empty($input['show_watermark'])
+                'show_watermark'  => !empty($input['show_watermark']),
+                'show_logo'       => !empty($input['show_logo']),
+                'show_header_title' => !empty($input['show_header_title']),
+                'show_header_subtitle' => !empty($input['show_header_subtitle']),
+                'show_phone'      => !empty($input['show_phone']),
+                'show_address'    => !empty($input['show_address']),
+                'show_tax_no'     => !empty($input['show_tax_no']),
+                'show_doc_title'  => !empty($input['show_doc_title']),
+                'show_print_date' => !empty($input['show_print_date']),
+                'show_footer_notes' => !empty($input['show_footer_notes']),
+                'show_signatures' => !empty($input['show_signatures']),
+                'logo_width'      => max(24, min(180, (int)($input['logo_width'] ?? 80))),
+                'logo_height'     => max(24, min(180, (int)($input['logo_height'] ?? 55))),
+                'logo_position'   => in_array($input['logo_position'] ?? '', ['right', 'left', 'top'], true) ? $input['logo_position'] : 'right'
             ];
+            foreach (['primary_color', 'accent_color'] as $colorField) {
+                if (!preg_match('/^#[0-9a-fA-F]{6}$/', $settings[$colorField])) {
+                    $settings[$colorField] = $colorField === 'primary_color' ? '#0f172a' : '#0284c7';
+                }
+            }
 
             $jsonStr = json_encode($settings, JSON_UNESCAPED_UNICODE);
             $service->setSettingValue($settingKey, $jsonStr);
@@ -3105,6 +3136,69 @@ case 'send_whatsapp_report':
             ]);
             break;
 
+                // --- ENTERPRISE SNMP FLEET MONITORING SUITE ---
+        case 'get_snmp_devices':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_view', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse(['success' => true, 'devices' => $snmp->getDevices($netId)]);
+            break;
+
+        case 'add_snmp_device':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_manage', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse($snmp->addDevice($input, $netId));
+            break;
+
+        case 'update_snmp_device':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_manage', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+            $id = (int)($input['id'] ?? ($_GET['id'] ?? 0));
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse($snmp->updateDevice($id, $input, $netId));
+            break;
+
+        case 'delete_snmp_device':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_manage', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+            $id = (int)($input['id'] ?? ($_GET['id'] ?? 0));
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse($snmp->deleteDevice($id, $netId));
+            break;
+
+        case 'poll_snmp_device':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_view', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+            $id = (int)($input['id'] ?? ($_GET['id'] ?? 0));
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse($snmp->pollDevice($id, $netId));
+            break;
+
+        case 'test_snmp_device':
+            require_once __DIR__ . '/includes/SnmpFleetMonitorService.php';
+            $scopeContext = legacyAuthorizationContext();
+            $scopeContext->assertCan(['network_monitor', 'routers_manage', 'routers', 'settings']);
+            $netId = (int)$scopeContext->activeNetworkId();
+            $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+            $snmp = new SnmpFleetMonitorService($db);
+            jsonResponse($snmp->testDevice($input, $netId));
+            break;
+
         // --- ROUTER CONTROL SUITE & HOTSPOT MANAGER ---
 
         case 'get_router_comprehensive_status':
@@ -3407,6 +3501,16 @@ case 'send_whatsapp_report':
 
                 jsonResponse(['error' => 'لم يتم اختيار صورة PNG'], 400);
 
+            }
+
+            break;
+
+        case 'upload_print_logo':
+
+            if (isset($_FILES['image'])) {
+                jsonResponse($service->uploadPrintLogo($_FILES['image']));
+            } else {
+                jsonResponse(['success' => false, 'error' => 'لم يتم اختيار ملف الشعار'], 400);
             }
 
             break;

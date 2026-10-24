@@ -735,6 +735,7 @@
             p.style.display = (p.id === 'subtab-panel-' + tab) ? 'block' : 'none';
         });
         if (tab === 'jobs') this.loadOwnerJobs();
+        if (tab === 'updates') this.loadOwnerUpdateStatus();
         if (tab === 'firewall') this.loadOwnerFirewall();
         if (tab === 'logs') this.loadOwnerLogs();
     };
@@ -776,6 +777,9 @@
                     </button>
                     <button class="owner-subtab-btn ${currentSub === 'jobs' ? 'active' : ''}" data-subtab="jobs" onclick="App.switchOwnerSubTab('jobs')">
                         <span>⚙️</span> مهام الخلفية والـ API
+                    </button>
+                    <button class="owner-subtab-btn ${currentSub === 'updates' ? 'active' : ''}" data-subtab="updates" onclick="App.switchOwnerSubTab('updates')">
+                        <span>📦</span> تحديثات النظام
                     </button>
                     <button class="owner-subtab-btn" data-subtab="firewall" onclick="App.switchTab('owner_firewall')" style="border-color:#38bdf8; background:#f0f9ff; color:#0369a1; font-weight:700;">
                         <span>🛡️</span> جدار الحماية المستقل ↗
@@ -887,6 +891,36 @@
                     </div>
                 </div>
 
+                <!-- SIGNED MANUAL SYSTEM UPDATE -->
+                <div id="subtab-panel-updates" class="owner-subtab-panel" style="display:${currentSub === 'updates' ? 'block' : 'none'}">
+                    <div class="owner-section" style="margin-bottom:16px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+                            <div>
+                                <h3 style="margin:0 0 6px;">📦 التحديث اليدوي الآمن للنظام</h3>
+                                <p style="margin:0;color:var(--text-muted);line-height:1.7;">ارفع حزمة SAM الرسمية الموقعة. تُفحص البنية والتوقيع وسلامة الملفات قبل السماح بالتطبيق. التحديث الحالي يحدّث ملفات التطبيق فقط ولا يغير قاعدة البيانات أو يعيد تشغيل RADIUS أو SSTP.</p>
+                            </div>
+                            <button class="mt-btn" onclick="App.loadOwnerUpdateStatus()">⟳ فحص الحالة</button>
+                        </div>
+                        <div id="owner-update-status" style="margin-top:14px;padding:12px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;">جاري فحص مدير التحديث...</div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:14px;">
+                            <section style="padding:16px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;">
+                                <h4 style="margin:0 0 8px;">١. اختيار ورفع الحزمة</h4>
+                                <p style="font-size:12px;color:var(--text-muted);">اختر ملف تحديث SAM بصيغة <code>.tar.gz</code> (الحد 64MB). لا ترفع نسخة قاعدة بيانات أو نسخة احتياطية.</p>
+                                <input id="owner-update-file" class="mt-input" type="file" accept=".tar.gz,application/gzip" onchange="App.resetOwnerUpdateStage()">
+                                <button id="owner-update-upload-btn" class="mt-btn mt-btn-primary" style="margin-top:10px;" onclick="App.uploadOwnerUpdate()">⬆️ رفع وفحص التوقيع</button>
+                            </section>
+                            <section style="padding:16px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;">
+                                <h4 style="margin:0 0 8px;">٢. مراجعة ثم تطبيق</h4>
+                                <div id="owner-update-preview" style="min-height:52px;color:var(--text-muted);">لن يتاح التطبيق قبل نجاح فحص التوقيع والحزمة.</div>
+                                <button id="owner-update-apply-btn" class="mt-btn mt-btn-success" style="margin-top:10px;" disabled onclick="App.applyOwnerUpdate()">✅ تطبيق التحديث مع نسخة رجوع</button>
+                            </section>
+                        </div>
+                        <div style="margin-top:14px;padding:12px;border-inline-start:4px solid #0ea5e9;background:#eff6ff;color:#1e3a8a;font-size:12px;line-height:1.7;">
+                            التحديث ينسخ ملفات التطبيق إلى مكانها بعد فحص PHP، ويحفظ نسخة من ملفات التطبيق السابقة. عند فشل الفحص اللاحق يحاول الرجوع للنسخة السابقة. الإصدارات التي تحتاج تغيير مخطط قاعدة البيانات غير مقبولة بهذه القناة حتى تصدر لها ترحيلة مستقلة ومراجعة.
+                        </div>
+                    </div>
+                </div>
+
                 <!-- SUBTAB 3: FIREWALL & SECURITY -->
                 <div id="subtab-panel-firewall" class="owner-subtab-panel" style="display:${currentSub === 'firewall' ? 'block' : 'none'}">
                     <div class="owner-section">
@@ -952,6 +986,68 @@
             });
         } else {
             document.getElementById('main-view').innerHTML = innerContent;
+        }
+        if (currentSub === 'updates') this.loadOwnerUpdateStatus();
+    };
+
+    App.ownerUpdateStage = null;
+    App.resetOwnerUpdateStage = function () {
+        this.ownerUpdateStage = null;
+        const preview = document.getElementById('owner-update-preview');
+        const button = document.getElementById('owner-update-apply-btn');
+        if (preview) preview.textContent = 'اختر الحزمة الجديدة وارفعها لإجراء الفحص.';
+        if (button) button.disabled = true;
+    };
+
+    App.loadOwnerUpdateStatus = async function () {
+        const host = document.getElementById('owner-update-status');
+        if (!host) return;
+        host.textContent = 'جاري فحص مدير التحديث...';
+        const result = await this.api('owner_system_update_status');
+        if (!result?.success) {
+            host.innerHTML = `<b style="color:#b91c1c;">مدير التحديث غير مهيأ على هذا الخادم.</b><div style="margin-top:5px;">${this.escape(result?.error || 'يلزم إصدار المثبت المزوّد بأداة التحديث الموقعة.')}</div>`;
+            return;
+        }
+        host.innerHTML = `<b style="color:#047857;">🟢 مدير التحديث جاهز</b><div style="margin-top:5px;">${result.installed ? 'تم التعرف على تثبيت SAM.' : 'لم يتم التعرف على ملف إعداد SAM.'} الإصدار: <code>${this.escape(result.current_version || 'غير مسجل بعد')}</code>؛ الحزم المرحّلة: ${(result.staged || []).length}</div>`;
+    };
+
+    App.uploadOwnerUpdate = async function () {
+        const input = document.getElementById('owner-update-file');
+        const file = input?.files?.[0];
+        if (!file) return this.toast('اختر حزمة تحديث أولاً', 'warning');
+        const form = new FormData();
+        form.append('update_package', file, file.name);
+        const preview = document.getElementById('owner-update-preview');
+        if (preview) preview.textContent = 'جارٍ رفع الحزمة والتحقق من التوقيع ومحتوياتها...';
+        const result = await this.api('owner_system_update_upload', {}, 'POST', form);
+        if (!result?.success) {
+            if (preview) preview.innerHTML = `<span style="color:#b91c1c;">فشل الفحص: ${this.escape(result?.error || 'خطأ غير معروف')}</span>`;
+            this.toast(result?.error || 'فشل فحص الحزمة', 'danger');
+            return;
+        }
+        this.ownerUpdateStage = { id: result.id, version: result.version };
+        if (preview) preview.innerHTML = `<b style="color:#047857;">✓ اجتازت الحزمة الفحص</b><div>الإصدار: <code>${this.escape(result.version)}</code></div><div>تغييرات قاعدة البيانات: ${Number(result.database_migrations || 0)}؛ خدمات يعاد تشغيلها: ${(result.restarted_services || []).length}</div><small>المعرف: ${this.escape(result.id)}</small>`;
+        const button = document.getElementById('owner-update-apply-btn');
+        if (button) button.disabled = false;
+        this.toast('تم التحقق من التوقيع وبنية الحزمة', 'success');
+    };
+
+    App.applyOwnerUpdate = async function () {
+        if (!this.ownerUpdateStage?.id) return this.toast('ارفع حزمة ناجحة الفحص أولاً', 'warning');
+        const message = `تطبيق الإصدار ${this.ownerUpdateStage.version}؟\nسيُنشأ نسخ رجوع لملفات التطبيق. لن تتغير قاعدة البيانات ولن يعاد تشغيل RADIUS أو SSTP.`;
+        if (!confirm(message)) return;
+        const button = document.getElementById('owner-update-apply-btn');
+        if (button) button.disabled = true;
+        const result = await this.api('owner_system_update_apply', {}, 'POST', { id: this.ownerUpdateStage.id, confirm: 'APPLY' });
+        const preview = document.getElementById('owner-update-preview');
+        if (result?.success) {
+            if (preview) preview.innerHTML = `<b style="color:#047857;">✓ اكتمل تحديث ملفات التطبيق</b><div>الإصدار: ${this.escape(result.version)}</div><div>نسخة الرجوع: <code>${this.escape(result.backup || '')}</code></div><div>الخدمات المعاد تشغيلها: لا يوجد</div>`;
+            this.ownerUpdateStage = null;
+            this.toast('اكتمل التحديث واجتاز الفحوصات اللاحقة', 'success');
+        } else {
+            if (preview) preview.innerHTML = `<span style="color:#b91c1c;">فشل التطبيق أو فحصه اللاحق. ${this.escape(result?.error || 'تحقق من سجل الخادم ونسخة الرجوع.')}</span>`;
+            this.toast(result?.error || 'فشل تطبيق التحديث', 'danger');
+            if (button) button.disabled = false;
         }
     };
 

@@ -213,6 +213,77 @@ require_once __DIR__ . '/includes/NetworkSubscriptionService.php';
 $networkSubscriptionService = new NetworkSubscriptionService($db);
 require __DIR__ . '/system_owner_notifications_api.php';
 
+function samOwnerUpdater(array $args): array {
+    $command = '/usr/bin/sudo -n /usr/local/sbin/sam-update ' . implode(' ', array_map('escapeshellarg', $args)) . ' 2>&1';
+    $lines = [];
+    exec($command, $lines, $code);
+    $raw = trim((string)end($lines));
+    $result = json_decode($raw, true);
+    if (!is_array($result)) {
+        return ['success'=>false, 'error'=>($raw !== '' ? mb_substr($raw, 0, 500) : 'مدير التحديث غير مهيأ على هذا الخادم'), 'exit_code'=>$code];
+    }
+    if ($code !== 0) $result['success'] = false;
+    return $result;
+}
+
+if ($action === 'owner_system_update_status') {
+    $result = samOwnerUpdater(['status']);
+    if (empty($result['success']) && !array_key_exists('installed', $result)) jsonResponse($result, 503);
+    jsonResponse(['success'=>true] + $result);
+}
+
+if ($action === 'owner_system_update_upload') {
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || !hash_equals('XMLHttpRequest', (string)($_SERVER['HTTP_X_SAM_REQUEST'] ?? ''))) {
+        jsonResponse(['success'=>false,'error'=>'CSRF_GUARD_FAILED'],403);
+    }
+    $file = $_FILES['update_package'] ?? null;
+    if (!is_array($file) || (int)($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK || !is_uploaded_file((string)($file['tmp_name'] ?? ''))) {
+        jsonResponse(['success'=>false,'error'=>'اختر حزمة تحديث صالحة ثم أعد المحاولة'],400);
+    }
+    if ((int)($file['size'] ?? 0) < 1024 || (int)$file['size'] > 64 * 1024 * 1024) {
+        jsonResponse(['success'=>false,'error'=>'حجم الحزمة خارج الحد المسموح (1KB إلى 64MB)'],413);
+    }
+    $incoming = '/var/lib/mikrotik-usermanager/updates/incoming';
+    if (!is_dir($incoming) || !is_writable($incoming)) {
+        jsonResponse(['success'=>false,'error'=>'مدير التحديث غير مهيأ. يلزم تثبيت أداة التحديث الموقعة على الخادم أولاً'],503);
+    }
+    if (count(glob($incoming . '/*.tar.gz') ?: []) >= 3) {
+        jsonResponse(['success'=>false,'error'=>'توجد ثلاث حزم مرحّلة بالفعل. احذف الحزم القديمة من إدارة الخادم ثم أعد الرفع'],429);
+    }
+    $freeBytes = @disk_free_space($incoming);
+    if ($freeBytes !== false && $freeBytes < ((int)$file['size'] + 256 * 1024 * 1024)) {
+        jsonResponse(['success'=>false,'error'=>'المساحة الحرة لا تكفي لرفع الحزمة وتجهيز نسخة الرجوع'],507);
+    }
+    $id = bin2hex(random_bytes(16));
+    $target = $incoming . '/' . $id . '.tar.gz';
+    if (!move_uploaded_file((string)$file['tmp_name'], $target)) jsonResponse(['success'=>false,'error'=>'تعذر حفظ حزمة التحديث في منطقة الفحص'],500);
+    @chmod($target, 0640);
+    $result = samOwnerUpdater(['verify', $id]);
+    if (empty($result['success'])) {
+        @unlink($target);
+        jsonResponse(['success'=>false,'error'=>$result['error'] ?? 'فشل التحقق من التوقيع والحزمة'],422);
+    }
+    samOwnerLogActivity($db, $service ?? null, 'owner_system_update_upload', 'system', 'رفع حزمة تحديث موثقة', 'version=' . (string)($result['version'] ?? ''), 'success', (int)$currentAdminId);
+    jsonResponse(['success'=>true,'id'=>$id,'version'=>$result['version'] ?? '',
+        'database_migrations'=>(int)($result['database_migrations'] ?? 0),
+        'restarted_services'=>$result['restarted_services'] ?? []]);
+}
+
+if ($action === 'owner_system_update_apply') {
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || !hash_equals('XMLHttpRequest', (string)($_SERVER['HTTP_X_SAM_REQUEST'] ?? ''))) {
+        jsonResponse(['success'=>false,'error'=>'CSRF_GUARD_FAILED'],403);
+    }
+    $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    $id = (string)($input['id'] ?? '');
+    if (!preg_match('/^[a-f0-9]{32}$/', $id) || ($input['confirm'] ?? '') !== 'APPLY') {
+        jsonResponse(['success'=>false,'error'=>'تأكيد التحديث غير صالح'],400);
+    }
+    $result = samOwnerUpdater(['apply', $id]);
+    if (empty($result['success'])) jsonResponse($result, 500);
+    samOwnerLogActivity($db, $service ?? null, 'owner_system_update_apply', 'system', 'تطبيق حزمة تحديث موثقة', 'version=' . (string)($result['version'] ?? ''), 'success', (int)$currentAdminId);
+    jsonResponse($result);
+}
+
 if ($action === 'owner_system_subscription_center') {
     jsonResponse($networkSubscriptionService->getCenter());
 }

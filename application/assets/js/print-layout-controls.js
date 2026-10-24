@@ -20,7 +20,15 @@
             position.appendChild(option);
         }
 
-        const storedPosition = saved('mt_print_sheet_pos', position.value || 'top_bar');
+        // The old default was top_bar. Move that legacy default to the new
+        // edge-to-edge bottom default while preserving other explicit choices.
+        const previousPosition = saved('mt_print_sheet_pos', '');
+        const storedPosition = previousPosition === 'top_bar'
+            ? 'bottom_center'
+            : (previousPosition || position.value || 'bottom_center');
+        if (previousPosition === 'top_bar' || !previousPosition) {
+            localStorage.setItem('mt_print_sheet_pos', storedPosition);
+        }
         if (position.querySelector(`option[value="${storedPosition}"]`)) position.value = storedPosition;
 
         const controls = document.createElement('div');
@@ -82,9 +90,7 @@
     App.printVouchersList = async function (...args) {
         const result = await originalPrintList(...args);
         this.installPrintLayoutControls();
-        if (document.getElementById('preview-sheet-pos')?.value === 'custom') {
-            await this.onPreviewMarginsChange();
-        }
+        await this.onPreviewMarginsChange();
         return result;
     };
 

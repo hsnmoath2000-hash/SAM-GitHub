@@ -3,6 +3,8 @@ require_once __DIR__ . '/config.php';
 $appTitle = htmlspecialchars(defined('APP_NAME') ? APP_NAME : 'SAM', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 $v = (string)max(
     filemtime(__DIR__ . '/assets/js/modules/app-core.js') ?: 0,
+    filemtime(__DIR__ . '/assets/js/qrcode-generator.min.js') ?: 0,
+    filemtime(__DIR__ . '/assets/js/modules/templates-designer.js') ?: 0,
     filemtime(__DIR__ . '/assets/js/modules/users-cards.js') ?: 0,
     filemtime(__DIR__ . '/assets/js/system-owner-console.js') ?: 0,
     filemtime(__DIR__ . '/assets/js/sam-customization.js') ?: 0,
@@ -68,6 +70,7 @@ $v = (string)max(
     </div>
 
     <!-- 1. SAM Modular Frontend Engine -->
+    <script src="assets/js/qrcode-generator.min.js?v=<?= $v ?>"></script>
     <script src="assets/js/modules/app-core.js?v=<?= $v ?>"></script>
     <script src="assets/js/sam-product-catalog.js?v=<?= $v ?>"></script>
     <script src="assets/js/sam-ui-components.js?v=<?= $v ?>"></script>

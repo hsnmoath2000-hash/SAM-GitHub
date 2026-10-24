@@ -7,14 +7,24 @@ APP=/var/www/mikrotik-usermanager
 STEP=preflight
 trap 'printf "Stopped at %s (line %s). Inspect the error before retrying; no automatic rollback is attempted.\n" "$STEP" "$LINENO" >&2' ERR
 die(){ printf 'ERROR: %s\n' "$*" >&2; exit 1; }
-[[ ${1:-} == --check || ${1:-} == --install ]] || die 'Usage: sudo bash install.sh --check | --install'
+[[ ${1:-} == --check || ${1:-} == --install ]] || die 'Usage: sudo bash install.sh --check | --install. This installer only supports a clean host; use the signed update package for upgrades.'
 MODE=$1
 [[ $EUID == 0 ]] || die 'Run as root.'
 [[ -z $(dpkg --audit) ]] || die 'Package manager interrupted: finish dpkg --configure -a before installation.'
 source /etc/os-release
 [[ $ID == ubuntu && ( $VERSION_ID == 22.04 || $VERSION_ID == 24.04 ) ]] || die 'Requires Ubuntu 22.04/24.04 LTS.'
 [[ $(uname -m) == x86_64 ]] || die 'Requires x86_64.'
-[[ ! -e $APP && ! -e /etc/mikrotik-usermanager && ! -e /etc/accel-ppp/accel-ppp.conf ]] || die 'Existing SAM installation. No files changed.'
+if [[ -e $APP || -e /etc/mikrotik-usermanager || -e /etc/accel-ppp/accel-ppp.conf ]]; then
+  die 'Existing SAM installation/configuration detected. Installer made no changes; use the signed in-app updater for upgrades.'
+fi
+for path in /etc/freeradius/3.0 /etc/apache2/sites-enabled/sam.conf /etc/php/8.3/fpm /var/lib/mysql/ibdata1; do
+  [[ ! -e $path ]] || die "Existing service/database state detected at $path; installer made no changes. Use a clean host."
+done
+for package in apache2 mariadb-server freeradius freeradius-mysql; do
+  if dpkg-query -W -f='${db:Status-Status}' "$package" 2>/dev/null | grep -qx installed; then
+    die "Existing service package detected: $package; installer made no changes. Use a clean host."
+  fi
+done
 [[ -s $ROOT/SHA256SUMS ]] || die 'Complete bundle required, not install.sh alone.'
 (cd "$ROOT" && sha256sum --quiet -c SHA256SUMS) || die 'Release checksum failed.'
 for file in application.tar.gz runtime.tar.gz database/schema.sql database/triggers.sql bootstrap.php render_runtime.py payload/accel-ppp-1.14.0.tar.gz; do
@@ -22,13 +32,17 @@ for file in application.tar.gz runtime.tar.gz database/schema.sql database/trigg
 done
 if command -v mariadb >/dev/null; then
  mariadb -NBe 'SELECT 1' >/dev/null || die 'Cannot inspect existing database safely.'
- [[ $(mariadb -NBe "SELECT COUNT(*) FROM information_schema.schemata WHERE schema_name='radius'") == 0 ]] || die 'Existing radius database.'
+ if [[ $(mariadb -NBe "SELECT COUNT(*) FROM information_schema.schemata WHERE schema_name='radius'") -gt 0 ]]; then
+  die 'Existing radius database detected. Installer made no changes and never drops databases.'
 fi
-for port in 80 443 8099 4406 3388 8088 2221; do
- [[ -z $(ss -H -ltn "sport = :$port") ]] || die "TCP $port is occupied; requires an empty host."
+fi
+for port in 80 443 8099 4406 3388 8088 2221 3306 6379; do
+ if [[ -n $(ss -H -ltn "sport = :$port") ]]; then
+   die "TCP $port is occupied; installer made no changes and will not stop services."
+ fi
 done
-for port in 1812 1813 3799; do
- [[ -z $(ss -H -lun "sport = :$port") ]] || die "UDP $port is occupied."
+for port in 1812 1813 3799 4406; do
+ [[ -z $(ss -H -lun "sport = :$port") ]] || die "UDP $port is occupied; installer made no changes."
 done
 echo 'Host and bundle preflight passed. No changes made.'
 [[ $MODE == --install ]] || exit 0
@@ -100,8 +114,8 @@ SAM_DB_PASSWORD=$(openssl rand -hex 32); SAM_RADIUS_SECRET=$(openssl rand -hex 3
 export SAM_DB_PASSWORD SAM_RADIUS_SECRET
 mariadb <<SQL
 CREATE DATABASE radius CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'sam_app'@'localhost' IDENTIFIED BY '$SAM_DB_PASSWORD';
-CREATE USER 'sam_app'@'127.0.0.1' IDENTIFIED BY '$SAM_DB_PASSWORD';
+CREATE OR REPLACE USER 'sam_app'@'localhost' IDENTIFIED BY '$SAM_DB_PASSWORD';
+CREATE OR REPLACE USER 'sam_app'@'127.0.0.1' IDENTIFIED BY '$SAM_DB_PASSWORD';
 GRANT ALL ON radius.* TO 'sam_app'@'localhost';
 GRANT ALL ON radius.* TO 'sam_app'@'127.0.0.1';
 SQL
@@ -145,14 +159,27 @@ done
 echo "SAM_STEP: services"
 STEP=services
 bash "$ROOT/service-manager/bootstrap.sh"
+echo "SAM_STEP: update-manager"
+STEP=update-manager
+install -d -m 0755 /usr/local/share/sam-updater /usr/local/sbin
+install -d -m 0750 -o root -g www-data /var/lib/mikrotik-usermanager/updates
+install -d -m 0770 -o www-data -g www-data /var/lib/mikrotik-usermanager/updates/incoming
+install -d -m 0700 /var/lib/mikrotik-usermanager/updates/work /var/backups/mikrotik-usermanager/updates
+install -m 0750 "$ROOT/updates/sam-update.py" /usr/local/sbin/sam-update
+install -m 0644 "$ROOT/updates/release-public.pem" /usr/local/share/sam-updater/release-public.pem
+UPDATE_SUDOERS=$(mktemp)
+printf '%s\n' 'www-data ALL=(root) NOPASSWD: /usr/local/sbin/sam-update *' > "$UPDATE_SUDOERS"
+visudo -cf "$UPDATE_SUDOERS" >/dev/null || die 'Unsafe update-manager sudoers rule.'
+install -m 0440 "$UPDATE_SUDOERS" /etc/sudoers.d/sam-update
+rm -f "$UPDATE_SUDOERS"
 sysctl -p /etc/sysctl.d/90-sam-forward.conf
 systemctl restart mariadb
 groupadd -f sam_um_importers
 ssh-keygen -A
 install -d -m 0755 /run/sshd
-a2dissite 000-default >/dev/null
+a2dissite 000-default 2>/dev/null || true
 a2enmod ssl rewrite headers proxy_fcgi setenvif >/dev/null
-a2dismod php8.3 >/dev/null
+a2dismod -f php8.3 2>/dev/null || true
 a2enconf php8.3-fpm sam-port >/dev/null
 a2ensite sam >/dev/null
 visudo -cf /etc/sudoers.d/sam-fresh

@@ -7,7 +7,7 @@ import shutil
 import subprocess
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-IGNORED = {'.git', 'dist', 'node_modules', 'vendor', '__pycache__'}
+IGNORED = {'.git', 'dist', 'node_modules', 'vendor', '__pycache__', 'copilot-worktrees'}
 
 def check(syntax=False):
     errors = []
@@ -19,7 +19,8 @@ def check(syntax=False):
     for path in files:
         rel = path.relative_to(ROOT).as_posix()
         runtime_module = rel == 'runtime/etc/freeradius/3.0/mods-available/detail.log'
-        if (path.suffix in {'.pem', '.key', '.keystore', '.p12', '.pfx', '.sqlite', '.sqlite3', '.db', '.dump', '.log'} and not runtime_module) or path.name in {'.env', 'app-config.php', 'test-owner.json'} or path.name.endswith('.sql.gz'):
+        public_release_key = rel == 'installer/updates/release-public.pem'
+        if (path.suffix in {'.pem', '.key', '.keystore', '.p12', '.pfx', '.sqlite', '.sqlite3', '.db', '.dump', '.log'} and not runtime_module and not public_release_key) or path.name in {'.env', 'app-config.php', 'test-owner.json'} or path.name.endswith('.sql.gz'):
             errors.append('Private/operational file: ' + rel)
         if any(part in {'uploads', 'backups', 'logs', 'sessions', 'downloads', 'auth_info_baileys'} for part in path.relative_to(ROOT).parts):
             errors.append('Operational directory: ' + rel)

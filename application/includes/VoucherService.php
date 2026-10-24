@@ -222,6 +222,9 @@ class VoucherService extends BaseService {
         // Query metadata and cleartext password while strictly blocking used cards
         // Rule: If a card is in a sheet, and any card in that sheet is used, the whole sheet is blocked
         $sql = "SELECT m.*, rc.value as password, ug.groupname as profile_name,
+                       COALESCE(NULLIF(m.validity, ''), p.validity) AS card_validity,
+                       COALESCE(p.transfer_limit, 0) AS transfer_limit,
+                       COALESCE(p.uptime_limit, 0) AS uptime_limit,
                        (m.first_login IS NOT NULL OR m.status IN ('used', 'expired') OR EXISTS (SELECT 1 FROM radacct ra WHERE ra.network_id=m.network_id AND ra.username = m.username)) as is_used,
                        EXISTS (
                            SELECT 1 FROM um_vouchers_meta sm 
@@ -231,6 +234,7 @@ class VoucherService extends BaseService {
                 FROM radcheck rc
                 LEFT JOIN um_vouchers_meta m ON m.network_id=rc.network_id AND rc.username = m.username
                 LEFT JOIN radusergroup ug ON ug.network_id=rc.network_id AND rc.username = ug.username
+                LEFT JOIN um_profiles_def p ON p.network_id=ug.network_id AND p.name=ug.groupname
                 WHERE rc.network_id=? AND rc.username IN ($placeholders)
                   AND rc.attribute IN ('Cleartext-Password', 'User-Password')
                 ORDER BY m.sheet_no ASC, m.id ASC";
@@ -273,10 +277,14 @@ class VoucherService extends BaseService {
         $batch = $stmt->fetch();
         // Fetch cards (Excluding any sheets that have used/active session cards)
         // Rule: Used cards cannot be printed, and sheets containing any used card are fully excluded from printing
-        $stmt2 = $this->db->prepare("SELECT m.*, rc.value as password, ug.groupname as profile_name 
+        $stmt2 = $this->db->prepare("SELECT m.*, rc.value as password, ug.groupname as profile_name,
+                                      COALESCE(NULLIF(m.validity, ''), p.validity) AS card_validity,
+                                      COALESCE(p.transfer_limit, 0) AS transfer_limit,
+                                      COALESCE(p.uptime_limit, 0) AS uptime_limit
                                       FROM um_vouchers_meta m
                                       LEFT JOIN radcheck rc ON rc.network_id=m.network_id AND m.username = rc.username AND rc.attribute = 'Cleartext-Password'
                                       LEFT JOIN radusergroup ug ON ug.network_id=m.network_id AND m.username = ug.username
+                                      LEFT JOIN um_profiles_def p ON p.network_id=ug.network_id AND p.name=ug.groupname
                                       WHERE m.network_id=? AND m.batch_id = ?
                                         AND m.sheet_no NOT IN (
                                             SELECT DISTINCT sub_m.sheet_no 
@@ -400,7 +408,7 @@ class VoucherService extends BaseService {
         if (empty($profile)) {
             throw new Exception('يجب تحديد الباقة المستهدفة لتوليد الدفعة');
         }
-        $pStmt = $this->db->prepare("SELECT price, package_type FROM um_profiles_def WHERE network_id=? AND name = ?");
+        $pStmt = $this->db->prepare("SELECT price, package_type, validity, transfer_limit, uptime_limit FROM um_profiles_def WHERE network_id=? AND name = ?");
         $pStmt->execute([$networkId,$profile]);
         $profRow = $pStmt->fetch(PDO::FETCH_ASSOC);
         if (!$profRow) {
@@ -457,6 +465,9 @@ class VoucherService extends BaseService {
                 'password' => $password,
                 'profile' => $profile,
                 'price' => $price,
+                'validity' => (string)($profRow['validity'] ?? ''),
+                'transfer_limit' => (int)($profRow['transfer_limit'] ?? 0),
+                'uptime_limit' => (int)($profRow['uptime_limit'] ?? 0),
                 'batch_id' => $batchId,
                 'sheet_no' => $sheetNo
             ];
@@ -958,6 +969,40 @@ class VoucherService extends BaseService {
             'height' => $height,
         ];
     }
+
+    public function uploadPrintLogo($file) {
+        if (!is_array($file) || ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK || empty($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+            throw new Exception('تعذر استلام ملف الشعار');
+        }
+        $maxBytes = 3 * 1024 * 1024;
+        if (empty($file['size']) || (int)$file['size'] > $maxBytes) {
+            throw new Exception('يجب ألا يتجاوز حجم الشعار 3 ميجابايت');
+        }
+        $imageInfo = @getimagesize($file['tmp_name']);
+        $allowedTypes = [IMAGETYPE_PNG => 'png', IMAGETYPE_JPEG => 'jpg', IMAGETYPE_WEBP => 'webp'];
+        $imageType = (int)($imageInfo[2] ?? 0);
+        if (!$imageInfo || !isset($allowedTypes[$imageType])) {
+            throw new Exception('صيغة الشعار غير مدعومة؛ استخدم PNG أو JPG أو WebP');
+        }
+        $width = (int)($imageInfo[0] ?? 0);
+        $height = (int)($imageInfo[1] ?? 0);
+        if ($width < 1 || $height < 1 || $width > 4096 || $height > 4096 || ($width * $height) > 12000000) {
+            throw new Exception('أبعاد صورة الشعار غير صالحة أو كبيرة جدًا');
+        }
+        $uploadDir = __DIR__ . '/../uploads/document-logos/';
+        if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true)) {
+            throw new Exception('تعذر إنشاء مجلد شعارات المستندات');
+        }
+        $extension = $allowedTypes[$imageType];
+        $filename = 'logo_' . date('Ymd_His') . '_' . bin2hex(random_bytes(8)) . '.' . $extension;
+        $targetPath = $uploadDir . $filename;
+        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            throw new Exception('تعذر حفظ صورة الشعار على الخادم');
+        }
+        @chmod($targetPath, 0644);
+        return ['success' => true, 'url' => 'uploads/document-logos/' . $filename, 'width' => $width, 'height' => $height];
+    }
+
     // ==========================================
     // USERS & VOUCHERS + USAGE METRICS
     // ==========================================

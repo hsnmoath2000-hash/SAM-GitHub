@@ -37,7 +37,20 @@
                 signature_roles: ['المحاسب / المنظم', 'المستلم / العميل', 'المدير العام / الاعتماد'],
                 paper_format: 'a4',
                 show_qr: true,
-                show_watermark: true
+                show_watermark: true,
+                show_logo: true,
+                show_header_title: true,
+                show_header_subtitle: true,
+                show_phone: true,
+                show_address: true,
+                show_tax_no: true,
+                show_doc_title: true,
+                show_print_date: true,
+                show_footer_notes: true,
+                show_signatures: true,
+                logo_width: 80,
+                logo_height: 55,
+                logo_position: 'right'
             };
         },
 
@@ -75,6 +88,18 @@
             return String(str).replace(/[&<>"']/g, m => ({
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
             }[m]));
+        },
+
+        isPrintOptionEnabled(key, settings = this._cachedPrintSettings || {}) {
+            const value = settings?.[key];
+            return value !== false && value !== 0 && value !== '0';
+        },
+
+        safeImageUrl(value) {
+            const url = String(value || '').trim();
+            if (!url || /^(?:javascript|data|vbscript):/i.test(url)) return '';
+            if (/^https:\/\//i.test(url) || /^(?:\.\.\/|\/|[a-z0-9_-]+\/)/i.test(url)) return url;
+            return '';
         },
 
         // Generate QR code URL via quickchart / local
@@ -314,30 +339,42 @@
         renderHeader(docTitle, docSubtitle = '', metaItems = [], customSettings = null) {
             const settings = customSettings || this._cachedPrintSettings || {};
             const net = this.getNetworkInfo();
+            const enabled = (key) => this.isPrintOptionEnabled(key, settings);
             const headerTitle = settings.header_title || net.name;
             const headerSubtitle = settings.header_subtitle || 'نظام الإدارة المحاسبية والشبكات المتقدم';
-            const logo = settings.logo_url || net.logo;
+            const logo = this.safeImageUrl(settings.logo_url || net.logo);
             const phone = settings.phone || net.phone;
             const address = settings.address || net.address;
             const taxNo = settings.tax_no || '';
-            const primaryColor = settings.primary_color || '#0f172a';
-            const accentColor = settings.accent_color || '#0284c7';
+            const primaryColor = /^#[0-9a-f]{6}$/i.test(settings.primary_color || '') ? settings.primary_color : '#0f172a';
+            const accentColor = /^#[0-9a-f]{6}$/i.test(settings.accent_color || '') ? settings.accent_color : '#0284c7';
+            const logoWidth = Math.max(24, Math.min(180, parseInt(settings.logo_width, 10) || 80));
+            const logoHeight = Math.max(24, Math.min(180, parseInt(settings.logo_height, 10) || 55));
+            const logoPosition = ['right', 'left', 'top'].includes(settings.logo_position) ? settings.logo_position : 'right';
+            const contacts = [
+                enabled('show_phone') && phone ? `هاتف: ${this.escape(phone)}` : '',
+                enabled('show_address') && address ? `العنوان: ${this.escape(address)}` : '',
+                enabled('show_tax_no') && taxNo ? `الرقم الضريبي: ${this.escape(taxNo)}` : ''
+            ].filter(Boolean);
+            const printedAt = new Date();
+            const logoStyle = logoPosition === 'top'
+                ? `display:block; width:${logoWidth}px; height:${logoHeight}px; object-fit:contain; margin:0 auto 6px;`
+                : `display:block; width:${logoWidth}px; height:${logoHeight}px; object-fit:contain; flex:0 0 auto; order:${logoPosition === 'left' ? 2 : 0};`;
+            const logoHtml = enabled('show_logo') && logo
+                ? `<img src="${this.escape(logo)}" alt="شعار المنشأة" style="${logoStyle}" onerror="this.style.display='none';" />`
+                : '';
+            const identityStyle = logoPosition === 'top'
+                ? 'display:flex; flex-direction:column; align-items:center; gap:0; text-align:center;'
+                : 'display:flex; flex-direction:row; align-items:center; gap:12px; text-align:right;';
 
             return `
-            <div class="sam-print-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:2.5px solid ${primaryColor}; padding-bottom:12px; margin-bottom:16px;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <img src="${logo}" style="height:55px; width:auto; max-width:80px; object-fit:contain;" onerror="this.style.display='none';" />
-                    <div>
-                        <div style="font-size:18px; font-weight:900; color:${primaryColor};">${this.escape(headerTitle)}</div>
-                        <div style="font-size:11px; color:#64748b; font-weight:600;">${this.escape(headerSubtitle)}</div>
-                        ${phone ? `<div style="font-size:11px; color:#64748b;">هاتف: ${this.escape(phone)}${address ? ' | العنوان: ' + this.escape(address) : ''}</div>` : (address ? `<div style="font-size:11px; color:#64748b;">العنوان: ${this.escape(address)}</div>` : '')}
-                        ${taxNo ? `<div style="font-size:10.5px; color:#64748b;">الرقم الضريبي: <code>${this.escape(taxNo)}</code></div>` : ''}
-                    </div>
+            <div class="sam-print-header" style="display:flex; justify-content:space-between; align-items:center; gap:16px; border-bottom:2.5px solid ${primaryColor}; padding-bottom:12px; margin-bottom:16px;">
+                <div style="${identityStyle}">
+                    ${logoPosition === 'left' ? `<div style="min-width:0;">${enabled('show_header_title') ? `<div style="font-size:18px; font-weight:900; color:${primaryColor};">${this.escape(headerTitle)}</div>` : ''}${enabled('show_header_subtitle') && headerSubtitle ? `<div style="font-size:11px; color:#64748b; font-weight:600;">${this.escape(headerSubtitle)}</div>` : ''}${contacts.length ? `<div style="font-size:10.5px; color:#64748b;">${contacts.join(' | ')}</div>` : ''}</div>${logoHtml}` : `${logoHtml}<div style="min-width:0;">${enabled('show_header_title') ? `<div style="font-size:18px; font-weight:900; color:${primaryColor};">${this.escape(headerTitle)}</div>` : ''}${enabled('show_header_subtitle') && headerSubtitle ? `<div style="font-size:11px; color:#64748b; font-weight:600;">${this.escape(headerSubtitle)}</div>` : ''}${contacts.length ? `<div style="font-size:10.5px; color:#64748b;">${contacts.join(' | ')}</div>` : ''}</div>`}
                 </div>
                 <div style="text-align:left;">
-                    <div style="font-size:17px; font-weight:800; color:${accentColor};">${this.escape(docTitle)}</div>
-                    ${docSubtitle ? `<div style="font-size:12px; font-weight:700; color:#475569;">${this.escape(docSubtitle)}</div>` : ''}
-                    <div style="font-size:11px; color:#64748b; margin-top:2px;">تاريخ الطباعة: ${new Date().toLocaleDateString('ar-YE')} ${new Date().toLocaleTimeString('ar-YE')}</div>
+                    ${enabled('show_doc_title') ? `<div style="font-size:17px; font-weight:800; color:${accentColor};">${this.escape(docTitle)}</div>${docSubtitle ? `<div style="font-size:12px; font-weight:700; color:#475569;">${this.escape(docSubtitle)}</div>` : ''}` : ''}
+                    ${enabled('show_print_date') ? `<div style="font-size:11px; color:#64748b; margin-top:2px;">تاريخ الطباعة: ${printedAt.toLocaleDateString('ar-YE')} ${printedAt.toLocaleTimeString('ar-YE')}</div>` : ''}
                 </div>
             </div>
             ${metaItems.length > 0 ? `
@@ -353,19 +390,22 @@
             const savedRoles = Array.isArray(settings.signature_roles) && settings.signature_roles.length ? settings.signature_roles : null;
             const sigRoles = savedRoles || roles || ['المحاسب / المنظم', 'المستلم / العميل', 'المدير العام / الاعتماد'];
             const footerNotes = settings.footer_notes || '';
+            const showNotes = this.isPrintOptionEnabled('show_footer_notes', settings);
+            const showSignatures = this.isPrintOptionEnabled('show_signatures', settings);
 
             return `
-            ${footerNotes ? `
+            ${showNotes && footerNotes ? `
             <div style="margin-top:20px; padding:8px 12px; background:#f8fafc; border-right:4px solid ${settings.accent_color || '#0284c7'}; border-radius:4px; font-size:11px; color:#475569; line-height:1.5;">
                 <b>ملاحظات وشروط المستند:</b> ${this.escape(footerNotes)}
             </div>` : ''}
+            ${showSignatures ? `
             <div class="sam-print-signatures" style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:30px; padding-top:15px; border-top:1px dashed #cbd5e1; font-size:12px;">
                 ${sigRoles.map(r => `
                 <div style="text-align:center; min-width:140px;">
                     <div style="font-weight:700; color:#334155; margin-bottom:38px;">${this.escape(r)}</div>
                     <div style="border-top:1px solid #94a3b8; padding-top:4px; color:#64748b;">التوقيع / الختم: ...................</div>
                 </div>`).join('')}
-            </div>
+            </div>` : ''}
             `;
         },
 
@@ -410,7 +450,7 @@
                     </div>
 
                     <div style="display:flex; justify-content:center; margin:8px 0;">
-                        <img src="${this.getQrUrl(qrData, 80)}" style="width:75px; height:75px;" />
+                        ${this.isPrintOptionEnabled('show_qr') ? `<img src="${this.getQrUrl(qrData, 80)}" style="width:75px; height:75px;" />` : ''}
                     </div>
 
                     <div style="font-size:10px; margin-top:6px; display:flex; justify-content:space-between;">
@@ -476,7 +516,7 @@
                 <!-- Bottom QR & Signatures -->
                 <div style="display:flex; justify-content:space-between; align-items:flex-end;">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${this.getQrUrl(qrData, 90)}" style="width:70px; height:70px; border:1px solid #cbd5e1; border-radius:4px; padding:2px;" />
+                        ${this.isPrintOptionEnabled('show_qr') ? `<img src="${this.getQrUrl(qrData, 90)}" style="width:70px; height:70px; border:1px solid #cbd5e1; border-radius:4px; padding:2px;" />` : ''}
                         <div style="font-size:10.5px; color:#64748b;">
                             <div>المسؤول: <b>${this.escape(v.creator_name || 'Admin')}</b></div>
                             <div>رمز التحقق الإلكتروني</div>
@@ -844,7 +884,7 @@
                     </div>
 
                     <div style="display:flex; justify-content:center; margin:8px 0;">
-                        <img src="${this.getQrUrl(qrData, 75)}" style="width:70px; height:70px;" />
+                        ${this.isPrintOptionEnabled('show_qr') ? `<img src="${this.getQrUrl(qrData, 75)}" style="width:70px; height:70px;" />` : ''}
                     </div>
 
                     <div style="font-size:9.5px; color:#555; border-top:1px dashed #999; padding-top:4px;">
@@ -896,7 +936,7 @@
                             فقط <b>${tafqeetInv || '...........................................'}</b> لا غير.
                         </div>
                         <div style="margin-top:10px; display:flex; align-items:center; gap:8px;">
-                            <img src="${this.getQrUrl(qrData, 75)}" style="width:65px; height:65px; border:1px solid #cbd5e1; border-radius:4px; padding:2px;" />
+                            ${this.isPrintOptionEnabled('show_qr') ? `<img src="${this.getQrUrl(qrData, 75)}" style="width:65px; height:65px; border:1px solid #cbd5e1; border-radius:4px; padding:2px;" />` : ''}
                             <div style="font-size:10.5px; color:#64748b;">فاتورة ضريبية / مبيعات معتمدة إلكترونياً</div>
                         </div>
                     </div>
@@ -1208,7 +1248,7 @@
                     </table>
 
                     <div style="width:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid #cbd5e1; border-radius:6px; padding:12px; text-align:center; background:#f8fafc;">
-                        <img src="${this.getQrUrl(qrData, 120)}" style="width:110px; height:110px;" />
+                        ${this.isPrintOptionEnabled('show_qr') ? `<img src="${this.getQrUrl(qrData, 120)}" style="width:110px; height:110px;" />` : ''}
                         <div style="font-size:11px; font-weight:700; margin-top:8px;"><code>${this.escape(asset.asset_code || asset.id)}</code></div>
                         <div style="font-size:10px; color:#64748b;">ملصق تتبع الأصل الذكي</div>
                     </div>
@@ -1344,7 +1384,7 @@
                             <div style="font-size:8.5px; color:#475569; margin-top:2px;">كود: <b>${this.escape(a.asset_code || a.id)}</b></div>
                             ${a.mac_address ? `<div style="font-size:8px; color:#64748b;">MAC: ${this.escape(a.mac_address)}</div>` : ''}
                         </div>
-                        <img src="${this.getQrUrl(qrData, 60)}" style="width:40px; height:40px;" />
+                        ${this.isPrintOptionEnabled('show_qr') ? `<img src="${this.getQrUrl(qrData, 60)}" style="width:40px; height:40px;" />` : ''}
                     </div>
 
                     <div style="font-size:8px; color:#64748b; text-align:center; border-top:1px dashed #cbd5e1; padding-top:1px;">
@@ -1431,8 +1471,23 @@
                                     <input type="text" id="pset-tax-no" class="mt-input" value="${this.escape(settings.tax_no || '')}" style="width:100%;" placeholder="100293847" oninput="App.PrintEngine.updateSettingsLivePreview()" />
                                 </div>
                                 <div style="flex:1;">
-                                    <label style="font-weight:700; font-size:12px; margin-bottom:4px; display:block;">🖼️ رابط الشعار (Logo URL)</label>
-                                    <input type="text" id="pset-logo-url" class="mt-input" value="${this.escape(settings.logo_url || '')}" style="width:100%; direction:ltr; text-align:right;" placeholder="assets/img/log.png" oninput="App.PrintEngine.updateSettingsLivePreview()" />
+                                    <label style="font-weight:700; font-size:12px; margin-bottom:4px; display:block;">🖼️ الشعار (رابط أو صورة مرفوعة)</label>
+                                    <input type="text" id="pset-logo-url" class="mt-input" value="${this.escape(settings.logo_url || '')}" style="width:100%; direction:ltr; text-align:right;" placeholder="مسار أو رابط صورة الشعار" oninput="App.PrintEngine.updateSettingsLivePreview()" />
+                                    <input type="file" id="pset-logo-file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="App.PrintEngine.uploadPrintLogo(this, ${activeNetId})" />
+                                    <button type="button" class="mt-btn" style="margin-top:6px; width:100%;" onclick="document.getElementById('pset-logo-file').click()">⬆️ رفع صورة الشعار</button>
+                                </div>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1.2fr; gap:8px; padding:10px; background:#f8fafc; border:1px solid #dbe4ef; border-radius:8px;">
+                                <div><label style="font-size:11px; font-weight:700; display:block; margin-bottom:4px;">عرض الشعار (px)</label><input id="pset-logo-width" type="number" min="24" max="180" value="${Math.max(24, Math.min(180, parseInt(settings.logo_width, 10) || 80))}" class="mt-input" style="width:100%;" oninput="App.PrintEngine.updateSettingsLivePreview()" /></div>
+                                <div><label style="font-size:11px; font-weight:700; display:block; margin-bottom:4px;">ارتفاع الشعار (px)</label><input id="pset-logo-height" type="number" min="24" max="180" value="${Math.max(24, Math.min(180, parseInt(settings.logo_height, 10) || 55))}" class="mt-input" style="width:100%;" oninput="App.PrintEngine.updateSettingsLivePreview()" /></div>
+                                <div><label style="font-size:11px; font-weight:700; display:block; margin-bottom:4px;">موضع الشعار</label><select id="pset-logo-position" class="mt-select" style="width:100%;" onchange="App.PrintEngine.updateSettingsLivePreview()"><option value="right" ${(!settings.logo_position || settings.logo_position === 'right') ? 'selected' : ''}>يمين الهوية</option><option value="left" ${settings.logo_position === 'left' ? 'selected' : ''}>يسار الهوية</option><option value="top" ${settings.logo_position === 'top' ? 'selected' : ''}>أعلى الهوية</option></select></div>
+                            </div>
+
+                            <div style="padding:10px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px;">
+                                <div style="font-size:12px; font-weight:800; margin-bottom:8px; color:#1e3a8a;">👁️ عناصر الظهور في المستندات</div>
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px; font-size:11px;">
+                                    ${[['show_logo','الشعار'],['show_header_title','اسم الشبكة'],['show_header_subtitle','العنوان الفرعي'],['show_phone','رقم التواصل'],['show_address','العنوان'],['show_tax_no','الرقم الضريبي'],['show_doc_title','عنوان المستند'],['show_print_date','تاريخ الطباعة'],['show_footer_notes','الملاحظات والشروط'],['show_signatures','التواقيع'],['show_qr','رمز QR']].map(([key,label]) => `<label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="pset-${key}" ${this.isPrintOptionEnabled(key, settings) ? 'checked' : ''} onchange="App.PrintEngine.updateSettingsLivePreview()" />${label}</label>`).join('')}
                                 </div>
                             </div>
 
@@ -1478,8 +1533,8 @@
                             <div id="pset-live-preview-card" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:20px; box-shadow:0 4px 15px rgba(0,0,0,0.08); font-family:'Cairo', sans-serif;">
                                 <!-- Header Preview -->
                                 <div id="pset-pv-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:2.5px solid ${settings.primary_color || '#0f172a'}; padding-bottom:10px; margin-bottom:14px;">
-                                    <div style="display:flex; align-items:center; gap:10px;">
-                                        <img id="pset-pv-logo" src="${settings.logo_url || 'assets/img/log.png'}" style="height:48px; width:auto; max-width:70px; object-fit:contain;" onerror="this.style.display='none';" />
+                                    <div id="pset-pv-brand" style="display:flex; align-items:center; gap:10px;">
+                                        <img id="pset-pv-logo" src="${this.escape(this.safeImageUrl(settings.logo_url || 'assets/img/log.png'))}" style="width:${Math.max(24, Math.min(180, parseInt(settings.logo_width, 10) || 80))}px; height:${Math.max(24, Math.min(180, parseInt(settings.logo_height, 10) || 55))}px; object-fit:contain;" alt="شعار المنشأة" onerror="this.style.display='none';" />
                                         <div>
                                             <div id="pset-pv-title" style="font-size:16px; font-weight:900; color:${settings.primary_color || '#0f172a'};">${this.escape(settings.header_title || 'اسم الشبكة')}</div>
                                             <div id="pset-pv-subtitle" style="font-size:10.5px; color:#64748b; font-weight:600;">${this.escape(settings.header_subtitle || '')}</div>
@@ -1490,7 +1545,7 @@
                                     </div>
                                     <div style="text-align:left;">
                                         <div id="pset-pv-doctitle" style="font-size:15px; font-weight:800; color:${settings.accent_color || '#0284c7'};">كشف حساب / فاتورة نموذجية</div>
-                                        <div style="font-size:10px; color:#64748b; margin-top:2px;">معاينة حية للمستند</div>
+                                        <div id="pset-pv-print-date" style="font-size:10px; color:#64748b; margin-top:2px;">معاينة حية للمستند</div>
                                     </div>
                                 </div>
 
@@ -1515,7 +1570,7 @@
                                 </div>
 
                                 <!-- Footer Notes & Signatures Preview -->
-                                <div id="pset-pv-footer-notes" style="margin-top:12px; padding:6px 10px; background:#f8fafc; border-right:3px solid ${settings.accent_color || '#0284c7'}; border-radius:4px; font-size:10px; color:#475569;">
+                                    <div id="pset-pv-footer-notes" style="margin-top:12px; padding:6px 10px; background:#f8fafc; border-right:3px solid ${settings.accent_color || '#0284c7'}; border-radius:4px; font-size:10px; color:#475569;">
                                     <b>ملاحظات:</b> <span id="pset-pv-notes-text">${this.escape(settings.footer_notes || 'تعتبر الفواتير نهائية')}</span>
                                 </div>
 
@@ -1537,68 +1592,99 @@
             </div>
             `;
 
-            App.openModal(modalHtml, '940px');
+            App.openModal(modalHtml, '1120px');
             setTimeout(() => this.updateSettingsLivePreview(), 50);
         },
 
         updateSettingsLivePreview() {
-            const title = document.getElementById('pset-header-title')?.value || 'اسم المنشأة / الشبكة';
-            const subtitle = document.getElementById('pset-header-subtitle')?.value || '';
-            const phone = document.getElementById('pset-phone')?.value || '';
-            const address = document.getElementById('pset-address')?.value || '';
-            const taxNo = document.getElementById('pset-tax-no')?.value || '';
-            const logo = document.getElementById('pset-logo-url')?.value || 'assets/img/log.png';
-            const primaryColor = document.getElementById('pset-primary-color')?.value || '#0f172a';
-            const accentColor = document.getElementById('pset-accent-color')?.value || '#0284c7';
-            const notes = document.getElementById('pset-footer-notes')?.value || 'تعتبر المستندات نهائية';
-            const sigStr = document.getElementById('pset-signature-roles')?.value || 'المحاسب / المنظم, المستلم / العميل, المدير العام / الاعتماد';
-
+            const value = id => document.getElementById(id)?.value || '';
+            const checked = id => !!document.getElementById(id)?.checked;
+            const title = value('pset-header-title') || 'اسم المنشأة / الشبكة';
+            const subtitle = value('pset-header-subtitle');
+            const phone = value('pset-phone');
+            const address = value('pset-address');
+            const taxNo = value('pset-tax-no');
+            const logo = this.safeImageUrl(value('pset-logo-url'));
+            const primaryColor = value('pset-primary-color') || '#0f172a';
+            const accentColor = value('pset-accent-color') || '#0284c7';
+            const notes = value('pset-footer-notes');
+            const sigStr = value('pset-signature-roles');
+            const position = value('pset-logo-position') || 'right';
+            const width = Math.max(24, Math.min(180, parseInt(value('pset-logo-width'), 10) || 80));
+            const height = Math.max(24, Math.min(180, parseInt(value('pset-logo-height'), 10) || 55));
+            const setDisplay = (id, show, display = '') => { const el = document.getElementById(id); if (el) el.style.display = show ? display : 'none'; };
             const headerEl = document.getElementById('pset-pv-header');
             if (headerEl) headerEl.style.borderBottomColor = primaryColor;
-
             const logoEl = document.getElementById('pset-pv-logo');
             if (logoEl) {
-                logoEl.src = logo;
-                logoEl.style.display = 'block';
+                if (logo) logoEl.src = logo;
+                else logoEl.removeAttribute('src');
+                logoEl.style.width = width + 'px';
+                logoEl.style.height = height + 'px';
+                logoEl.style.display = checked('pset-show_logo') && logo ? 'block' : 'none';
             }
-
             const titleEl = document.getElementById('pset-pv-title');
             if (titleEl) {
                 titleEl.textContent = title;
                 titleEl.style.color = primaryColor;
+                setDisplay('pset-pv-title', checked('pset-show_header_title'));
             }
-
             const subEl = document.getElementById('pset-pv-subtitle');
-            if (subEl) subEl.textContent = subtitle;
-
+            if (subEl) { subEl.textContent = subtitle; setDisplay('pset-pv-subtitle', checked('pset-show_header_subtitle') && !!subtitle); }
             const docTitleEl = document.getElementById('pset-pv-doctitle');
-            if (docTitleEl) docTitleEl.style.color = accentColor;
-
+            if (docTitleEl) { docTitleEl.style.color = accentColor; setDisplay('pset-pv-doctitle', checked('pset-show_doc_title')); }
+            setDisplay('pset-pv-print-date', checked('pset-show_print_date'));
             const contactEl = document.getElementById('pset-pv-contact');
             if (contactEl) {
-                let parts = [];
-                if (phone) parts.push('هاتف: ' + phone);
-                if (address) parts.push('العنوان: ' + address);
-                if (taxNo) parts.push('الرقم الضريبي: ' + taxNo);
+                const parts = [];
+                if (checked('pset-show_phone') && phone) parts.push('هاتف: ' + phone);
+                if (checked('pset-show_address') && address) parts.push('العنوان: ' + address);
+                if (checked('pset-show_tax_no') && taxNo) parts.push('الرقم الضريبي: ' + taxNo);
                 contactEl.textContent = parts.join(' | ');
+                contactEl.style.display = parts.length ? '' : 'none';
             }
-
+            const brand = document.getElementById('pset-pv-brand');
+            if (brand) {
+                brand.style.flexDirection = position === 'top' ? 'column' : (position === 'left' ? 'row-reverse' : 'row');
+                brand.style.alignItems = 'center';
+                brand.style.textAlign = position === 'top' ? 'center' : 'right';
+            }
             const notesEl = document.getElementById('pset-pv-notes-text');
             if (notesEl) notesEl.textContent = notes;
-
             const notesBox = document.getElementById('pset-pv-footer-notes');
-            if (notesBox) notesBox.style.borderRightColor = accentColor;
-
+            if (notesBox) { notesBox.style.borderRightColor = accentColor; notesBox.style.display = checked('pset-show_footer_notes') && !!notes ? '' : 'none'; }
             const sigBox = document.getElementById('pset-pv-signatures');
             if (sigBox) {
+                sigBox.style.display = checked('pset-show_signatures') ? 'flex' : 'none';
                 const sigList = sigStr.split(',').map(s => s.trim()).filter(Boolean);
-                sigBox.innerHTML = sigList.map(r => `
-                    <div style="text-align:center;">
-                        <div style="font-weight:700; color:#334155; margin-bottom:20px;">${this.escape(r)}</div>
-                        <div style="border-top:1px solid #94a3b8; padding-top:2px; color:#94a3b8;">التوقيع / الختم</div>
-                    </div>
-                `).join('');
+                sigBox.innerHTML = sigList.map(r => `<div style="text-align:center;"><div style="font-weight:700; color:#334155; margin-bottom:20px;">${this.escape(r)}</div><div style="border-top:1px solid #94a3b8; padding-top:2px; color:#94a3b8;">التوقيع / الختم</div></div>`).join('');
             }
+        },
+
+        async uploadPrintLogo(input, networkId = 0) {
+            const file = input?.files?.[0];
+            if (!file) return;
+            if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > 3 * 1024 * 1024) {
+                App.toast('اختر صورة PNG أو JPG أو WebP بحجم لا يتجاوز 3 ميجابايت.', 'warning');
+                input.value = '';
+                return;
+            }
+            const formData = new FormData();
+            formData.append('image', file, file.name);
+            formData.append('network_id', String(networkId || 0));
+            const result = await App.api('upload_print_logo', {}, 'POST', formData).catch(error => ({ success: false, error: error.message }));
+            if (!result?.success || !result.url) {
+                App.toast(result?.error || 'تعذر رفع الشعار.', 'danger');
+                input.value = '';
+                return;
+            }
+            const urlInput = document.getElementById('pset-logo-url');
+            if (urlInput) urlInput.value = result.url;
+            const toggle = document.getElementById('pset-show_logo');
+            if (toggle) toggle.checked = true;
+            this.updateSettingsLivePreview();
+            App.toast('تم رفع الشعار. احفظ الإعدادات لتطبيقه على المستندات.', 'success');
+            input.value = '';
         },
 
         async savePrintSettingsForm(e, networkId = 0) {
@@ -1616,11 +1702,14 @@
                 accent_color: document.getElementById('pset-accent-color')?.value,
                 footer_notes: document.getElementById('pset-footer-notes')?.value,
                 signature_roles: document.getElementById('pset-signature-roles')?.value,
-                paper_format: document.getElementById('pset-paper-format')?.value || 'a4'
+                paper_format: document.getElementById('pset-paper-format')?.value || 'a4',
+                logo_width: Math.max(24, Math.min(180, parseInt(document.getElementById('pset-logo-width')?.value, 10) || 80)),
+                logo_height: Math.max(24, Math.min(180, parseInt(document.getElementById('pset-logo-height')?.value, 10) || 55)),
+                logo_position: document.getElementById('pset-logo-position')?.value || 'right'
             };
-
-            payload.show_qr = 1;
-            payload.show_watermark = 1;
+            ['show_logo','show_header_title','show_header_subtitle','show_phone','show_address','show_tax_no','show_doc_title','show_print_date','show_footer_notes','show_signatures','show_qr'].forEach(key => {
+                payload[key] = document.getElementById('pset-' + key)?.checked ? 1 : 0;
+            });
             const res = await App.api('save_print_settings', payload).catch(() => null);
             if (res && res.success) {
                 this._cachedPrintSettings = null;

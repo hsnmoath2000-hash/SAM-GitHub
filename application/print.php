@@ -14,6 +14,7 @@ $networkId = $service->getActiveNetworkId(); // SAM_PRINT_NETWORK_SCOPE_V1
 
 $batchId = trim($_GET['batch_id'] ?? '');
 $templateId = !empty($_GET['template_id']) ? (int)$_GET['template_id'] : null;
+$isThermal = (isset($_GET['format']) && $_GET['format'] === 'thermal');
 $usernamesRaw = trim($_GET['usernames'] ?? '');
 
 $vouchers = [];
@@ -31,10 +32,14 @@ if (!empty($batchId)) {
         $db = getDB();
         $in = implode(',', array_fill(0, count($usernames), '?'));
         $stmt = $db->prepare("
-            SELECT m.*, rc.value as password, ug.groupname as profile_name 
+            SELECT m.*, rc.value as password, ug.groupname as profile_name,
+                   COALESCE(NULLIF(m.validity, ''), p.validity) AS card_validity,
+                   COALESCE(p.transfer_limit, 0) AS transfer_limit,
+                   COALESCE(p.uptime_limit, 0) AS uptime_limit
             FROM radcheck rc
             LEFT JOIN um_vouchers_meta m ON m.network_id = rc.network_id AND rc.username = m.username
             LEFT JOIN radusergroup ug ON ug.network_id = rc.network_id AND rc.username = ug.username
+            LEFT JOIN um_profiles_def p ON p.network_id = ug.network_id AND p.name = ug.groupname
             WHERE rc.network_id = ? AND rc.username IN ($in) AND rc.attribute = 'Cleartext-Password'
         ");
         $stmt->execute(array_merge([$networkId], $usernames));
@@ -71,10 +76,12 @@ $cGap = isset($_GET['gap']) ? (float)$_GET['gap'] : (float)($template['card_gap_
 
 $a4W = 210.0;
 $a4H = 297.0;
+$pageNumberHeaderMM = 5.0;
 $availW = $a4W - (2 * $pMargin) - (($cols - 1) * $cGap);
-$availH = $a4H - (2 * $pMargin) - (($rows - 1) * $cGap);
+$availH = $a4H - (2 * $pMargin) - $pageNumberHeaderMM - (($rows - 1) * $cGap);
 $cardW = round($availW / $cols, 2);
 $cardH = round($availH / $rows, 2);
+$gridH = $cardH * $rows + (($rows - 1) * $cGap);
 
 $perPage = $cols * $rows;
 $totalPages = max(1, (int)ceil(count($vouchers) / $perPage));
@@ -85,7 +92,10 @@ $elements = [
     'password' => ['enabled' => true, 'x' => 50, 'y' => 62, 'size' => 13, 'weight' => 'normal', 'color' => '#222222', 'prefix' => 'كلمة المرور: '],
     'qr_code' => ['enabled' => true, 'x' => 84, 'y' => 50, 'size' => 45],
     'price' => ['enabled' => true, 'x' => 20, 'y' => 84, 'size' => 11, 'weight' => 'bold', 'color' => '#e74c3c', 'prefix' => ''],
-    'profile' => ['enabled' => true, 'x' => 75, 'y' => 84, 'size' => 11, 'weight' => 'bold', 'color' => '#0078d7', 'prefix' => '']
+    'profile' => ['enabled' => true, 'x' => 75, 'y' => 84, 'size' => 11, 'weight' => 'bold', 'color' => '#0078d7', 'prefix' => ''],
+    'quota' => ['id' => 'quota', 'label' => 'رصيد البيانات', 'text' => '1 GB', 'enabled' => true, 'x' => 22, 'y' => 76, 'size' => 9, 'weight' => 'bold', 'color' => '#0f766e', 'prefix' => 'الرصيد: '],
+    'validity' => ['id' => 'validity', 'label' => 'الصلاحية', 'text' => '30 يوم', 'enabled' => true, 'x' => 52, 'y' => 76, 'size' => 9, 'weight' => 'bold', 'color' => '#334155', 'prefix' => 'الصلاحية: '],
+    'uptime' => ['id' => 'uptime', 'label' => 'ساعات الاستخدام', 'text' => '3 ساعات', 'enabled' => true, 'x' => 82, 'y' => 76, 'size' => 9, 'weight' => 'bold', 'color' => '#7c3aed', 'prefix' => 'الوقت: ']
 ];
 
 if (!empty($template['elements_json'])) {
@@ -105,20 +115,42 @@ $adminName = $_SESSION['fullname'] ?? ($_SESSION['user'] ?? 'admin');
 
 $docTitle = "$batchName - $profName - $countStr - $dateStr - $adminName";
 
-// Helper for QR code SVG
-function renderQR($text, $size = 48) {
-    // Generate lightweight valid SVG QR
-    return '<svg width="'.$size.'" height="'.$size.'" viewBox="0 0 33 33" xmlns="http://www.w3.org/2000/svg">
-        <rect width="33" height="33" fill="#ffffff"/>
-        <rect x="2" y="2" width="7" height="7" fill="#000"/><rect x="3" y="3" width="5" height="5" fill="#fff"/><rect x="4" y="4" width="3" height="3" fill="#000"/>
-        <rect x="24" y="2" width="7" height="7" fill="#000"/><rect x="25" y="3" width="5" height="5" fill="#fff"/><rect x="26" y="4" width="3" height="3" fill="#000"/>
-        <rect x="2" y="24" width="7" height="7" fill="#000"/><rect x="3" y="25" width="5" height="5" fill="#fff"/><rect x="4" y="26" width="3" height="3" fill="#000"/>
-        <rect x="11" y="4" width="2" height="2" fill="#000"/><rect x="15" y="2" width="2" height="2" fill="#000"/><rect x="19" y="4" width="2" height="2" fill="#000"/>
-        <rect x="11" y="8" width="2" height="2" fill="#000"/><rect x="14" y="10" width="3" height="2" fill="#000"/><rect x="19" y="8" width="2" height="2" fill="#000"/>
-        <rect x="12" y="14" width="9" height="9" fill="#000"/><rect x="14" y="16" width="5" height="5" fill="#fff"/><rect x="15" y="17" width="3" height="3" fill="#000"/>
-        <rect x="11" y="25" width="3" height="2" fill="#000"/><rect x="16" y="27" width="2" height="3" fill="#000"/><rect x="20" y="25" width="3" height="2" fill="#000"/>
-        <rect x="25" y="24" width="2" height="2" fill="#000"/><rect x="28" y="27" width="3" height="2" fill="#000"/>
-    </svg>';
+require_once __DIR__ . '/includes/QrCodeGenerator.php';
+
+// Helper for dynamic compliant QR code SVG
+function renderQR(string $text, int $size = 48): string {
+    return QrCodeGenerator::svg($text, $size);
+}
+
+function formatVoucherQuota($bytes): string {
+    $bytes = (float)$bytes;
+    if ($bytes <= 0) return 'غير محدود';
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    $unit = min((int)floor(log($bytes, 1024)), count($units) - 1);
+    return rtrim(rtrim(number_format($bytes / (1024 ** $unit), 2, '.', ''), '0'), '.') . ' ' . $units[$unit];
+}
+
+function formatVoucherValidity($validity): string {
+    $validity = trim((string)$validity);
+    if ($validity === '') return 'غير محددة';
+    if (preg_match('/^(\d+)mo$/i', $validity, $m)) return $m[1] . ' شهر';
+    if (preg_match('/^(\d+)d$/i', $validity, $m)) return $m[1] . ' يوم';
+    if (preg_match('/^(\d+)h$/i', $validity, $m)) return $m[1] . ' ساعة';
+    if (preg_match('/^(\d+)m$/i', $validity, $m)) return $m[1] . ' دقيقة';
+    if (preg_match('/^(\d+)y$/i', $validity, $m)) return $m[1] . ' سنة';
+    return $validity;
+}
+
+function formatVoucherUptime($seconds): string {
+    $seconds = (int)$seconds;
+    if ($seconds <= 0) return 'غير محدود';
+    $parts = [];
+    foreach ([['يوم', 86400], ['ساعة', 3600], ['دقيقة', 60]] as [$label, $unit]) {
+        $value = intdiv($seconds, $unit);
+        if ($value > 0) { $parts[] = $value . ' ' . $label; $seconds %= $unit; }
+    }
+    if ($seconds > 0) $parts[] = $seconds . ' ثانية';
+    return implode(' ', $parts);
 }
 ?>
 <!DOCTYPE html>
@@ -148,6 +180,7 @@ function renderQR($text, $size = 48) {
             padding: 0;
         }
         .a4-page {
+            position: relative;
             width: 210mm;
             height: 297mm;
             max-height: 297mm;
@@ -164,11 +197,22 @@ function renderQR($text, $size = 48) {
         .cards-grid {
             display: grid;
             width: 100%;
-            height: 100%;
+            height: <?= $gridH ?>mm;
             box-sizing: border-box;
             grid-template-columns: repeat(<?= $cols ?>, 1fr);
-            grid-template-rows: repeat(<?= $rows ?>, 1fr);
+            grid-template-rows: repeat(<?= $rows ?>, <?= $cardH ?>mm);
             gap: <?= $cGap ?>mm;
+        }
+        .print-page-number {
+            flex: 0 0 5mm;
+            height: 5mm;
+            text-align: right;
+            direction: rtl;
+            color: #334155;
+            font-weight: 800;
+            font-size: 9pt;
+            line-height: 4mm;
+            white-space: nowrap;
         }
         .card-box {
             position: relative;
@@ -255,15 +299,20 @@ function renderQR($text, $size = 48) {
 
     <?php for ($p = 0; $p < $totalPages; $p++): 
         $pageVouchers = array_slice($vouchers, $p * $perPage, $perPage);
+        $pageNumber = $pageVouchers[0]['sheet_no'] ?? ($p + 1);
     ?>
     <div class="a4-page">
+        <div class="print-page-number">رقم الصفحة: <?= htmlspecialchars(str_pad((string)$pageNumber, 6, '0', STR_PAD_LEFT), ENT_QUOTES, 'UTF-8') ?> (<?= $p + 1 ?>/<?= $totalPages ?>)</div>
         <div class="cards-grid">
             <?php foreach ($pageVouchers as $v): 
-                $u = $v['username'];
-                $pass = !empty($v['password']) ? $v['password'] : $u;
-                $loginUrl = ($template['hotspot_url'] ?? 'http://192.168.88.1/login') . "?username=$u&password=$pass";
+                $u = (string)$v['username'];
+                $pass = isset($v['password']) ? (string)$v['password'] : '';
+                $loginUrl = ($template['hotspot_url'] ?? 'http://192.168.88.1/login') . "?username=" . urlencode($u) . ($pass !== '' ? ('&password=' . urlencode($pass)) : '');
                 $prof = $v['profile_name'] ?? ($v['profile'] ?? '');
                 $price = !empty($v['price']) ? $v['price'] . ' YER' : '';
+                $quota = formatVoucherQuota($v['transfer_limit'] ?? 0);
+                $validity = formatVoucherValidity($v['card_validity'] ?? ($v['validity'] ?? ''));
+                $uptime = formatVoucherUptime($v['uptime_limit'] ?? 0);
             ?>
             <div class="card-box">
                 <?php if (!empty($elements['title']['enabled'])): ?>
@@ -278,7 +327,7 @@ function renderQR($text, $size = 48) {
                 </div>
                 <?php endif; ?>
 
-                <?php if (!empty($elements['password']['enabled']) && !empty($pass) && $pass !== $u): ?>
+                <?php if (!empty($elements['password']['enabled']) && $pass !== '' && $pass !== $u): ?>
                 <div class="elem-pos" style="left:<?= $elements['password']['x'] ?>%; top:<?= $elements['password']['y'] ?>%; transform:translate(-50%,-50%); font-size:<?= $elements['password']['size'] ?>px; font-weight:<?= $elements['password']['weight'] ?>; color:<?= $elements['password']['color'] ?>; font-family:monospace;">
                     كلمة المرور: <?= htmlspecialchars($pass) ?>
                 </div>
@@ -301,6 +350,14 @@ function renderQR($text, $size = 48) {
                     <?= htmlspecialchars($prof) ?>
                 </div>
                 <?php endif; ?>
+
+                <?php foreach (['quota' => $quota, 'validity' => $validity, 'uptime' => $uptime] as $field => $value): ?>
+                    <?php if (!empty($elements[$field]['enabled'])): $element = $elements[$field]; ?>
+                    <div class="elem-pos" style="left:<?= (float)($element['x'] ?? 50) ?>%; top:<?= (float)($element['y'] ?? 76) ?>%; transform:translate(-50%,-50%); font-size:<?= (float)($element['size'] ?? 9) ?>px; font-weight:<?= htmlspecialchars($element['weight'] ?? 'bold', ENT_QUOTES, 'UTF-8') ?>; color:<?= htmlspecialchars($element['color'] ?? '#334155', ENT_QUOTES, 'UTF-8') ?>;">
+                        <?= htmlspecialchars((string)($element['prefix'] ?? ''), ENT_QUOTES, 'UTF-8') ?><?= htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?>
+                    </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </div>
             <?php endforeach; ?>
         </div>
@@ -309,12 +366,17 @@ function renderQR($text, $size = 48) {
 
     <script>
         const vouchersData = <?= json_encode(array_map(function($v) use ($template) {
+            $passVal = isset($v['password']) ? (string)$v['password'] : '';
             return [
                 'network_name' => $template['network_name'] ?? 'شبكتي',
                 'username' => $v['username'] ?? '',
-                'password' => !empty($v['password']) ? $v['password'] : ($v['username'] ?? ''),
+                'password' => $passVal,
+                'login_url' => ($template['hotspot_url'] ?? 'http://192.168.88.1/login') . "?username=" . urlencode((string)($v['username'] ?? '')) . ($passVal !== '' ? ('&password=' . urlencode($passVal)) : ''),
                 'profile' => $v['profile_name'] ?? ($v['profile'] ?? ''),
                 'price' => $v['price'] ?? '',
+                'validity' => $v['card_validity'] ?? ($v['validity'] ?? ''),
+                'transfer_limit' => (int)($v['transfer_limit'] ?? 0),
+                'uptime_limit' => (int)($v['uptime_limit'] ?? 0),
                 'login_url' => $template['hotspot_url'] ?? 'http://192.168.88.1/login'
             ];
         }, $vouchers), JSON_UNESCAPED_UNICODE) ?>;

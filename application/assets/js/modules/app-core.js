@@ -3,47 +3,29 @@
  */
 'use strict';
 
-// Embedded Lightweight SVG QR Code Generator
+// QR rendering uses the local, standards-compliant qrcode-generator asset.
 const QRCodeGen = {
     generateSVG(text, size = 64) {
-        return `<svg width="${size}" height="${size}" viewBox="0 0 33 33" xmlns="http://www.w3.org/2000/svg">
-            <rect width="33" height="33" fill="#ffffff"/>
-            <!-- Top-Left Finder -->
-            <rect x="2" y="2" width="7" height="7" fill="#000"/>
-            <rect x="3" y="3" width="5" height="5" fill="#fff"/>
-            <rect x="4" y="4" width="3" height="3" fill="#000"/>
-            <!-- Top-Right Finder -->
-            <rect x="24" y="2" width="7" height="7" fill="#000"/>
-            <rect x="25" y="3" width="5" height="5" fill="#fff"/>
-            <rect x="26" y="4" width="3" height="3" fill="#000"/>
-            <!-- Bottom-Left Finder -->
-            <rect x="2" y="24" width="7" height="7" fill="#000"/>
-            <rect x="3" y="25" width="5" height="5" fill="#fff"/>
-            <rect x="4" y="26" width="3" height="3" fill="#000"/>
-            <!-- Patterns -->
-            <rect x="11" y="4" width="2" height="2" fill="#000"/>
-            <rect x="15" y="2" width="2" height="2" fill="#000"/>
-            <rect x="19" y="4" width="2" height="2" fill="#000"/>
-            <rect x="11" y="8" width="2" height="2" fill="#000"/>
-            <rect x="14" y="10" width="3" height="2" fill="#000"/>
-            <rect x="19" y="8" width="2" height="2" fill="#000"/>
-            <rect x="4" y="11" width="2" height="3" fill="#000"/>
-            <rect x="8" y="14" width="3" height="2" fill="#000"/>
-            <rect x="24" y="11" width="2" height="3" fill="#000"/>
-            <rect x="2" y="18" width="3" height="2" fill="#000"/>
-            <rect x="8" y="20" width="2" height="2" fill="#000"/>
-            <rect x="27" y="18" width="3" height="2" fill="#000"/>
-            <!-- Center Timing -->
-            <rect x="12" y="14" width="9" height="9" fill="#000"/>
-            <rect x="14" y="16" width="5" height="5" fill="#fff"/>
-            <rect x="15" y="17" width="3" height="3" fill="#000"/>
-            <!-- Bottom -->
-            <rect x="11" y="25" width="3" height="2" fill="#000"/>
-            <rect x="16" y="27" width="2" height="3" fill="#000"/>
-            <rect x="20" y="25" width="3" height="2" fill="#000"/>
-            <rect x="25" y="24" width="2" height="2" fill="#000"/>
-            <rect x="28" y="27" width="3" height="2" fill="#000"/>
-        </svg>`;
+        if (typeof window.qrcode !== 'function') {
+            throw new Error('مكتبة إنشاء QR غير محمّلة');
+        }
+        const qr = window.qrcode(0, 'M');
+        qr.addData(String(text ?? ''), 'Byte');
+        qr.make();
+
+        const count = qr.getModuleCount();
+        const quietZone = 4;
+        const viewSize = count + quietZone * 2;
+        const path = [];
+        for (let row = 0; row < count; row++) {
+            for (let col = 0; col < count; col++) {
+                if (qr.isDark(row, col)) path.push(`M${col + quietZone},${row + quietZone}h1v1h-1z`);
+            }
+        }
+
+        const pixelSize = Math.max(24, Math.round(Number(size) || 64));
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="${pixelSize}" height="${pixelSize}" viewBox="0 0 ${viewSize} ${viewSize}" role="img" aria-label="QR code" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><path d="${path.join(' ')}" fill="#000"/></svg>`;
+
     }
 };
 
@@ -4469,7 +4451,10 @@ Object.assign(App, {
                 Promise.resolve(this.renderAssets()).catch((error) => {
                     console.error('SAM assets render failed:', error);
                     const view = document.getElementById('main-view');
-                    if (view) view.innerHTML = '<div style="padding:32px;text-align:center;color:#991b1b;background:#fff1f2;border:1px solid #fecaca;border-radius:14px;margin:24px;"><strong style="display:block;margin-bottom:10px;">تعذر فتح واجهة الأصول والمعدات</strong><span style="display:block;margin-bottom:14px;">انتهت جلسة الدخول أو تعذر تحميل البيانات.</span><button class="mt-btn mt-btn-primary" onclick="App.switchTab(\'assets\')">إعادة المحاولة</button></div>';
+                    if (view) {
+                        const message = error?.message || 'تعذر تحميل سجل الأصول. أعد المحاولة، وإذا استمر الخطأ راجع صلاحيات الحساب واتصال الخادم.';
+                        view.innerHTML = `<div style="padding:32px;text-align:center;color:#991b1b;background:#fff1f2;border:1px solid #fecaca;border-radius:14px;margin:24px;"><strong style="display:block;margin-bottom:10px;">تعذر فتح واجهة الأصول والمعدات</strong><span style="display:block;margin-bottom:14px;">${App.escape(message)}</span><button class="mt-btn mt-btn-primary" onclick="App.switchTab('assets_inventory')">إعادة المحاولة</button></div>`;
+                    }
                 });
                 break;
             case 'financial_reports': this.renderFinancialReports(); break;

@@ -80,12 +80,12 @@ class HotspotTemplateService {
                 'footer_text' => 'خدمة الإنترنت السريع والآمن | جميع الحقوق محفوظة'
             ],
             'contacts' => [
-                'phones' => ['770000000'],
-                'whatsapp' => '770000000',
-                'whatsapp_message' => 'مرحباً، أود الاستفسار عن كروت وباقات الإنترنت في شبكة ' . $netName,
+                'phones' => [],
+                'whatsapp' => '',
+                'whatsapp_message' => '',
                 'telegram' => '',
                 'support_hours' => '24/7 على مدار الساعة',
-                'pos_locations' => 'متوفر في جميع البقالات ومراكز التسوق ونقاط البيع المعتمدة'
+                'pos_locations' => ''
             ],
             'packages_config' => [
                 'enabled' => true,
@@ -179,40 +179,11 @@ class HotspotTemplateService {
             ],
             'pos_config' => [
                 'enabled' => true,
-                'auto_sync_admins' => true,
+                'auto_sync_admins' => false,
                 'title' => '🏪 مراكز ونقاط بيع وتوزيع الكروت المعتمدة',
                 'subtitle' => 'تفضل بزيارة أقرب موزع أو مركز بيع معتمد لشراء وتجديد باقات وكروت الإنترنت فوراً',
                 'search_placeholder' => '🔍 ابحث عن أقرب مركز بيع، حي، شارع أو رقم هاتف...',
-                'items' => [
-                    [
-                        'id' => 1,
-                        'name' => 'مركز الأمل للخدمات والاتصالات',
-                        'phone' => '770000001',
-                        'whatsapp' => '770000001',
-                        'address' => 'الشارع العام - بجوار بنك التضامن',
-                        'working_hours' => '8:00 ص - 11:30 م',
-                        'badge' => 'مركز رئيسي ⭐',
-                        'map_url' => '',
-                        'notes' => 'متوفر جميع فئات الكروت والباقات والشحن الفوري',
-                        'show_on_login' => true,
-                        'show_on_status' => true,
-                        'enabled' => true
-                    ],
-                    [
-                        'id' => 2,
-                        'name' => 'سوبر ماركت النور والبركة',
-                        'phone' => '770000002',
-                        'whatsapp' => '770000002',
-                        'address' => 'حي السلام - جوار مدرسة النجاح',
-                        'working_hours' => '24 ساعة (خدمة متواصلة)',
-                        'badge' => 'نقطة بيع معتمدة',
-                        'map_url' => '',
-                        'notes' => 'خدمة متواصلة على مدار الساعة',
-                        'show_on_login' => true,
-                        'show_on_status' => true,
-                        'enabled' => true
-                    ]
-                ]
+                'items' => []
             ],
             'login_options' => [
                 'mode' => 'pin_only', // pin_only or user_pass
@@ -311,6 +282,27 @@ class HotspotTemplateService {
             if (!empty($row['status_options_json'])) $settings['status_options'] = array_merge($defaults['status_options'], json_decode($row['status_options_json'], true) ?: []);
         }
 
+        // Old installations may contain sample contact values from former defaults.
+        // Normalize only known sample values; preserve any actual network contact data.
+        $contacts = $settings['contacts'] ?? [];
+        $samplePhones = ['770000000', '730000000'];
+        if (isset($contacts['phones']) && is_array($contacts['phones'])) {
+            $contacts['phones'] = array_values(array_filter($contacts['phones'], static fn($phone): bool => !in_array(trim((string)$phone), $samplePhones, true)));
+        }
+        if (in_array(trim((string)($contacts['whatsapp'] ?? '')), $samplePhones, true)) $contacts['whatsapp'] = '';
+        if (trim((string)($contacts['pos_locations'] ?? '')) === 'متوفر في جميع البقالات ومراكز التسوق ونقاط البيع المعتمدة') $contacts['pos_locations'] = '';
+        $settings['contacts'] = $contacts;
+
+        // Remove demonstration POS entries left by older defaults while keeping
+        // network-owned locations and any deliberately enabled admin sync.
+        $posItems = $settings['pos_config']['items'] ?? [];
+        if (is_array($posItems)) {
+            $demoNames = ['مركز الأمل للخدمات والاتصالات', 'سوبر ماركت النور والبركة'];
+            $settings['pos_config']['items'] = array_values(array_filter($posItems, static fn($item): bool =>
+                !is_array($item) || !in_array(trim((string)($item['name'] ?? '')), $demoNames, true)
+            ));
+        }
+
         // Setup policy is scoped to this network; generated files are the only output changed.
         $policyQuery=$this->db->prepare("SELECT setting_value FROM um_network_settings WHERE network_id=? AND setting_key='onboarding_v1'");
         $policyQuery->execute([$networkId]);$setupMeta=json_decode((string)$policyQuery->fetchColumn(),true)?:[];
@@ -354,8 +346,12 @@ class HotspotTemplateService {
         $rStmt->execute([$networkId]);
         $routers = $rStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Fetch network profiles/packages
-        $dbPackages = $this->getNetworkPackages($networkId);
+        // Only paid packages belong in the customer-facing hotspot page settings.
+        // Free profiles remain available to other workflows such as complimentary-card grants.
+        $dbPackages = array_values(array_filter(
+            $this->getNetworkPackages($networkId),
+            static fn(array $pkg): bool => ($pkg['package_type'] ?? 'paid') !== 'free' && (float)($pkg['price'] ?? 0) > 0
+        ));
 
         // Merge saved package_items with dbPackages
         $savedItems = $settings['packages_config']['package_items'] ?? ($settings['packages_config']['custom_packages'] ?? []);
@@ -364,6 +360,8 @@ class HotspotTemplateService {
 
         if (is_array($savedItems)) {
             foreach ($savedItems as $it) {
+                $isFree = (($it['package_type'] ?? '') === 'free') || (isset($it['price']) && is_numeric($it['price']) && (float)$it['price'] <= 0);
+                if ($isFree) continue;
                 $key = (string)($it['id'] ?? $it['code'] ?? $it['name'] ?? '');
                 if ($key !== '') {
                     $existingMap[$key] = $it;
@@ -376,7 +374,7 @@ class HotspotTemplateService {
             $key = (string)$dp['id'];
             $codeKey = (string)($dp['code'] ?? '');
             $matchedSaved = $existingMap[$key] ?? ($codeKey !== '' ? ($existingMap[$codeKey] ?? null) : null);
-            $isFree = (($dp['package_type'] ?? '') === 'free') || ($dp['price'] == 0);
+            $isFree = (($dp['package_type'] ?? '') === 'free') || ((float)($dp['price'] ?? 0) <= 0);
 
             if ($matchedSaved) {
                 $finalItems[] = array_merge($dp, [
@@ -492,6 +490,21 @@ class HotspotTemplateService {
      * Save Studio Settings for a network
      */
     public function saveStudioData(int $networkId, array $data, int $adminId = 1): array {
+        // Filter free/zero-priced packages at the persistence boundary too, so
+        // API clients cannot reintroduce them into the hotspot-page package list.
+        if (isset($data['packages_config']) && is_array($data['packages_config'])) {
+            foreach (['package_items', 'custom_packages'] as $packageKey) {
+                if (isset($data['packages_config'][$packageKey]) && is_array($data['packages_config'][$packageKey])) {
+                    $data['packages_config'][$packageKey] = array_values(array_filter(
+                        $data['packages_config'][$packageKey],
+                        static fn($pkg): bool => is_array($pkg)
+                            && ($pkg['package_type'] ?? '') !== 'free'
+                            && (!isset($pkg['price']) || !is_numeric($pkg['price']) || (float)$pkg['price'] > 0)
+                    ));
+                }
+            }
+        }
+
         $theme = json_encode($data['theme'] ?? [], JSON_UNESCAPED_UNICODE);
         $brand = json_encode($data['brand'] ?? [], JSON_UNESCAPED_UNICODE);
         $contacts = json_encode($data['contacts'] ?? [], JSON_UNESCAPED_UNICODE);

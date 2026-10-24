@@ -125,6 +125,9 @@ Object.assign(window.App, {
             qr_code: { id: 'qr_code', label: 'رمز QR', text: 'QR', enabled: true, x: 80, y: 52, size: 55, weight: 'normal', color: '#000000', align: 'center', prefix: '' },
             price: { id: 'price', label: 'السعر', text: '500 ${App.getCurrencySymbol(App._baseCurrency)}', enabled: true, x: 28, y: 86, size: 12, weight: 'bold', color: '#27ae60', align: 'center', prefix: 'السعر: ' },
             profile: { id: 'profile', label: 'اسم الباقة', text: 'VIP 5M', enabled: true, x: 78, y: 86, size: 11, weight: 'bold', color: '#555555', align: 'center', prefix: '' },
+            quota: { id: 'quota', label: 'رصيد البيانات', text: '1 GB', enabled: true, x: 22, y: 76, size: 9, weight: 'bold', color: '#0f766e', align: 'center', prefix: 'الرصيد: ' },
+            validity: { id: 'validity', label: 'الصلاحية', text: '30 يوم', enabled: true, x: 52, y: 76, size: 9, weight: 'bold', color: '#334155', align: 'center', prefix: 'الصلاحية: ' },
+            uptime: { id: 'uptime', label: 'ساعات الاستخدام', text: '3 ساعات', enabled: true, x: 82, y: 76, size: 9, weight: 'bold', color: '#7c3aed', align: 'center', prefix: 'الوقت: ' },
             icon: { id: 'icon', label: 'صورة الأيقونة PNG', image_url: '', enabled: false, x: 88, y: 15, size: 40, weight: 'normal', color: '#0078d7', align: 'center', prefix: '' },
             sheet_no: { id: 'sheet_no', label: 'رقم الورقة بالكرت', text: '000001', enabled: false, x: 80, y: 15, size: 9, weight: 'bold', color: '#64748b', align: 'center', prefix: 'ورقة: ' }
         };
@@ -597,7 +600,7 @@ Object.assign(window.App, {
         const count = (t.grid_cols || 3) * (t.grid_rows || 10);
         for (let i = 1; i <= Math.min(count, 50); i++) {
             const code = Math.floor(100000 + Math.random() * 900000).toString();
-            dummyVouchers.push({ username: code, password: code, profile: t.profile_name || 'VIP-10M', price: '1000' });
+            dummyVouchers.push({ username: code, password: code, profile: t.profile_name || 'VIP-10M', price: '1000', validity: '30d', transfer_limit: 1024 ** 3, uptime_limit: 3 * 3600 });
         }
         this.printVouchersList(dummyVouchers, t);
     },
@@ -729,6 +732,9 @@ Object.assign(window.App, {
             password: v.password !== undefined ? v.password : (v.username || ''),
             profile: v.profile || v.profile_name || '',
             price: v.price || '',
+            validity: v.validity || v.card_validity || v.profile_validity || '',
+            transfer_limit: Number(v.transfer_limit || v.data_limit_bytes || 0),
+            uptime_limit: Number(v.uptime_limit || v.profile_uptime_limit || 0),
             sheet_no: v.sheet_no || null,
             sheet_no_formatted: v.sheet_no_formatted || (v.sheet_no ? String(v.sheet_no).padStart(6, '0') : null),
             batch_id: v.batch_id || ''
@@ -774,20 +780,21 @@ Object.assign(window.App, {
 
                         <!-- Sheet Number & Batch Position & Size Selector -->
                         <div style="display:flex; align-items:center; gap:4px; background:#fff; padding:3px 6px; border-radius:4px; border:1px solid var(--border-color);">
-                            <label style="font-size:10px; font-weight:700;">موضع رقم الورقة:</label>
+                            <label style="font-size:10px; font-weight:700;">موضع رقم الصفحة:</label>
                             <select id="preview-sheet-pos" class="mt-select" style="font-size:11px; padding:2px 4px; font-weight:600;" onchange="App.onPreviewSheetPosChange(this.value)">
-                                <option value="top_bar">🔝 ترويسة كاملة أعلى الصفحة [افتراضي]</option>
+                                <option value="top_bar">🔝 ترويسة كاملة أعلى الصفحة</option>
                                 <option value="top_right">↗️ أعلى الورقة - يمين</option>
                                 <option value="top_center">⬆️ أعلى الورقة - وسط</option>
                                 <option value="top_left">↖️ أعلى الورقة - يسار</option>
                                 <option value="bottom_bar">🔻 تذييل كامل أسفل الصفحة</option>
                                 <option value="bottom_right">↘️ أسفل الورقة - يمين</option>
-                                <option value="bottom_center">⬇️ أسفل الورقة - وسط</option>
+                                <option value="bottom_center" selected>⬇️ أسفل الورقة - وسط [افتراضي]</option>
                                 <option value="bottom_left">↙️ أسفل الورقة - يسار</option>
-                                <option value="hide">🚫 إخفاء من رأس/تذييل الصفحة (للطباعة على ورق جاهز)</option>
+                                <option value="hide">🚫 إخفاء رقم الصفحة</option>
                             </select>
+                            <small style="font-size:10px;color:#64748b;font-weight:700">الرقم على حافة الورقة بلا هامش</small>
                             <label style="font-size:10px; font-weight:700; margin-right:4px;">الخط (pt):</label>
-                            <input type="number" id="preview-sheet-font" min="7" max="24" step="0.5" class="mt-input" style="width:44px; text-align:center; font-weight:bold;" value="9.5" oninput="App.onPreviewMarginsChange()" title="حجم خط رقم الورقة والترويسة" />
+                            <input type="number" id="preview-sheet-font" min="7" max="24" step="0.5" class="mt-input" style="width:44px; text-align:center; font-weight:bold;" value="9.5" oninput="App.onPreviewMarginsChange()" title="حجم خط رقم الصفحة والترويسة" />
                         </div>
                     </div>
                     <div class="mt-toolbar-right" style="gap:8px;">
@@ -823,7 +830,7 @@ Object.assign(window.App, {
     },
 
     onPreviewSheetPosChange(pos) {
-        localStorage.setItem('mt_print_sheet_pos', pos);
+        localStorage.setItem('mt_print_sheet_pos', pos || 'bottom_center');
         this.onPreviewMarginsChange();
     },
 
@@ -833,7 +840,7 @@ Object.assign(window.App, {
         const t = templates.find(item => item.id == templateId) || templates[0];
         const pMargin = parseFloat(document.getElementById('preview-margin')?.value) ?? 5.0;
         const cGap = parseFloat(document.getElementById('preview-gap')?.value) ?? 1.5;
-        const sheetPos = document.getElementById('preview-sheet-pos')?.value || localStorage.getItem('mt_print_sheet_pos') || 'top_bar';
+        const sheetPos = document.getElementById('preview-sheet-pos')?.value || localStorage.getItem('mt_print_sheet_pos') || 'bottom_center';
         const sheetFont = parseFloat(document.getElementById('preview-sheet-font')?.value) || 9.5;
 
         const container = document.getElementById('print-container');
@@ -847,7 +854,8 @@ Object.assign(window.App, {
 
         const pMargin = customMargin !== null ? customMargin : (t.page_margin_mm !== undefined ? t.page_margin_mm : 5.0);
         const cGap = customGap !== null ? customGap : (t.card_gap_mm !== undefined ? t.card_gap_mm : 1.5);
-        const sheetPos = customSheetPos || localStorage.getItem('mt_print_sheet_pos') || 'top_bar';
+        const requestedSheetPos = customSheetPos || localStorage.getItem('mt_print_sheet_pos') || 'bottom_center';
+        const sheetPos = requestedSheetPos;
         const sheetFont = customSheetFont || parseFloat(document.getElementById('preview-sheet-font')?.value) || 9.5;
 
         const dim = this.calcA4Dimensions(t.grid_cols || 3, t.grid_rows || 10, pMargin, cGap);
@@ -862,7 +870,10 @@ Object.assign(window.App, {
             } catch (e) {}
         }
 
-        const scale = dim.scaleFactor;
+        // Page numbering is an overlay on the physical sheet edge and must not
+        // reserve card area or change the selected grid dimensions.
+        const cardHeightMM = dim.heightMM;
+        const scale = dim.scaleFactor * (cardHeightMM / dim.heightMM);
 
         let html = '';
         for (let page = 0; page < totalPages; page++) {
@@ -871,41 +882,34 @@ Object.assign(window.App, {
             const pageSheetFormatted = pageVouchers[0]?.sheet_no_formatted || (pageVouchers[0]?.sheet_no ? String(pageVouchers[0].sheet_no).padStart(6, '0') : (this.currentPrintMeta?.start_sheet_no ? String(Number(this.currentPrintMeta.start_sheet_no) + page).padStart(6, '0') : String(page + 1).padStart(6, '0')));
 
             const codeFont = Math.max(8, sheetFont + 1.5);
-            const sheetTag = `<span>📄 ورقة رقم: <code style="font-size:${codeFont}px; font-weight:800; background:#f1f5f9; padding:1px 5px; border-radius:3px; color:#0f172a; border:1px solid #cbd5e1;">${pageSheetFormatted}</code></span>`;
+            const sheetTag = `<span>📄 رقم الصفحة: <code style="font-size:${codeFont}px;font-weight:800;background:transparent;padding:0;border:0;color:#0f172a;">${this.escape(pageSheetFormatted)}</code> (${page + 1}/${totalPages})</span>`;
             const batchTag = `<span>📦 الدفعة: ${this.escape(this.currentPrintMeta?.batchId || '')}</span>`;
             const profTag = `<span>🏷️ الباقة: ${this.escape(this.currentPrintMeta?.profileName || '')}</span>`;
             const dateTag = `<span>📅 ${this.currentPrintMeta?.date || new Date().toISOString().slice(0, 10)}</span>`;
 
-            let headerHTML = '';
-            let footerHTML = '';
-
-            if (sheetPos === 'top_bar') {
-                headerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; font-size:${sheetFont}px; font-weight:bold; color:#334155; border-bottom:1px solid #cbd5e1; padding-bottom:2px; margin-bottom:3.5mm;">${sheetTag}${batchTag}${profTag}${dateTag}</div>`;
-            } else if (sheetPos === 'top_right') {
-                headerHTML = `<div style="display:flex; justify-content:flex-start; align-items:center; gap:12px; font-size:${sheetFont}px; font-weight:bold; color:#334155; margin-bottom:3mm;">${sheetTag}${batchTag}</div>`;
-            } else if (sheetPos === 'top_center') {
-                headerHTML = `<div style="display:flex; justify-content:center; align-items:center; gap:14px; font-size:${sheetFont}px; font-weight:bold; color:#334155; margin-bottom:3mm;">${sheetTag}${batchTag}${profTag}</div>`;
-            } else if (sheetPos === 'top_left') {
-                headerHTML = `<div style="display:flex; justify-content:flex-end; align-items:center; gap:12px; font-size:${sheetFont}px; font-weight:bold; color:#334155; margin-bottom:3mm;">${sheetTag}${batchTag}</div>`;
-            } else if (sheetPos === 'bottom_bar') {
-                footerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; font-size:${sheetFont}px; font-weight:bold; color:#334155; border-top:1px solid #cbd5e1; padding-top:2px; margin-top:3.5mm;">${sheetTag}${batchTag}${profTag}${dateTag}</div>`;
-            } else if (sheetPos === 'bottom_right') {
-                footerHTML = `<div style="display:flex; justify-content:flex-start; align-items:center; gap:12px; font-size:${sheetFont}px; font-weight:bold; color:#334155; margin-top:3mm;">${sheetTag}${batchTag}</div>`;
-            } else if (sheetPos === 'bottom_center') {
-                footerHTML = `<div style="display:flex; justify-content:center; align-items:center; gap:14px; font-size:${sheetFont}px; font-weight:bold; color:#334155; margin-top:3mm;">${sheetTag}${batchTag}${profTag}</div>`;
-            } else if (sheetPos === 'bottom_left') {
-                footerHTML = `<div style="display:flex; justify-content:flex-end; align-items:center; gap:12px; font-size:${sheetFont}px; font-weight:bold; color:#334155; margin-top:3mm;">${sheetTag}${batchTag}</div>`;
-            }
+            const sheetPositions = {
+                top_bar: { top: '0', left: '0', right: '0', align: 'space-between', tag: `${sheetTag}${batchTag}${profTag}${dateTag}`, border: 'border-bottom:1px solid #cbd5e1;' },
+                top_right: { top: '0', right: '0', align: 'flex-start', tag: `${sheetTag}${batchTag}` },
+                top_center: { top: '0', left: '50%', transform: 'translateX(-50%)', align: 'center', tag: `${sheetTag}${batchTag}${profTag}` },
+                top_left: { top: '0', left: '0', align: 'flex-end', tag: `${sheetTag}${batchTag}` },
+                bottom_bar: { bottom: '0', left: '0', right: '0', align: 'space-between', tag: `${sheetTag}${batchTag}${profTag}${dateTag}`, border: 'border-top:1px solid #cbd5e1;' },
+                bottom_right: { bottom: '0', right: '0', align: 'flex-start', tag: `${sheetTag}${batchTag}` },
+                bottom_center: { bottom: '0', left: '50%', transform: 'translateX(-50%)', align: 'center', tag: `${sheetTag}${batchTag}${profTag}` },
+                bottom_left: { bottom: '0', left: '0', align: 'flex-end', tag: `${sheetTag}${batchTag}` }
+            };
+            const position = sheetPositions[sheetPos];
+            const markerWidth = position?.left !== undefined && position?.right !== undefined ? '100%' : 'max-content';
+            const fallbackPageNumberHTML = position ? `<div class="custom-sheet-number" style="position:absolute;${position.top !== undefined ? `top:${position.top};` : ''}${position.bottom !== undefined ? `bottom:${position.bottom};` : ''}${position.left !== undefined ? `left:${position.left};` : ''}${position.right !== undefined ? `right:${position.right};` : ''}${position.transform ? `transform:${position.transform};` : ''}z-index:50;display:flex;justify-content:${position.align};gap:12px;width:${markerWidth};font-size:${sheetFont}pt;line-height:1;font-weight:800;color:#111;background:transparent;white-space:nowrap;pointer-events:none;${position.border || ''}">${position.tag}</div>` : '';
 
             html += `
-            <div class="pdf-a4-page" style="padding: ${dim.pageMargin}mm; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 20px;">
-                ${headerHTML}
+            <div class="pdf-a4-page" style="position:relative; padding: ${dim.pageMargin}mm; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 20px;">
+                ${fallbackPageNumberHTML}
                 <div class="visual-cards-grid" style="display: grid !important; grid-template-columns: repeat(${dim.cols}, 1fr) !important; gap: ${dim.cardGap}mm !important; width: 100% !important; box-sizing: border-box !important;">
                     ${pageVouchers.map(v => {
-                        const loginUrl = `${t.hotspot_url || 'http://192.168.88.1/login'}?username=${v.username}&password=${v.password}`;
+                        const loginUrl = `${t.hotspot_url || 'http://192.168.88.1/login'}?username=${encodeURIComponent(String(v.username ?? ''))}&password=${encodeURIComponent(String(v.password ?? ''))}`;
 
                         return `
-                        <div class="visual-card-rendered" style="position:relative; height:${dim.heightMM}mm; border:1px dashed ${t.border_color || '#0078d7'}; border-radius:3px; overflow:hidden; background:#ffffff; box-sizing:border-box;">
+                        <div class="visual-card-rendered" style="position:relative; height:${cardHeightMM}mm; border:1px dashed ${t.border_color || '#0078d7'}; border-radius:3px; overflow:hidden; background:#ffffff; box-sizing:border-box;">
                             ${t.bg_image ? `<img src="${t.bg_image}" style="position:absolute; left:0; top:0; width:100%; height:100%; object-fit:fill; z-index:0; pointer-events:none;" />` : ''}
                             
                             ${elements.title?.enabled ? `
@@ -944,6 +948,24 @@ Object.assign(window.App, {
                                 </div>
                             ` : ''}
 
+                            ${elements.quota?.enabled ? `
+                                <div class="rendered-item-pos" style="position:absolute; left:${elements.quota.x}%; top:${elements.quota.y}%; transform:translate(-50%, -50%) rotate(${Number(elements.quota.rotation || 0)}deg); font-size:${Math.round(elements.quota.size * scale)}px; font-weight:${elements.quota.weight}; color:${elements.quota.color}; z-index:2; white-space:nowrap; line-height:1.1;">
+                                    ${this.escape(elements.quota.prefix || '')}${v.transfer_limit > 0 ? this.escape(App.formatBytes(v.transfer_limit)) : 'غير محدود'}
+                                </div>
+                            ` : ''}
+
+                            ${elements.validity?.enabled ? `
+                                <div class="rendered-item-pos" style="position:absolute; left:${elements.validity.x}%; top:${elements.validity.y}%; transform:translate(-50%, -50%) rotate(${Number(elements.validity.rotation || 0)}deg); font-size:${Math.round(elements.validity.size * scale)}px; font-weight:${elements.validity.weight}; color:${elements.validity.color}; z-index:2; white-space:nowrap; line-height:1.1;">
+                                    ${this.escape(elements.validity.prefix || '')}${this.escape(v.validity ? (App.formatValidityDisplay?.(v.validity) || v.validity) : 'غير محددة')}
+                                </div>
+                            ` : ''}
+
+                            ${elements.uptime?.enabled ? `
+                                <div class="rendered-item-pos" style="position:absolute; left:${elements.uptime.x}%; top:${elements.uptime.y}%; transform:translate(-50%, -50%) rotate(${Number(elements.uptime.rotation || 0)}deg); font-size:${Math.round(elements.uptime.size * scale)}px; font-weight:${elements.uptime.weight}; color:${elements.uptime.color}; z-index:2; white-space:nowrap; line-height:1.1;">
+                                    ${this.escape(elements.uptime.prefix || '')}${v.uptime_limit > 0 ? this.escape(App.formatSecondsArabic?.(v.uptime_limit) || App.formatSeconds(v.uptime_limit)) : 'غير محدود'}
+                                </div>
+                            ` : ''}
+
                             ${elements.icon?.enabled && elements.icon?.image_url ? `
                                 <img class="rendered-item-pos" src="${elements.icon.image_url}" alt="" style="position:absolute; left:${elements.icon.x}%; top:${elements.icon.y}%; transform:translate(-50%, -50%) rotate(${Number(elements.icon.rotation || 0)}deg); width:${Math.round(elements.icon.size * scale)}px; height:${Math.round(elements.icon.size * scale)}px; object-fit:contain; z-index:3;" />
                             ` : ''}
@@ -957,7 +979,6 @@ Object.assign(window.App, {
                         `;
                     }).join('')}
                 </div>
-                ${footerHTML}
             </div>
             `;
         }
@@ -990,6 +1011,32 @@ Object.assign(window.App, {
         }, 1500);
     },
 
+        async loadPdfExportLibrary(relativePath, readyCheck) {
+        if (readyCheck()) return;
+        const inFlight = window.__samTemplatePdfLoads || (window.__samTemplatePdfLoads = {});
+        if (!inFlight[relativePath]) {
+            const designerScript = Array.from(document.scripts).find(script => /templates-designer\.js(?:\?|$)/.test(script.src));
+            const version = designerScript ? new URL(designerScript.src).searchParams.get('v') : '';
+            const assetUrl = new URL(`../${relativePath}`, designerScript?.src || document.baseURI);
+            if (version) assetUrl.searchParams.set('v', version);
+
+            inFlight[relativePath] = new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = assetUrl.href;
+                script.async = true;
+                script.onload = () => readyCheck()
+                    ? resolve()
+                    : reject(new Error(`لم تُحمّل مكتبة ${relativePath}`));
+                script.onerror = () => reject(new Error(`تعذر تحميل ${relativePath}`));
+                document.head.appendChild(script);
+            }).catch(error => {
+                delete inFlight[relativePath];
+                throw error;
+            });
+        }
+        return inFlight[relativePath];
+    },
+
         async exportPDF() {
         const sourcePages = Array.from(document.querySelectorAll('#print-container .pdf-a4-page'));
         if (sourcePages.length === 0) return this.toast('لا توجد كروت للتصدير', 'warning');
@@ -1013,11 +1060,12 @@ Object.assign(window.App, {
         this.toast(`جاري تجهيز ${total} صفحة PDF... لا تغلق النافذة`, 'info');
 
         try {
+            await Promise.all([
+                this.loadPdfExportLibrary('jspdf.umd.min.js', () => !!(window.jspdf?.jsPDF || window.jsPDF)),
+                this.loadPdfExportLibrary('html2canvas.min.js', () => typeof window.html2canvas === 'function')
+            ]);
             const JsPdfCtor = window.jspdf?.jsPDF || window.jsPDF;
             const canvasRenderer = window.html2canvas;
-            if (!JsPdfCtor || !canvasRenderer) {
-                throw new Error('مكتبة إنشاء PDF لم تُحمّل بصورة صحيحة');
-            }
             if (document.fonts?.ready) await document.fonts.ready;
 
             const pdf = new JsPdfCtor({

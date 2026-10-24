@@ -3471,7 +3471,7 @@ CREATE TABLE IF NOT EXISTS um_voucher_delivery_attempts (
 CREATE TABLE IF NOT EXISTS um_wallet_sales (
  id BIGINT AUTO_INCREMENT PRIMARY KEY, network_id INT NOT NULL, pos_admin_id INT NOT NULL,
  voucher_id BIGINT NOT NULL, network_invoice_id INT DEFAULT NULL, invoice_no VARCHAR(64) NOT NULL,
- distribution_amount DECIMAL(14,2) NOT NULL, retail_amount DECIMAL(14,2) NOT NULL,
+ distribution_amount DECIMAL(14,2) NOT NULL, retail_amount DECIMAL(14,2) NOT NULL, customer_paid_amount DECIMAL(14,2) DEFAULT NULL,
  network_journal_id INT NOT NULL, pos_journal_id BIGINT NOT NULL, refund_journal_id INT DEFAULT NULL,
  customer_refund_due DECIMAL(14,2) NOT NULL DEFAULT 0, customer_refund_paid_at DATETIME DEFAULT NULL,
  status ENUM('completed','refunded') NOT NULL DEFAULT 'completed',
@@ -3505,3 +3505,33 @@ ALTER TABLE um_sales_invoices MODIFY COLUMN sale_kind ENUM('cards','instant_bala
 
 ALTER TABLE um_sales_invoice_items MODIFY COLUMN item_type ENUM('cards','instant_balance','digital_voucher','wallet_distribution') NOT NULL DEFAULT 'cards', ALGORITHM=INPLACE, LOCK=NONE;
 
+
+
+CREATE TABLE IF NOT EXISTS `um_network_devices` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `network_id` int(11) NOT NULL DEFAULT 1,
+  `device_name` varchar(128) NOT NULL,
+  `device_type` enum('router','switch','antenna','server','ups','olt','other') NOT NULL DEFAULT 'router',
+  `ip_address` varchar(45) NOT NULL,
+  `snmp_version` enum('v1','v2c','v3') NOT NULL DEFAULT 'v2c',
+  `snmp_community` varchar(64) NOT NULL DEFAULT 'public',
+  `snmp_port` int(11) NOT NULL DEFAULT 161,
+  `polling_interval_minutes` int(11) NOT NULL DEFAULT 5,
+  `status` enum('online','offline','warning','unknown') NOT NULL DEFAULT 'unknown',
+  `last_seen` datetime DEFAULT NULL,
+  `last_latency_ms` decimal(6,2) DEFAULT NULL,
+  `cpu_usage` tinyint(3) unsigned DEFAULT NULL,
+  `memory_usage` tinyint(3) unsigned DEFAULT NULL,
+  `uptime_seconds` bigint(20) unsigned DEFAULT NULL,
+  `temperature_celsius` decimal(5,1) DEFAULT NULL,
+  `voltage` decimal(5,2) DEFAULT NULL,
+  `traffic_in_mbps` decimal(10,2) DEFAULT NULL,
+  `traffic_out_mbps` decimal(10,2) DEFAULT NULL,
+  `extra_metrics_json` text DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_dev_network` (`network_id`,`is_active`),
+  KEY `idx_dev_status` (`network_id`,`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

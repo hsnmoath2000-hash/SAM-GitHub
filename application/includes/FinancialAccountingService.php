@@ -1957,6 +1957,8 @@ class FinancialAccountingService extends BaseService {
                 if(!empty($old['invoice_id'])||str_starts_with((string)$old['reference_id'],'JV-OPEN-'))throw new DomainException('للسند المرتبط بفاتورة أو افتتاحية استخدم الإجراء الأصلي');
                 $oldId=(int)$old['id'];
                 $oldNo=(string)$old['voucher_no'];
+                $editReason=trim((string)($data['edit_reason']??'تعديل السند'));
+                if($editReason==='')$editReason='تعديل السند';
                 // The old voucher is permanently canceled; the recursive save creates a new number.
                 $this->deleteFinancialVoucher($oldId,$currentAdminId);
                 unset($data['id']);
@@ -1967,7 +1969,9 @@ class FinancialAccountingService extends BaseService {
                 $newNo=(string)($r['voucher_no']??'');
                 if($newId<=0||$newNo==='')throw new DomainException('تعذر تحديد رقم السند الجديد');
                 $this->db->prepare("UPDATE um_vouchers_financial SET notes=CONCAT(COALESCE(notes,''),' | تم الإلغاء والتعديل بسند جديد رقم ',?) WHERE network_id=? AND id=?")->execute([$newNo,$n,$oldId]);
-                $this->db->prepare("INSERT INTO um_voucher_audit_logs (network_id,voucher_id,voucher_no,modified_by,action_type,old_amount,new_amount,old_party_id,new_party_id,edit_reason,diff_summary,created_at) VALUES (?,?,?,?,'replace',?,?,?,?,?,?,NOW())")->execute([$n,$oldId,$oldNo,$currentAdminId,$old['amount'],$r['amount']??$data['amount']??0,$old['party_id'],$data['party_id']??null,'تعديل السند','السند القديم ملغى؛ السند الجديد رقم '.$newNo]);
+                // The production audit table accepts edit/delete/reverse; replacing a
+                // voucher is recorded as an edit while retaining the replacement details.
+                $this->db->prepare("INSERT INTO um_voucher_audit_logs (network_id,voucher_id,voucher_no,modified_by,action_type,old_amount,new_amount,old_party_id,new_party_id,edit_reason,diff_summary,created_at) VALUES (?,?,?,?,'edit',?,?,?,?,?,?,NOW())")->execute([$n,$oldId,$oldNo,$currentAdminId,$old['amount'],$r['amount']??$data['amount']??0,$old['party_id'],$data['party_id']??null,$editReason,'السند القديم ملغى؛ السند الجديد رقم '.$newNo]);
                 if($own)$this->db->commit();
                 return ['success'=>true,'id'=>$newId,'voucher_id'=>$newId,'voucher_no'=>$newNo,'canceled_voucher_id'=>$oldId,'canceled_voucher_no'=>$oldNo,'message'=>'تم إلغاء السند القديم وإنشاء سند جديد رقم '.$newNo];
             } catch(Throwable $e) {

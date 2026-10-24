@@ -1,8 +1,8 @@
 {
-  "source_files": 508,
-  "php_syntax_checked": 113,
+  "source_files": 510,
+  "php_syntax_checked": 114,
   "javascript_syntax_checked": 55,
-  "checksum_entries_verified": 43,
+  "checksum_entries_verified": 221,
   "database_data_exported": false,
   "deployed": false,
   "full_fresh_install_tested": false

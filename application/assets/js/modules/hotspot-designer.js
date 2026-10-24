@@ -1042,34 +1042,37 @@ Object.assign(window.App, {
                     
                     <div class="hs-field-group">
                         <label>أرقام هواتف الاتصال المباشر (افصل بينها بفاصلة):</label>
-                        <input type="text" id="hs-contact-phones" class="hs-input" value="${this.escape(phonesStr)}" placeholder="770000000, 730000000" />
+                        <input type="text" id="hs-contact-phones" class="hs-input" value="${this.escape(phonesStr)}" placeholder="" />
                     </div>
 
                     <div class="hs-field-group">
                         <label>رقم الواتساب لاستقبال الاستفسارات وطلبات الباقات:</label>
-                        <input type="text" id="hs-contact-whatsapp" class="hs-input" value="${this.escape(c.whatsapp || '')}" placeholder="770000000" />
+                        <input type="text" id="hs-contact-whatsapp" class="hs-input" value="${this.escape(c.whatsapp || '')}" placeholder="" />
                     </div>
 
                     <div class="hs-field-group">
                         <label>رسالة الواتساب الافتراضية عند الضغط على زر التواصل:</label>
-                        <input type="text" id="hs-wa-msg" class="hs-input" value="${this.escape(c.whatsapp_message || '')}" placeholder="مرحباً، أود الاستفسار عن كروت وباقات الإنترنت" />
+                        <input type="text" id="hs-wa-msg" class="hs-input" value="${this.escape(c.whatsapp_message || '')}" placeholder="" />
                     </div>
 
                     <div class="hs-field-group">
                         <label>معرف أو رابط قناة التليجرام (Telegram Channel):</label>
-                        <input type="text" id="hs-contact-telegram" class="hs-input" value="${this.escape(c.telegram || '')}" placeholder="@MyNetwork_Net" />
+                        <input type="text" id="hs-contact-telegram" class="hs-input" value="${this.escape(c.telegram || '')}" placeholder="" />
                     </div>
 
                     <div class="hs-field-group">
                         <label>أماكن تواجد الكروت ونقاط البيع (POS Locations):</label>
-                        <textarea id="hs-pos-locations" class="hs-input" style="height:70px; resize:vertical;" placeholder="متوفر في جميع البقالات ومراكز التسوق ونقاط البيع المعتمدة">${this.escape(c.pos_locations || '')}</textarea>
+                        <textarea id="hs-pos-locations" class="hs-input" style="height:70px; resize:vertical;" placeholder="">${this.escape(c.pos_locations || '')}</textarea>
                     </div>
                 </div>
                 `;
 
             case 'packages':
-                const dbPackages = this.hotspotStudioData?.db_packages || [];
-                const pkgItems = (p.package_items && p.package_items.length > 0) ? p.package_items : dbPackages.map(dp => ({
+                const isPaidHotspotPackage = pkg => (pkg?.package_type || 'paid') !== 'free'
+                    && (!Number.isFinite(Number(pkg?.price)) || Number(pkg.price) > 0);
+                const dbPackages = (this.hotspotStudioData?.db_packages || []).filter(isPaidHotspotPackage);
+                const configuredPackages = (p.package_items || []).filter(isPaidHotspotPackage);
+                const pkgItems = configuredPackages.length > 0 ? configuredPackages : dbPackages.map(dp => ({
                     id: dp.id,
                     name: dp.name,
                     price: dp.price,
@@ -1085,13 +1088,13 @@ Object.assign(window.App, {
                     is_custom: false
                 }));
 
-                // Ensure p.package_items is populated
+                // Keep free profiles out of hotspot page settings and rendering.
                 p.package_items = pkgItems;
 
                 return `
                 <div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                        <h4 style="font-size:15px; font-weight:800; color:#0f172a; margin:0;">💎 باقات وعروض الشبكة (المدفوعة والمجانية)</h4>
+                        <h4 style="font-size:15px; font-weight:800; color:#0f172a; margin:0;">💎 باقات وعروض الشبكة المدفوعة</h4>
                         <label style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; cursor:pointer;">
                             <input type="checkbox" id="hs-pkg-enabled" ${p.enabled !== false ? 'checked' : ''} />
                             تفعيل قسم الباقات
@@ -1099,7 +1102,7 @@ Object.assign(window.App, {
                     </div>
                     
                     <p style="font-size:12px; color:#64748b; line-height:1.6; margin-bottom:15px;">
-                        تظهر الباقات المدفوعة والمجانية في صفحة تسجيل الدخول للمشتركين مع إمكانية تمييز الباقات الأكثر طلباً وتخصيص أسماء العرض والشارات والطلب الفوري عبر الواتساب.
+                        تظهر الباقات المدفوعة فقط في صفحة تسجيل الدخول، مع إمكانية تمييز الأكثر طلباً وتخصيص أسماء العرض والشارات والطلب عبر الواتساب.
                     </p>
 
                     <!-- Section General Config -->
@@ -1443,15 +1446,15 @@ Object.assign(window.App, {
                             <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:8px;">
                                 <div>
                                     <label style="font-size:11px; font-weight:700; color:#475569;">اسم المركز / المحل:</label>
-                                    <input type="text" class="hs-input hs-pos-name" value="${this.escape(item.name || '')}" placeholder="مركز الأمل للاتصالات" />
+                                    <input type="text" class="hs-input hs-pos-name" value="${this.escape(item.name || '')}" placeholder="" />
                                 </div>
                                 <div>
                                     <label style="font-size:11px; font-weight:700; color:#475569;">رقم الهاتف / الاتصال:</label>
-                                    <input type="text" class="hs-input hs-pos-phone" value="${this.escape(item.phone || '')}" placeholder="770000000" />
+                                    <input type="text" class="hs-input hs-pos-phone" value="${this.escape(item.phone || '')}" placeholder="" />
                                 </div>
                                 <div>
                                     <label style="font-size:11px; font-weight:700; color:#475569;">رقم الواتساب:</label>
-                                    <input type="text" class="hs-input hs-pos-whatsapp" value="${this.escape(item.whatsapp || item.phone || '')}" placeholder="770000000" />
+                                    <input type="text" class="hs-input hs-pos-whatsapp" value="${this.escape(item.whatsapp || item.phone || '')}" placeholder="" />
                                 </div>
                             </div>
 
@@ -1785,21 +1788,22 @@ Object.assign(window.App, {
      * Resync packages from system profiles
      */
     resyncHotspotPackagesFromDb() {
-        const dbPackages = this.hotspotStudioData?.db_packages || [];
+                const dbPackages = (this.hotspotStudioData?.db_packages || []).filter(dp =>
+                    (dp.package_type || 'paid') !== 'free' && Number(dp.price) > 0
+                );
         if (confirm('هل ترغب بإعادة استيراد كافة بروفايلات النظام وضبط الباقات وفقاً للأسعار والبيانات الأساسية؟')) {
             const pCfg = this.hotspotStudioData?.settings?.packages_config;
             if (pCfg) {
                 pCfg.package_items = dbPackages.map(dp => {
-                    const isFree = (dp.package_type === 'free') || (parseFloat(dp.price || 0) === 0);
                     return {
                         id: dp.id,
                         name: dp.name,
-                        package_type: dp.package_type || (isFree ? 'free' : 'paid'),
+                        package_type: 'paid',
                         price: dp.price,
                         validity: dp.validity,
                         rate_limit: dp.rate_limit,
                         quota_label: dp.quota_label,
-                        badge: dp.badge || (isFree ? 'مجاني 🎁' : ''),
+                        badge: dp.badge || '',
                         description: '',
                         custom_order_msg: '',
                         enabled: true,
@@ -1891,14 +1895,14 @@ Object.assign(window.App, {
         this.hotspotStudioData.settings.pos_config.items = this.hotspotStudioData.settings.pos_config.items || [];
         this.hotspotStudioData.settings.pos_config.items.push({
             id: Date.now(),
-            name: 'نقطة بيع جديدة',
-            phone: '770000000',
-            whatsapp: '770000000',
-            address: 'الشارع العام',
-            working_hours: '8:00 ص - 11:30 م',
-            badge: 'نقطة معتمدة',
+            name: '',
+            phone: '',
+            whatsapp: '',
+            address: '',
+            working_hours: '',
+            badge: '',
             map_url: '',
-            notes: 'متوفر جميع فئات الكروت وباقات الإنترنت',
+            notes: '',
             show_on_login: true,
             show_on_status: true,
             enabled: true

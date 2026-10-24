@@ -48,23 +48,23 @@ Object.assign(window.App, {
 
 
 
-        const [res, routersRes, nodesRes, adminsRes] = await Promise.all([
+        // Inventory data is critical; filter metadata is optional and should
+        // never make the whole screen unavailable.
+        const assetsRes = await this.api('get_assets', params);
+        if (!assetsRes || assetsRes.error || assetsRes.success === false) {
+            throw new Error(String(assetsRes?.message || assetsRes?.error || 'تعذر جلب سجل الأصول من الخادم.'));
+        }
 
-            this.api('get_assets', params),
-
+        const [routersResult, nodesResult, adminsResult] = await Promise.allSettled([
             this.api('get_routers'),
-
             this.api('get_network_nodes'),
-
             this.api('get_admins')
-
         ]);
+        const routersRes = routersResult.status === 'fulfilled' ? routersResult.value : null;
+        const nodesRes = nodesResult.status === 'fulfilled' ? nodesResult.value : null;
+        const adminsRes = adminsResult.status === 'fulfilled' ? adminsResult.value : null;
 
-
-
-        const assetsRes = res || { data: [], summary: {}, grouped_by_category: [], grouped_by_status: [], grouped_by_node: [], grouped_by_custodian: [] };
-
-        const assets = assetsRes.data || [];
+        const assets = Array.isArray(assetsRes.data) ? assetsRes.data : (Array.isArray(assetsRes.assets) ? assetsRes.assets : []);
 
         const summary = assetsRes.summary || {
 
@@ -100,9 +100,9 @@ Object.assign(window.App, {
 
         const routersList = Array.isArray(routersRes) ? routersRes : (routersRes?.data || routersRes?.routers || []);
 
-        const nodesList = nodesRes?.nodes || (Array.isArray(nodesRes) ? nodesRes : []);
+        const nodesList = nodesRes?.nodes || nodesRes?.data || (Array.isArray(nodesRes) ? nodesRes : []);
 
-        const adminsList = Array.isArray(adminsRes) ? adminsRes : (adminsRes?.admins || []);
+        const adminsList = Array.isArray(adminsRes) ? adminsRes : (adminsRes?.admins || adminsRes?.data || []);
 
 
 

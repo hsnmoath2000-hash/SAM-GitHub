@@ -1,5 +1,5 @@
 'use strict';
-const PREFIX='sam-pwa-',VERSION='20261005-onboarding-3',CACHE=PREFIX+VERSION;
+const PREFIX='sam-pwa-',VERSION='20261007-template-pdf-qr-1',CACHE=PREFIX+VERSION;
 const root=new URL('./',self.registration.scope),offline=new URL('offline.html',root).href;
 const seed=['offline.html','manifest.json','assets/img/icon-192.png','assets/img/icon-512.png','assets/img/icon-maskable-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(seed.map(x=>new URL(x,root).href))));});
