@@ -9,7 +9,7 @@ final class StockInventoryPostingService {
   $q=$this->db->prepare('SELECT id,account_type,is_active FROM um_chart_of_accounts WHERE network_id=? AND account_code=? FOR UPDATE');$q->execute([$net,$code]);$row=$q->fetch(PDO::FETCH_ASSOC);if(!$row||!(int)$row['is_active']||$row['account_type']!==$type)throw new DomainException('CHART_ACCOUNT_INVALID');return (int)$row['id'];
  }
  public function post(int $id,array $input=[]):array{
-  $this->auth->assertCan(['stock_inventory','card_warehouses','warehouse_stock_transfer']);if(!in_array($this->auth->role(),['system_owner','superadmin','network_manager','admin','accountant','finance'],true))throw new DomainException('FORBIDDEN');
+  $this->auth->assertCan(['stock_inventory','card_warehouses','warehouse_stock_transfer']);if(!in_array($this->auth->role(),['system_owner','superadmin','network_manager','admin','admin2','accountant','finance'],true))throw new DomainException('FORBIDDEN');
   $net=$this->auth->activeNetworkId();if($net<=0||!$this->auth->canAccessNetwork($net)||isset($input['network_id'])&&(int)$input['network_id']!==$net)throw new DomainException('FORBIDDEN_NETWORK');
   $owns=!$this->db->inTransaction();if($owns)$this->db->beginTransaction();
   try{

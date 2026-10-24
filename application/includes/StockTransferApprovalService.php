@@ -8,7 +8,7 @@ final class StockTransferApprovalService {
  private function transfer(int $id,bool $lock=false):array{
   $this->auth->assertCan(['warehouse_stock_transfer','card_warehouses']);$net=$this->auth->activeNetworkId();if($net<=0||!$this->auth->canAccessNetwork($net))throw new DomainException('FORBIDDEN_NETWORK');
   $q=$this->db->prepare('SELECT * FROM um_stock_transfers WHERE id=? AND network_id=?'.($lock?' FOR UPDATE':''));$q->execute([$id,$net]);$row=$q->fetch(PDO::FETCH_ASSOC);if(!$row)throw new DomainException('FORBIDDEN_NETWORK');
-  $manager=in_array($this->auth->role(),['system_owner','superadmin','network_manager','admin'],true);if(!$manager&&(int)$row['receiver_admin_id']!==$this->auth->id())throw new DomainException('FORBIDDEN_SCOPE');
+  $manager=in_array($this->auth->role(),['system_owner','superadmin','network_manager','admin','admin2'],true);if(!$manager&&(int)$row['receiver_admin_id']!==$this->auth->id())throw new DomainException('FORBIDDEN_SCOPE');
   if($manager){$this->auth->assertCanAccessAdmin((int)$row['sender_admin_id']);$this->auth->assertCanAccessAdmin((int)$row['receiver_admin_id']);}
   if((int)$row['sender_admin_id']===(int)$row['receiver_admin_id'])throw new InvalidArgumentException('SAME_WAREHOUSE');
   if(!in_array($row['transfer_type'],['transfer','return'],true))throw new DomainException('SALES_INVOICE_REQUIRED');return $row;

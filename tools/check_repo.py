@@ -12,10 +12,50 @@ IGNORED = {'.git', 'dist', 'node_modules', 'vendor', '__pycache__', 'copilot-wor
 def check(syntax=False):
     errors = []
     files = [p for p in ROOT.rglob('*') if p.is_file() and not any(part in IGNORED for part in p.relative_to(ROOT).parts)]
-    required = ['application/api.php', 'application/config.php', 'application/index.php', 'application/includes/WalletCommerceService.php', 'database/schema.sql', 'installer/install.sh', 'runtime/archive-metadata.json']
+    required = ['application/api.php', 'application/config.php', 'application/index.php', 'application/includes/WalletCommerceService.php', 'database/schema.sql', 'installer/install.sh', 'installer/service-manager/bootstrap.sh', 'installer/service-manager/manager.py', 'installer/service-manager/merge_control.py', 'installer/service-manager/sam-system-control', 'runtime/archive-metadata.json']
     for rel in required:
         if not (ROOT / rel).is_file():
             errors.append('Missing: ' + rel)
+    catalogs = ['permissions.json', 'roles.json', 'role-permissions.json', 'chart.json']
+    for catalog in catalogs:
+        if not (ROOT / 'database' / catalog).is_file():
+            errors.append('Missing installer catalog: database/' + catalog)
+    bootstrap = (ROOT / 'installer/bootstrap.php').read_text(encoding='utf-8')
+    if "dirname(__DIR__).'/database'" not in bootstrap or "$databaseDir.'/'.$catalog" not in bootstrap:
+        errors.append('Installer bootstrap must resolve and validate catalogs from repository and bundle layouts')
+    service_bootstrap = (ROOT / 'installer/service-manager/bootstrap.sh').read_text(encoding='utf-8')
+    if 'sha256sum --quiet -c SHA256SUMS' not in service_bootstrap or 'git -C "$ROOT/../.." rev-parse --show-toplevel' not in service_bootstrap:
+        errors.append('Service manager bootstrap must verify bundles and allow trusted repository checkouts')
+    if 'python3 "$ROOT/merge_control.py" /usr/local/sbin/sam-system-control' not in service_bootstrap:
+        errors.append('Service manager bootstrap must use the safe existing-control merger')
+    merge_control_path = ROOT / 'installer/service-manager/merge_control.py'
+    merge_control_source = merge_control_path.read_text(encoding='utf-8')
+    try:
+        merge_namespace = {'__name__': '_sam_merge_control_test'}
+        exec(compile(merge_control_source, str(merge_control_path), 'exec'), merge_namespace)
+        legacy_control = (
+            '#!/bin/bash\ncase "${1:-}" in\n'
+            '  service)\n    unit="${2:-}"; op="${3:-}"\n'
+            '    case "$unit" in apache2|php8.3-fpm|freeradius|mariadb) ;; *) exit 2;; esac\n'
+            '    ;;\nesac\n'
+        )
+        merged_control = merge_namespace['merge_control'](legacy_control)
+        expected_units = 'apache2|php8.3-fpm|freeradius|mariadb|php8.[1-9]-fpm|redis-server|cron'
+        if '  service-manager)' not in merged_control or expected_units not in merged_control:
+            errors.append('Service control merger omitted the manager route or supported units')
+        if merge_namespace['merge_control'](merged_control) != merged_control:
+            errors.append('Service control merger is not idempotent')
+        malformed_control = '#!/bin/bash\ncase "${1:-}" in\n  service) exit 2;;\nesac\n'
+        try:
+            merge_namespace['merge_control'](malformed_control)
+            errors.append('Service control merger accepted an unsupported allowlist format')
+        except ValueError:
+            pass
+    except (SyntaxError, KeyError, ValueError) as error:
+        errors.append('Invalid service control merger: ' + str(error))
+    service_control = (ROOT / 'installer/service-manager/sam-system-control').read_text(encoding='utf-8')
+    if '  service-manager)' not in service_control or 'php8.[1-9]-fpm' not in service_control or 'redis-server|cron' not in service_control:
+        errors.append('Service control must route service-manager commands and allow supported service units')
     for path in files:
         rel = path.relative_to(ROOT).as_posix()
         runtime_module = rel == 'runtime/etc/freeradius/3.0/mods-available/detail.log'
@@ -58,12 +98,12 @@ def check(syntax=False):
             errors.append('Broken/outside runtime link: ' + link['path'])
     syntax_count = 0
     if syntax:
-        for executable in ['php', 'node']:
+        for executable in ['php', 'node', 'bash']:
             if not shutil.which(executable):
                 errors.append('Syntax checker missing: ' + executable)
         if not errors:
             for path in files:
-                command = ['php', '-l', str(path)] if path.suffix == '.php' else ['node', '--check', str(path)] if path.suffix in {'.js', '.cjs', '.mjs'} else None
+                command = ['php', '-l', str(path)] if path.suffix == '.php' else ['node', '--check', str(path)] if path.suffix in {'.js', '.cjs', '.mjs'} else ['bash', '-n', str(path)] if path.suffix == '.sh' or path.name == 'sam-system-control' else None
                 if command:
                     result = subprocess.run(command, capture_output=True, text=True)
                     syntax_count += 1

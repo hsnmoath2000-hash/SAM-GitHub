@@ -113,8 +113,18 @@ if (in_array($action, $temporarilyDisabledActions, true)) {
         $netId = (int)($_GET['network_id'] ?? 1);
         $type = (string)($_GET['type'] ?? 'login');
         $bundle = $hsService->generateHotspotBundle($netId);
+        $html = $bundle[$type === 'status' ? 'status.html' : 'login.html'] ?? $bundle['login.html'];
+        
+        // Strip or resolve raw RouterOS template directives for clean browser preview
+        $html = preg_replace('/\$\(if error\).*?\$\(endif\)/s', '', $html);
+        $html = preg_replace('/\$\(if [a-zA-Z0-9_-]+\)(.*?)\$\(endif\)/s', '$1', $html);
+        $html = str_replace(
+            ['$(link-login-only)', '$(link-login)', '$(link-orig)', '$(mac)', '$(ip)', '$(username)'],
+            ['#', '#', '#', 'AA:BB:CC:DD:EE:FF', '192.168.88.100', '123456'],
+            $html
+        );
         header('Content-Type: text/html; charset=utf-8');
-        echo $bundle[$type === 'status' ? 'status.html' : 'login.html'] ?? $bundle['login.html'];
+        echo $html;
         exit;
     }
 

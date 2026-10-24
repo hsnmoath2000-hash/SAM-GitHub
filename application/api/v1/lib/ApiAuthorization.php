@@ -5,6 +5,10 @@ final class ApiAuthorization
 {
     public static function requirePermission(array $actor, string $permission): void
     {
+        // System owner and superadmin have unrestricted global permissions
+        if (in_array(($actor['role'] ?? ''), ['system_owner', 'superadmin'], true)) {
+            return;
+        }
         $permissions = $actor['effective_permissions'] ?? [];
         if (!in_array('*', $permissions, true) && !in_array($permission, $permissions, true)) {
             throw new DomainException('FORBIDDEN');
